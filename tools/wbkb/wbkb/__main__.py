@@ -1,4 +1,4 @@
-"""WBKB CLI: python -m wbkb discover | doctor"""
+"""WBKB CLI: python -m wbkb discover | doctor | extract"""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ import os
 import sys
 from pathlib import Path
 
-from . import config, discovery, manifest as manifest_mod, registry as registry_mod, util
+from . import config, discovery, extractor, manifest as manifest_mod, registry as registry_mod, util
 
 
 def repo_root() -> Path:
@@ -116,6 +116,56 @@ def cmd_discover(_args) -> int:
     return 0
 
 
+def cmd_extract(args) -> int:
+    root = repo_root()
+    registry = registry_mod.load_local_registry(root)
+    if registry is None:
+        print("Registry missing; run: python -m wbkb discover", file=sys.stderr)
+        return 1
+
+    if args.extract_command == "status":
+        return _cmd_extract_status(root, registry)
+
+    extractor_info = extractor.detect_extractor(root)
+    if extractor_info is None:
+        print("Decompiler       MISSING", file=sys.stderr)
+        print("Run `dotnet tool restore` in the WBKB root (requires .NET SDK).", file=sys.stderr)
+        return 1
+
+    try:
+        result = extractor.perform_extraction(root, registry, force=args.force, extractor_info=extractor_info)
+    except extractor.ExtractionError as exc:
+        print(f"Extraction failed: {exc}", file=sys.stderr)
+        return 1
+
+    source = registry["sources"]["worldbox"]
+    manifest = result["manifest"]
+    print(f"WorldBox {source.get('game_version') or 'unknown'}")
+    print(f"Assembly {manifest['assembly']['sha256'][:12]}…")
+    print(f"Extractor {manifest['extractor']['name']} {manifest['extractor']['version']}")
+    print(f"Snapshot {result['snapshot']}")
+    print(f"Source files {manifest['output']['csharp_files']} .cs / {manifest['output']['total_files']} total")
+    for warning in result.get("warnings", []):
+        print(f"Warning: {warning}", file=sys.stderr)
+    print(f"Status {result['status']}")
+    return 0
+
+
+def _cmd_extract_status(root: Path, registry: dict) -> int:
+    source = registry.get("sources", {}).get("worldbox")
+    if not source or not source.get("assembly"):
+        print("Current Assembly: none (run: python -m wbkb discover)")
+        return 1
+    sha = source["assembly"].get("sha256", "")
+    print(f"Current Assembly: {sha[:12]}… ({source.get('game_version') or 'unknown'})")
+    extractor_info = extractor.detect_extractor(root)
+    print(f"Extractor: {extractor_info['name'] + ' ' + extractor_info['version'] if extractor_info else 'MISSING'}")
+    state = extractor.snapshot_state(root, registry, extractor_info)
+    print(f"Snapshot: {state['snapshot']} [{state['state']}]")
+    print(f"Status: {'OK' if state['state'] == 'OK' else state['state']}")
+    return 0
+
+
 def cmd_doctor(_args) -> int:
     root = repo_root()
     scan = discovery.discover_sources(root)
@@ -154,6 +204,16 @@ def cmd_doctor(_args) -> int:
     else:
         print(f"{'Registry':<16}STALE (recorded paths invalid; run: python -m wbkb discover)")
 
+    extractor_info = extractor.detect_extractor(root)
+    print(f"{'Decompiler':<16}{'OK' if extractor_info else 'MISSING'}"
+          + (f" {extractor_info['name']} {extractor_info['version']}" if extractor_info else ""))
+
+    if registry is not None and registry.get("sources", {}).get("worldbox"):
+        state = extractor.snapshot_state(root, registry, extractor_info)
+        print(f"{'WorldBox Source':<16}{state['state'].replace('OK-EXTRACTOR-CHANGED', 'OK')}")
+    else:
+        print(f"{'WorldBox Source':<16}MISSING")
+
     hard_ok = wb["root"] and wb["assembly"]
     return 0 if hard_ok else 1
 
@@ -174,9 +234,16 @@ def main(argv: list[str] | None = None) -> int:
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("discover", help="discover external sources, update registry/manifest")
     sub.add_parser("doctor", help="short health check of configured sources")
+    extract_parser = sub.add_parser("extract", help="extract registered sources into local snapshots")
+    extract_sub = extract_parser.add_subparsers(dest="extract_command", required=True)
+    extract_worldbox = extract_sub.add_parser("worldbox", help="decompile Assembly-CSharp into a source snapshot")
+    extract_worldbox.add_argument("--force", action="store_true", help="re-extract even if snapshot exists")
+    extract_sub.add_parser("status", help="show current assembly/snapshot state")
     args = parser.parse_args(argv)
     if args.command == "discover":
         return cmd_discover(args)
+    if args.command == "extract":
+        return cmd_extract(args)
     return cmd_doctor(args)
 
 

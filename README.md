@@ -25,13 +25,18 @@ WBKB 未来负责：
 
 ## Quick Start
 
-Configure / auto-discover sources:
+Configure / auto-discover sources, then extract the registered WorldBox
+Assembly-CSharp into a local generated source snapshot (requires .NET SDK;
+run `dotnet tool restore` once in the repository root):
 
 ```bash
 cd tools/wbkb
 python -m wbkb discover
+python -m wbkb extract worldbox
 python -m wbkb doctor
 ```
+
+Decompiled snapshots stay local under `data/generated/` and are never committed.
 
 ## Layout
 

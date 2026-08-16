@@ -39,6 +39,24 @@ Committed Source Manifest  (manifests/source-registry.json — 进 Git，仅身�
 * External sources 严格 read-only；重复运行 discover 输出每个源的 `UNCHANGED / CHANGED / NEW / MISSING`，内容未变时不重写文件。
 * `python -m wbkb doctor` 提供简短健康检查（optional source 缺失不算致命）。
 
+## WorldBox Extraction Layer (v0.3)
+
+```text
+Source Registry
+      ↓
+WorldBox Extraction  (tools/wbkb — python -m wbkb extract worldbox)
+      ↓
+Generated Raw Source Snapshot  (data/generated/worldbox/snapshots/, 不进 Git)
+      ↓
+Future Structured Index  (Z3)
+```
+
+* raw source = **generated evidence**：反编译产物，非原始 WorldBox 源码，不手工维护。
+* snapshot 以 `game_version + assembly_sha256` 为 key（如 `worldbox-0.51.2-51d275f0168b`）；extraction identity 还包含 extractor 与 extractor_version——同一 assembly、不同 extractor 版本视为不同 extraction configuration。
+* extractor = `ilspycmd`（local .NET tool，版本固定于 `.config/dotnet-tools.json`，`dotnet tool restore` 可复原）。
+* 幂等：相同 assembly + extractor → `UNCHANGED`，跳过重新反编译；`--force` 才允许重建。临时目录验证通过后才原子替换 snapshot。
+* 完整反编译源码只留在本地：`data/generated/*` 不进 Git，也不上传。
+
 ## Directory Responsibilities
 
 ### `tools/`
