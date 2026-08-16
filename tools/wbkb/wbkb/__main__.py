@@ -35,13 +35,19 @@ def _short(sha) -> str:
 def cmd_discover(_args) -> int:
     root = repo_root()
     scan = discovery.discover_sources(root)
+    if scan["worldbox"]["root"] is None and sys.stdin.isatty():
+        # last resort: interactive user input
+        print("WorldBox not found automatically.")
+        answer = input("Enter WorldBox installation path (empty to abort): ").strip().strip('"')
+        if answer and Path(answer).is_dir():
+            scan = discovery.discover_sources(root, worldbox_root_override=answer)
 
     print(f"Config origin: {scan['config_origin']}")
     if scan["config_written"]:
         config.save_local_config_if_changed(root, scan["config"])
         print(f"Config written: {config.local_config_path(root).relative_to(root)}")
-    elif scan["config_origin"] == "existing-config":
-        print(f"Config: using existing {config.local_config_path(root).relative_to(root)}")
+    elif scan["config_origin"] == "local-config":
+        print(f"Config: using local {config.local_config_path(root).relative_to(root)}")
 
     wb = scan["worldbox"]
     if wb["root"]:
@@ -154,7 +160,7 @@ def cmd_doctor(_args) -> int:
 
 def _doctor_config_state(root: Path, scan: dict) -> str:
     path = config.local_config_path(root)
-    if path.is_file() and scan["config_origin"] == "existing-config":
+    if path.is_file() and scan["config_origin"] == "local-config":
         return "OK"
     if path.is_file():
         return "STALE (paths invalid; fix or delete to re-discover)"

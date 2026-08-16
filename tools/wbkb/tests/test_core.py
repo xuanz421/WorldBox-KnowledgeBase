@@ -8,6 +8,7 @@ import io
 import json
 import os
 import re
+import shutil
 import tempfile
 import unittest
 from pathlib import Path
@@ -168,7 +169,7 @@ class FakeTreeTests(unittest.TestCase):
 
     def test_discover_end_to_end(self):
         scan = discovery.discover_sources(self.repo)
-        self.assertEqual(scan["config_origin"], "existing-config")
+        self.assertEqual(scan["config_origin"], "local-config")
         self.assertEqual(scan["worldbox"]["root"], str(self.wb))
         self.assertEqual(scan["worldbox"]["assembly"]["sha256"], hashlib.sha256(b"ASSEMBLY-BYTES").hexdigest())
         self.assertEqual(scan["worldbox"]["publicized"]["sha256"], hashlib.sha256(b"PUBLICIZED-BYTES").hexdigest())
@@ -262,6 +263,95 @@ class ConfigTests(unittest.TestCase):
             self.assertIsNone(config.load_local_config(repo))
             (repo / "config" / "wbkb.local.json").write_text(json.dumps({"worldbox_root": "x"}), encoding="utf-8")
             self.assertIsNone(config.load_local_config(repo))  # missing required keys
+
+
+class ProjectAgnosticDiscoveryTests(unittest.TestCase):
+    """WBKB discovery must not inspect or depend on consumer mod projects (Z1.1)."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        tmp = Path(self._tmp.name)
+        self.repo = tmp / "repo"
+        (self.repo / "config").mkdir(parents=True)
+        self.wb = tmp / "wb"
+        (self.wb / "worldbox_Data" / "Managed").mkdir(parents=True)
+        (self.wb / "worldbox.exe").write_bytes(b"MZ")
+        (self.wb / "worldbox_Data" / "Managed" / "Assembly-CSharp.dll").write_bytes(b"ASM")
+        # a consumer mod project sibling whose csproj points at the fake WorldBox;
+        # WBKB must ignore it completely
+        sibling = tmp / "SomeConsumerMod"
+        sibling.mkdir()
+        (sibling / "SomeConsumerMod.csproj").write_text(
+            f"<Project><PropertyGroup><WorldBoxDir>{self.wb}</WorldBoxDir></PropertyGroup></Project>",
+            encoding="utf-8",
+        )
+        self._old_env = os.environ.pop(discovery.WORLDBOX_ROOT_ENV, None)
+        self._old_vdf = discovery._VDF_PATH
+        discovery._VDF_PATH = tmp / "nonexistent.vdf"  # steam lookup disabled by default
+
+    def tearDown(self):
+        discovery._VDF_PATH = self._old_vdf
+        if self._old_env is not None:
+            os.environ[discovery.WORLDBOX_ROOT_ENV] = self._old_env
+        self._tmp.cleanup()
+
+    def _write_config(self, worldbox_root):
+        (self.repo / "config" / "wbkb.local.json").write_text(
+            json.dumps(
+                {
+                    "worldbox_root": str(worldbox_root),
+                    "assembly_csharp": "",
+                    "assembly_csharp_publicized": "",
+                    "neomodloader_root": "",
+                    "reference_mods_roots": [],
+                }
+            ),
+            encoding="utf-8",
+        )
+
+    def test_local_config_takes_priority_over_env(self):
+        self._write_config(self.wb)
+        os.environ[discovery.WORLDBOX_ROOT_ENV] = str(Path(self._tmp.name) / "elsewhere")
+        scan = discovery.discover_sources(self.repo)
+        self.assertEqual(scan["config_origin"], "local-config")
+        self.assertEqual(scan["worldbox"]["root"], str(self.wb.resolve()))
+
+    def test_environment_fallback(self):
+        os.environ[discovery.WORLDBOX_ROOT_ENV] = str(self.wb)
+        scan = discovery.discover_sources(self.repo)
+        self.assertEqual(scan["config_origin"], "environment")
+        self.assertEqual(scan["worldbox"]["root"], str(self.wb.resolve()))
+        self.assertEqual(scan["worldbox"]["assembly"]["sha256"], hashlib.sha256(b"ASM").hexdigest())
+
+    def test_explicit_override(self):
+        scan = discovery.discover_sources(self.repo, worldbox_root_override=str(self.wb))
+        self.assertEqual(scan["config_origin"], "explicit")
+        self.assertEqual(scan["worldbox"]["root"], str(self.wb.resolve()))
+
+    def test_steam_discovery(self):
+        lib = Path(self._tmp.name) / "lib"
+        (lib / "steamapps" / "common" / "worldbox").mkdir(parents=True)
+        vdf = Path(self._tmp.name) / "libraryfolders.vdf"
+        escaped = str(lib).replace("\\", "\\\\")
+        vdf.write_text(f'"libraryfolders"\n{{\n"1"\n{{\n"path"    "{escaped}"\n}}\n}}\n', encoding="utf-8")
+        discovery._VDF_PATH = vdf
+        scan = discovery.discover_sources(self.repo)
+        self.assertEqual(scan["config_origin"], "steam")
+        expected = (lib / "steamapps" / "common" / "worldbox").resolve()
+        self.assertEqual(scan["config"]["worldbox_root"], str(expected))
+
+    def test_no_csproj_scan_of_parent(self):
+        # sibling consumer project with <WorldBoxDir> must be ignored entirely
+        scan = discovery.discover_sources(self.repo)
+        self.assertEqual(scan["config_origin"], "none")
+        self.assertIsNone(scan["worldbox"]["root"])
+
+    def test_works_without_any_consumer_project(self):
+        shutil.rmtree(Path(self._tmp.name) / "SomeConsumerMod")
+        os.environ[discovery.WORLDBOX_ROOT_ENV] = str(self.wb)
+        scan = discovery.discover_sources(self.repo)
+        self.assertEqual(scan["config_origin"], "environment")
+        self.assertEqual(scan["worldbox"]["root"], str(self.wb.resolve()))
 
 
 if __name__ == "__main__":

@@ -50,7 +50,9 @@ WBKB 自身允许修改。
 * Assembly-CSharp
 * NeoModLoader
 * Reference Mods
-* NewEra
+* Consumer mod projects
+
+WBKB must never inspect or depend on consumer mod projects for source discovery.
 
 ## Generated Data
 

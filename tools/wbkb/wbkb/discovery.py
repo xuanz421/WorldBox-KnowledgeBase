@@ -1,9 +1,12 @@
 """Automatic discovery of external sources.
 
-External sources are strictly read-only. Discovery order (Z1 §6):
-1. existing local config (if WorldBox root still valid)
-2. sibling .csproj containing <WorldBoxDir> (bounded search under WBKB's parent)
-3. Steam library folders (libraryfolders.vdf) + appmanifest
+External sources are strictly read-only. WBKB is project-agnostic: it never
+inspects consumer mod projects. Discovery order (Z1.1):
+1. explicit override (CLI / caller-provided worldbox root)
+2. existing local config (if WorldBox root still valid)
+3. WBKB_WORLDBOX_ROOT environment variable
+4. Steam library folders (libraryfolders.vdf)
+5. user input as last resort (interactive prompt, handled by the CLI)
 """
 
 from __future__ import annotations
@@ -16,10 +19,9 @@ from pathlib import Path
 from . import config, util
 
 WORLDBOX_STEAM_APPID = "1206560"
+WORLDBOX_ROOT_ENV = "WBKB_WORLDBOX_ROOT"
 _VDF_PATH = Path(r"C:\Program Files (x86)\Steam\steamapps\libraryfolders.vdf")
 
-_CS_PROJ_MAX_DEPTH = 4
-_CS_PROJ_MAX_BYTES = 1 << 20
 _VERSIONS_JSON_MAX_DEPTH = 3
 _PUBLICIZED_GLOB_MAX_DEPTH = 6
 _PUBLICIZED_ALTERNATIVE_CAP = 3
@@ -47,25 +49,7 @@ def _iter_files_bounded(root: Path, pattern: str, max_depth: int):
                 yield Path(base) / fn
 
 
-# --- Stage 1/2/3: find the WorldBox root -------------------------------------
-
-
-def _find_worldbox_root_from_sibling_csproj(repo_root: Path) -> str | None:
-    parent = repo_root.parent
-    if not parent.is_dir():
-        return None
-    for csproj in sorted(_iter_files_bounded(parent, "*.csproj", _CS_PROJ_MAX_DEPTH), key=str):
-        if repo_root == csproj or repo_root in csproj.parents:
-            continue
-        try:
-            with open(csproj, "r", encoding="utf-8", errors="replace") as f:
-                text = f.read(_CS_PROJ_MAX_BYTES)
-        except OSError:
-            continue
-        m = re.search(r"<WorldBoxDir>\s*([^<]+?)\s*</WorldBoxDir>", text, re.IGNORECASE)
-        if m and Path(m.group(1)).is_dir():
-            return m.group(1)
-    return None
+# --- Stage 3: find the WorldBox root via standard Steam installation -------
 
 
 def _steam_libraries() -> list[Path]:
@@ -170,16 +154,9 @@ def _looks_like_reference_mods(mods_dir: Path) -> bool:
     return any(c.is_dir() and (c / "mod.json").is_file() for c in children)
 
 
-def auto_discover_config(repo_root: Path) -> tuple[dict, str]:
+def config_from_worldbox_root(root: Path) -> dict:
+    """Derive a full source config from a WorldBox installation root."""
     cfg = config.example_config()
-    root = _find_worldbox_root_from_sibling_csproj(repo_root)
-    origin = "newera-csproj" if root else "none"
-    if not root:
-        root = _find_worldbox_root_in_steam_libraries()
-        if root:
-            origin = "steam"
-    if not root:
-        return cfg, origin
     rootp = Path(root).resolve()
     cfg["worldbox_root"] = str(rootp)
 
@@ -199,7 +176,17 @@ def auto_discover_config(repo_root: Path) -> tuple[dict, str]:
     if mods.is_dir() and _looks_like_reference_mods(mods):
         cfg["reference_mods_roots"] = [str(mods)]
 
-    return cfg, origin
+    return cfg
+
+
+def auto_discover_config(_repo_root: Path) -> tuple[dict, str]:
+    env_root = os.environ.get(WORLDBOX_ROOT_ENV, "").strip()
+    if env_root and Path(env_root).is_dir():
+        return config_from_worldbox_root(Path(env_root)), "environment"
+    steam_root = _find_worldbox_root_in_steam_libraries()
+    if steam_root:
+        return config_from_worldbox_root(Path(steam_root)), "steam"
+    return config.example_config(), "none"
 
 
 # --- Source scans ------------------------------------------------------------
@@ -425,19 +412,21 @@ def _scan_reference_mods(cfg: dict) -> tuple[list[dict], list[str]]:
 # --- Entry point -------------------------------------------------------------
 
 
-def discover_sources(repo_root: Path) -> dict:
-    cfg = config.load_local_config(repo_root)
-    if cfg is not None and config.config_is_usable(cfg):
-        origin = "existing-config"
-        config_written = False
+def discover_sources(repo_root: Path, worldbox_root_override: str | None = None) -> dict:
+    override = (worldbox_root_override or "").strip()
+    if override and Path(override).is_dir():
+        cfg = config_from_worldbox_root(Path(override))
+        origin = "explicit"
     else:
-        cfg, origin = auto_discover_config(repo_root)
-        config_written = False
-        if config.local_config_path(repo_root).is_file():
-            # keep the user's file untouched even when unusable
-            origin = origin + "+stale-config-kept"
+        cfg = config.load_local_config(repo_root)
+        if cfg is not None and config.config_is_usable(cfg):
+            origin = "local-config"
         else:
-            config_written = True
+            cfg, origin = auto_discover_config(repo_root)
+            if config.local_config_path(repo_root).is_file():
+                # keep the user's file untouched even when unusable
+                origin = origin + "+stale-config-kept"
+    config_written = not config.local_config_path(repo_root).is_file()
 
     worldbox = _scan_worldbox(cfg, repo_root)
     neomodloader = _scan_neomodloader(cfg)

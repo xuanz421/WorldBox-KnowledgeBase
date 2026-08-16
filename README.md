@@ -17,8 +17,8 @@ WBKB 未来负责：
 
 ## Non-goals
 
-* WBKB 不是 NewEra 的专属文档库
-* WBKB 不包含 NewEra gameplay design
+* WBKB 不是任何具体模组项目的专属文档库
+* WBKB 不包含任何 consumer mod 的 gameplay design
 * WBKB 不修改 WorldBox 原始文件
 * WBKB 不修改 reference mods
 * WBKB 不修改 NeoModLoader
