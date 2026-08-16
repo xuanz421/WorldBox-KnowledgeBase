@@ -138,17 +138,26 @@ def cmd_extract(args) -> int:
         return 1
 
     try:
-        result = extractor.perform_extraction(root, registry, force=args.force, extractor_info=extractor_info)
+        if args.extract_command == "worldbox":
+            result = extractor.perform_extraction(root, registry, force=args.force, extractor_info=extractor_info)
+            source_label = registry["sources"]["worldbox"].get("game_version") or "unknown"
+        elif args.extract_command == "neomodloader":
+            result = extractor.perform_nml_extraction(root, registry, force=args.force, extractor_info=extractor_info)
+            nml = registry["sources"]["neomodloader"]
+            source_label = f"commit {(nml.get('commit') or 'unknown')[:12]}"
+        else:
+            print(f"Unknown source: {args.extract_command}", file=sys.stderr)
+            return 1
     except extractor.ExtractionError as exc:
         print(f"Extraction failed: {exc}", file=sys.stderr)
         return 1
 
-    source = registry["sources"]["worldbox"]
     manifest = result["manifest"]
-    print(f"WorldBox {source.get('game_version') or 'unknown'}")
-    print(f"Assembly {manifest['assembly']['sha256'][:12]}…")
+    print(f"Source {args.extract_command} {source_label}")
     print(f"Extractor {manifest['extractor']['name']} {manifest['extractor']['version']}")
     print(f"Snapshot {result['snapshot']}")
+    mode = manifest.get("source_mode", "decompiled")
+    print(f"Mode {mode}")
     print(f"Source files {manifest['output']['csharp_files']} .cs / {manifest['output']['total_files']} total")
     for warning in result.get("warnings", []):
         print(f"Warning: {warning}", file=sys.stderr)
@@ -157,17 +166,21 @@ def cmd_extract(args) -> int:
 
 
 def _cmd_extract_status(root: Path, registry: dict) -> int:
-    source = registry.get("sources", {}).get("worldbox")
-    if not source or not source.get("assembly"):
-        print("Current Assembly: none (run: python -m wbkb discover)")
-        return 1
-    sha = source["assembly"].get("sha256", "")
-    print(f"Current Assembly: {sha[:12]}… ({source.get('game_version') or 'unknown'})")
     extractor_info = extractor.detect_extractor(root)
+
+    source = registry.get("sources", {}).get("worldbox")
+    if source and source.get("assembly"):
+        sha = source["assembly"].get("sha256", "")
+        print(f"WorldBox Assembly: {sha[:12]}… ({source.get('game_version') or 'unknown'})")
+        state = extractor.snapshot_state(root, registry, extractor_info)
+        print(f"WorldBox Snapshot: {state['snapshot']} [{state['state']}]")
+
+    nml = registry.get("sources", {}).get("neomodloader")
+    if nml:
+        nml_state = extractor.nml_snapshot_state(root, registry, extractor_info)
+        label = nml_state.get("snapshot") or nml_state.get("reason", "?")
+        print(f"NML Snapshot:      {label} [{nml_state['state']}]")
     print(f"Extractor: {extractor_info['name'] + ' ' + extractor_info['version'] if extractor_info else 'MISSING'}")
-    state = extractor.snapshot_state(root, registry, extractor_info)
-    print(f"Snapshot: {state['snapshot']} [{state['state']}]")
-    print(f"Status: {'OK' if state['state'] == 'OK' else state['state']}")
     return 0
 
 
@@ -181,29 +194,34 @@ def cmd_index(args) -> int:
     if args.index_command == "status":
         state = indexer.index_state(root, registry)
         meta = state.get("meta") or {}
-        print(f"WorldBox version: {meta.get('worldbox_version', '?')}")
-        print(f"Snapshot: {meta.get('source_snapshot_id', '?')}")
-        print(f"Indexer: {meta.get('indexer_version', '?')} schema v{meta.get('schema_version', '?')}")
+        print(f"Schema:            v{meta.get('schema_version', '?')}"
+              f" (indexer {meta.get('indexer_version', '?')}, resolver {meta.get('resolver_version', '?')})")
+        print(f"WorldBox snapshot: {meta.get('snapshot:worldbox', '-')}")
+        print(f"NML snapshot:      {meta.get('snapshot:neomodloader', '-')}")
         print(f"State: {state['state']}" + (f" ({state['reason']})" if state.get("reason") else ""))
         return 0 if state["state"] == "OK" else 1
 
     try:
-        result = indexer.perform_indexing(root, registry, force=args.force)
+        result = indexer.perform_unified_indexing(root, registry, force=args.force, requested=args.index_command)
     except indexer.IndexError_ as exc:
         print(f"Index failed: {exc}", file=sys.stderr)
         return 1
+    included = ", ".join(s["source_id"] for s in result["specs"])
     if result["status"] == "UNCHANGED":
-        print(f"Snapshot {result['snapshot']}")
+        print(f"Sources {included}")
         print("Status UNCHANGED")
         return 0
     stats = result["stats"]
-    print(f"Snapshot {result['snapshot']}")
-    print(f"Parsed {stats['counts']['files']} files"
+    counts = stats["counts"]
+    print(f"Sources {included}")
+    print(f"Parsed {counts['files']} files"
           f" (OK {stats['parse'].get('OK', 0)} / PARTIAL {stats['parse'].get('PARTIAL', 0)}"
           f" / FAILED {stats['parse'].get('FAILED', 0)})")
-    print(f"Types {stats['counts']['types']}  Methods {stats['counts']['methods']}"
-          f"  Fields {stats['counts']['fields']}  Properties {stats['counts']['properties']}")
-    print(f"Strings {stats['counts']['strings']}  Inheritance {stats['counts']['inheritance']}")
+    print(f"Types {counts['types']}  Methods {counts['methods']}"
+          f"  Fields {counts['fields']}  Properties {counts['properties']}")
+    print(f"Strings {counts['strings']}  Inheritance {counts['inheritance']}")
+    print(f"Symbol refs {counts['symbol_references']}  Method calls {counts['method_calls']}"
+          f"  Type refs {counts['type_references']}")
     print(f"Status {result['status']}")
     return 0
 
@@ -211,7 +229,8 @@ def cmd_index(args) -> int:
 def cmd_search(args) -> int:
     root = repo_root()
     try:
-        result = query.search(root, args.query, limit=args.limit, exact=args.exact, include_generated=args.all)
+        result = query.search(root, args.query, limit=args.limit, exact=args.exact,
+                              include_generated=args.all, source=args.source)
     except query.QueryError as exc:
         print(f"Search failed: {exc}", file=sys.stderr)
         return 1
@@ -225,53 +244,54 @@ def cmd_search(args) -> int:
     print("Types")
     print("-----")
     for row in result["types"]:
-        print(f"  [{row['kind']}] {row['full_name']}  ({row['relative_path']}:{row['start_line']})")
+        print(f"  [{row['source_id']}] [{row['kind']}] {row['full_name']}  ({row['relative_path']}:{row['start_line']})")
     if not result["types"]:
         print("  (none)")
 
     print("\nMethods")
     print("-------")
     for row in result["methods"]:
-        print(f"  {row['type_full']}.{row['signature']}  ({row['relative_path']}:{row['start_line']})")
+        print(f"  [{row['source_id']}] {row['type_full']}.{row['signature']}  ({row['relative_path']}:{row['start_line']})")
     if not result["methods"]:
         print("  (none)")
 
     print("\nFields")
     print("------")
     for row in result["fields"]:
-        print(f"  {row['type_full']}.{row['name']} : {row['field_type']}  ({row['relative_path']}:{row['start_line']})")
+        print(f"  [{row['source_id']}] {row['type_full']}.{row['name']} : {row['field_type']}  ({row['relative_path']}:{row['start_line']})")
     if not result["fields"]:
         print("  (none)")
 
     print("\nProperties")
     print("----------")
     for row in result["properties"]:
-        print(f"  {row['type_full']}.{row['name']} : {row['property_type']}  ({row['relative_path']}:{row['start_line']})")
+        print(f"  [{row['source_id']}] {row['type_full']}.{row['name']} : {row['property_type']}  ({row['relative_path']}:{row['start_line']})")
     if not result["properties"]:
         print("  (none)")
 
     print("\nStrings")
     print("-------")
     for row in result["strings"]:
-        print(f'  "{row["value"]}"  {row["relative_path"]}:{row["start_line"]}')
+        print(f'  [{row["source_id"]}] "{row["value"]}"  {row["relative_path"]}:{row["start_line"]}')
     if not result["strings"]:
         print("  (none)")
 
     print("\nFiles")
     print("-----")
     for row in result["files"]:
-        print(f"  {row['relative_path']}")
+        print(f"  [{row['source_id']}] {row['relative_path']}")
     if not result["files"]:
         print("  (none)")
 
-    print(f"\n(limit {limit} per category)")
+    suffix = f", source: {args.source}" if args.source else ""
+    print(f"\n(limit {limit} per category{suffix})")
     return 0
 
 
 def cmd_symbol(args) -> int:
     root = repo_root()
     try:
-        result = query.symbol(root, args.name, include_generated=args.all)
+        result = query.symbol(root, args.name, include_generated=args.all, source=args.source)
     except query.QueryError as exc:
         print(f"Symbol lookup failed: {exc}", file=sys.stderr)
         return 1
@@ -353,30 +373,40 @@ def cmd_stats(_args) -> int:
     root = repo_root()
     path = indexer.db_path(root)
     if not path.is_file():
-        print("Index database missing; run: python -m wbkb index worldbox")
+        print("Index database missing; run: python -m wbkb index all")
         return 1
     stats = indexer.read_stats(path)
     meta = stats["meta"]
     counts = stats["counts"]
-    print(f"WorldBox version  {meta.get('worldbox_version', '?')}")
-    print(f"Assembly          {meta.get('assembly_sha256', '?')[:12]}…")
-    print(f"Snapshot          {meta.get('source_snapshot_id', '?')}")
-    print(f"Extractor         {meta.get('extractor_name', '?')} {meta.get('extractor_version', '?')}")
     print(f"Indexer           {meta.get('indexer_version', '?')} (schema v{meta.get('schema_version', '?')},"
           f" resolver {meta.get('resolver_version', '?')})")
     print(f"Built at          {meta.get('built_at', '?')}")
-    print(f"Source files      {counts['files']}"
-          f"  (OK {stats['parse'].get('OK', 0)} / PARTIAL {stats['parse'].get('PARTIAL', 0)}"
-          f" / FAILED {stats['parse'].get('FAILED', 0)})")
+    print(f"WorldBox          {meta.get('worldbox_version', '?')}  assembly {meta.get('assembly_sha256', '?')[:12]}…"
+          f"  snapshot {meta.get('snapshot:worldbox', '-')}")
+    if meta.get("snapshot:neomodloader"):
+        print(f"NeoModLoader      commit {meta.get('nml_commit', '?')[:12] or '?'}"
+              f"  mode {meta.get('nml_source_mode', '?')}"
+              f"  snapshot {meta.get('snapshot:neomodloader', '-')}")
     ref_status = stats.get("ref_status", {})
-    if ref_status:
-        print(f"Reference pass    {ref_status.get('OK', 0)} OK / {ref_status.get('PARTIAL', 0)} PARTIAL")
-    print(f"Types             {counts['types']}")
-    print(f"Methods           {counts['methods']}")
-    print(f"Fields            {counts['fields']}")
-    print(f"Properties        {counts['properties']}")
-    print(f"Strings           {counts['strings']}")
-    print(f"Inheritance edges {counts['inheritance']}")
+    print(f"Source files      {counts['files']}"
+          f"  (parse OK {stats['parse'].get('OK', 0)} / PARTIAL {stats['parse'].get('PARTIAL', 0)}"
+          f" / FAILED {stats['parse'].get('FAILED', 0)};"
+          f" ref pass {ref_status.get('OK', 0)}/{sum(ref_status.values())})")
+    try:
+        per_source = query.source_stats(root)
+    except query.QueryError:
+        per_source = None
+    if per_source:
+        for source_id, row in per_source["per_source"].items():
+            print(f"[{source_id}]")
+            print(f"  Files {row['files']}  Types {row['types']}  Methods {row['methods']}"
+                  f"  Fields {row['fields']}  Properties {row['properties']}  Strings {row['strings']}")
+        cross = per_source.get("cross", {})
+        if cross:
+            print("Cross-source edges (neomodloader → worldbox, resolved)")
+            print(f"  type refs       {cross.get('nml_to_worldbox_type_refs', 0)}")
+            print(f"  method calls    {cross.get('nml_to_worldbox_method_calls', 0)}")
+            print(f"  member refs     {cross.get('nml_to_worlddb_symbol_refs', cross.get('nml_to_worldbox_symbol_refs', 0))}")
     cr = stats.get("call_resolution", {})
     rr = stats.get("ref_resolution", {})
     total_calls = sum(cr.values()) or 1
@@ -399,7 +429,7 @@ def cmd_stats(_args) -> int:
 def cmd_refs(args) -> int:
     root = repo_root()
     try:
-        result = query.refs(root, args.symbol, limit=args.limit, include_all=args.all)
+        result = query.refs(root, args.symbol, limit=args.limit, include_all=args.all, from_source=args.from_source)
     except query.QueryError as exc:
         print(f"Refs failed: {exc}", file=sys.stderr)
         return 1
@@ -420,7 +450,8 @@ def cmd_refs(args) -> int:
     print("\nReferences")
     print("----------")
     for ref in result["references"]:
-        print(f"  {ref['location']}  {ref['kind']}  [{ref['status']}]")
+        prefix = f"[{ref['from_source']}] " if ref.get("from_source") else ""
+        print(f"  {prefix}{ref['location']}  {ref['kind']}  [{ref['status']}]")
     if not result["references"]:
         print("  (none)")
     if args.context > 0:
@@ -444,7 +475,7 @@ def _print_context(root: Path, location: str, context: int) -> None:
 def cmd_callers(args) -> int:
     root = repo_root()
     try:
-        result = query.callers(root, args.symbol, limit=args.limit, include_all=args.all)
+        result = query.callers(root, args.symbol, limit=args.limit, include_all=args.all, source=args.source)
     except query.QueryError as exc:
         print(f"Callers failed: {exc}", file=sys.stderr)
         return 1
@@ -501,7 +532,7 @@ def cmd_callees(args) -> int:
 def cmd_derived(args) -> int:
     root = repo_root()
     try:
-        result = query.derived(root, args.symbol, recursive=args.recursive)
+        result = query.derived(root, args.symbol, recursive=args.recursive, source=getattr(args, "source", None))
     except query.QueryError as exc:
         print(f"Derived failed: {exc}", file=sys.stderr)
         return 1
@@ -587,15 +618,34 @@ def cmd_doctor(_args) -> int:
     else:
         print(f"{'WorldBox Source':<16}MISSING")
 
+    nml_source_state = "MISSING"
+    if registry is not None and registry.get("sources", {}).get("neomodloader"):
+        nml_state = extractor.nml_snapshot_state(root, registry, extractor_info)
+        nml_source_state = nml_state["state"].replace("OK-EXTRACTOR-CHANGED", "OK")
+    print(f"{'NeoModLoader Src':<16}{nml_source_state}")
+
     index = indexer.index_state(root, registry)
     print(f"{'WorldBox Index':<16}{index['state']}")
-    schema = (index.get("meta") or {}).get("schema_version")
-    has_refs = (index.get("meta") or {}).get("resolver_version") is not None
+    meta = index.get("meta") or {}
+    schema = meta.get("schema_version")
+    nml_indexed = meta.get("snapshot:neomodloader")
     if index["state"] == "OK":
-        graph_state = "OK" if has_refs else "MISSING"
+        nml_index_state = "OK" if nml_indexed else "MISSING"
     else:
+        nml_index_state = "MISSING" if not nml_indexed else index["state"]
+    print(f"{'NeoModLoader Idx':<16}{nml_index_state}")
+
+    if index["state"] == "OK" and nml_indexed:
+        try:
+            cross = query.source_stats(root).get("cross", {})
+            graph_state = "OK" if sum(cross.values()) > 0 else "EMPTY"
+        except query.QueryError:
+            graph_state = "BROKEN"
+    elif nml_indexed:
         graph_state = index["state"]
-    print(f"{'Reference Graph':<16}{graph_state}")
+    else:
+        graph_state = "MISSING"
+    print(f"{'Cross-Source':<16}{graph_state}")
     print(f"{'SQLite Schema':<16}{'v' + schema if schema else '-'}")
 
     hard_ok = wb["root"] and wb["assembly"]
@@ -622,12 +672,19 @@ def main(argv: list[str] | None = None) -> int:
     extract_sub = extract_parser.add_subparsers(dest="extract_command", required=True)
     extract_worldbox = extract_sub.add_parser("worldbox", help="decompile Assembly-CSharp into a source snapshot")
     extract_worldbox.add_argument("--force", action="store_true", help="re-extract even if snapshot exists")
+    extract_nml = extract_sub.add_parser("neomodloader", help="decompile the registered NML core assemblies")
+    extract_nml.add_argument("--force", action="store_true", help="re-extract even if snapshot exists")
     extract_sub.add_parser("status", help="show current assembly/snapshot state")
 
-    index_parser = sub.add_parser("index", help="build the structured SQLite index")
+    index_parser = sub.add_parser("index", help="build the unified SQLite index")
     index_sub = index_parser.add_subparsers(dest="index_command", required=True)
-    index_worldbox = index_sub.add_parser("worldbox", help="index the current WorldBox source snapshot")
-    index_worldbox.add_argument("--force", action="store_true", help="rebuild even if index is current")
+    for name, help_text in (
+        ("worldbox", "rebuild the unified index (WorldBox + any other available sources)"),
+        ("neomodloader", "rebuild the unified index including the NML snapshot"),
+        ("all", "rebuild the unified index from every available snapshot"),
+    ):
+        index_src = index_sub.add_parser(name, help=help_text)
+        index_src.add_argument("--force", action="store_true", help="rebuild even if index is current")
     index_sub.add_parser("status", help="show current index state")
 
     search_parser = sub.add_parser("search", help="search types/methods/fields/properties/strings/files")
@@ -635,17 +692,20 @@ def main(argv: list[str] | None = None) -> int:
     search_parser.add_argument("--limit", type=int, default=query.DEFAULT_LIMIT)
     search_parser.add_argument("--exact", action="store_true", help="exact match instead of substring")
     search_parser.add_argument("--all", action="store_true", help="include compiler-generated symbols")
+    search_parser.add_argument("--source", help="restrict to a source (worldbox / neomodloader)")
     search_parser.add_argument("--json", action="store_true", help="machine-readable output")
 
     symbol_parser = sub.add_parser("symbol", help="inspect a type by name")
     symbol_parser.add_argument("name")
     symbol_parser.add_argument("--all", action="store_true", help="include compiler-generated types")
+    symbol_parser.add_argument("--source", help="restrict to a source (worldbox / neomodloader)")
     symbol_parser.add_argument("--json", action="store_true", help="machine-readable output")
 
     refs_parser = sub.add_parser("refs", help="definition + references of a symbol (Type or Type.member)")
     refs_parser.add_argument("symbol")
     refs_parser.add_argument("--limit", type=int, default=query.RELATION_LIMIT)
     refs_parser.add_argument("--all", action="store_true", help="include unresolved/external references")
+    refs_parser.add_argument("--from-source", dest="from_source", help="only references made by this source")
     refs_parser.add_argument("--context", type=int, default=0, help="attach source context lines")
     refs_parser.add_argument("--json", action="store_true", help="machine-readable output")
 
@@ -653,6 +713,7 @@ def main(argv: list[str] | None = None) -> int:
     callers_parser.add_argument("symbol")
     callers_parser.add_argument("--limit", type=int, default=query.RELATION_LIMIT)
     callers_parser.add_argument("--all", action="store_true", help="include ambiguous/unresolved callers")
+    callers_parser.add_argument("--source", help="only callers from this source")
     callers_parser.add_argument("--json", action="store_true", help="machine-readable output")
 
     callees_parser = sub.add_parser("callees", help="what this method calls")
@@ -664,6 +725,7 @@ def main(argv: list[str] | None = None) -> int:
     derived_parser = sub.add_parser("derived", help="types directly inheriting from a type")
     derived_parser.add_argument("symbol")
     derived_parser.add_argument("--recursive", action="store_true")
+    derived_parser.add_argument("--source", help="only derived types from this source")
 
     overrides_parser = sub.add_parser("overrides", help="derived overrides of a base method")
     overrides_parser.add_argument("symbol", help="Type.method")

@@ -34,7 +34,8 @@ structured SQLite index (requires `pip install -r tools/wbkb/requirements.txt`):
 cd tools/wbkb
 python -m wbkb discover
 python -m wbkb extract worldbox
-python -m wbkb index worldbox
+python -m wbkb extract neomodloader
+python -m wbkb index all
 python -m wbkb doctor
 ```
 
@@ -43,6 +44,8 @@ inspect a symbol, navigate the reference graph, or show exact source
 context from the snapshot):
 
 ```bash
+python -m wbkb search Actor --source neomodloader
+python -m wbkb refs "AssetLibrary.get(string)" --from-source neomodloader
 python -m wbkb search miner --limit 20
 python -m wbkb symbol Actor
 python -m wbkb string citizen_job

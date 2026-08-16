@@ -284,6 +284,9 @@ def parse_source(code: bytes) -> dict:
             name_node = _child_by_field(node, "name")
             ns = _text(name_node).strip() if name_node is not None else ""
             merged = f"{namespace}.{ns}" if namespace and ns else (ns or namespace)
+            body = _child_by_field(node, "body")
+            if body is None:
+                return  # file-scoped namespace: handled by the root-level pre-scan
             for child in node.children:
                 visit(child, merged, parent_type)
             return
@@ -459,7 +462,17 @@ def parse_source(code: bytes) -> dict:
         for child in node.children:
             visit(child, namespace, parent_type, method_local_id)
 
-    visit(root, "", None)
+    # file-scoped namespaces (`namespace X.Y;`) apply to all sibling declarations
+    file_namespace = ""
+    for child in root.children:
+        if child.type == "file_scoped_namespace_declaration":
+            name_node = _child_by_field(child, "name")
+            file_namespace = _text(name_node).strip() if name_node is not None else ""
+            break
+    for child in root.children:
+        if child.type == "file_scoped_namespace_declaration":
+            continue
+        visit(child, file_namespace, None)
 
     error_text = _first_error_text(root)
     if error_text is not None:

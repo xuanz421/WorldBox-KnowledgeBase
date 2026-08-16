@@ -367,7 +367,7 @@ class NavigationTests(RefFixture):
 
     def test_derived_and_overrides(self):
         derived = query.derived(self.repo, "BaseThing")
-        self.assertIn("Sim.Actor", derived["derived"])
+        self.assertIn("[worldbox] Sim.Actor", derived["derived"])
         overrides = query.overrides(self.repo, "BaseThing.update")
         self.assertIn("Sim.Actor.update()", overrides["overrides"])
 

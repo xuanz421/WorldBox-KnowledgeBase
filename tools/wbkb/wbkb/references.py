@@ -34,11 +34,12 @@ _TYPE_NODE_KINDS = {
 class ReferenceContext:
     """What the extractor needs to know about the file being processed."""
 
-    def __init__(self, resolver, file_id: int, type_ids: dict[str, int], method_ids: dict[tuple[str, str], int]):
+    def __init__(self, resolver, file_id: int, source: str, type_ids: dict, method_ids: dict):
         self.resolver = resolver
         self.file_id = file_id
-        self.type_ids = type_ids      # full_name -> db id
-        self.method_ids = method_ids  # (owner_full, signature) -> db id
+        self.source = source          # source_id of the file being processed
+        self.type_ids = type_ids      # (source, full_name) -> db id
+        self.method_ids = method_ids  # ((source, owner_full), signature) -> db id
 
 
 def extract_references(code: bytes, ctx: ReferenceContext) -> dict:
@@ -53,6 +54,10 @@ def extract_references(code: bytes, ctx: ReferenceContext) -> dict:
 
     def current_type():
         return state["type_chain"][-1] if state["type_chain"] else None
+
+    def _is_type_key(value) -> bool:
+        """TypeKey tuples are indexed types; plain strings are external pseudo-types."""
+        return isinstance(value, tuple) and len(value) == 2 and value in ctx.resolver.types
 
     # ---- emitters ----
 
@@ -110,8 +115,10 @@ def extract_references(code: bytes, ctx: ReferenceContext) -> dict:
 
     # ---- type helpers ----
 
-    def resolve_type_name(name_text: str) -> Resolution:
-        return ctx.resolver.resolve_type(name_text, state["namespace"], tuple(state["using"]), current_type())
+    def resolve_type_name(name_text: str):
+        return ctx.resolver.resolve_type(
+            name_text, state["namespace"], tuple(state["using"]), current_type(), ctx.source
+        )
 
     def emit_type_node_refs(node, kind: str):
         if node.type == "predefined_type":
@@ -148,7 +155,7 @@ def extract_references(code: bytes, ctx: ReferenceContext) -> dict:
             res = resolve_type_name(name)
             if res.ok:
                 emit_type_ref(res, node, "type_use")
-                return res.type_full
+                return res.type_key
             # implicit this: bare member access on the enclosing type
             if current_type() and res.status == "unresolved":
                 member_res = ctx.resolver.resolve_member(current_type(), name)
@@ -178,7 +185,6 @@ def extract_references(code: bytes, ctx: ReferenceContext) -> dict:
         if t in ("base", "base_expression"):
             chain = ctx.resolver.type_chain(current_type()) if current_type() else []
             return chain[1] if len(chain) > 1 else None
-
         if t == "cast_expression":
             type_node = _child_by_field(node, "type")
             value = _child_by_field(node, "value")
@@ -188,7 +194,7 @@ def extract_references(code: bytes, ctx: ReferenceContext) -> dict:
             if type_node is not None:
                 emit_type_node_refs(type_node, "cast")
                 res = resolve_type_name(_text(type_node))
-                return res.type_full if res.ok else None
+                return res.type_key if res.ok else None
             return None
 
         if t == "as_expression":
@@ -198,7 +204,7 @@ def extract_references(code: bytes, ctx: ReferenceContext) -> dict:
                 emit_type_node_refs(right, "as")
                 res = resolve_type_name(_text(right))
                 if res.ok:
-                    return res.type_full
+                    return res.type_key
                 if res.status == "external":
                     return strip_generics(_text(right).strip())
             return None
@@ -241,26 +247,26 @@ def extract_references(code: bytes, ctx: ReferenceContext) -> dict:
             resolve_expression(child, "read")
         return None
 
-    def resolve_member_access(node, mode: str) -> str | None:
+    def resolve_member_access(node, mode: str) -> str | tuple | None:
         expr = _child_by_field(node, "expression")
         name_node = _child_by_field(node, "name")
         member = _member_name(name_node)
-        receiver_type = resolve_expression(expr, "read")
+        receiver = resolve_expression(expr, "read")
         kind = _member_kind_for_mode(mode)
 
-        if receiver_type is None:
+        if receiver is None:
             emit_symbol_ref(Resolution("unresolved", declaring_hint=member), member, kind, node)
             return None
 
-        if receiver_type not in ctx.resolver.types:
-            hint = f"{receiver_type}.{member}"
+        if not _is_type_key(receiver):
+            hint = f"{receiver}.{member}" if isinstance(receiver, str) else member
             emit_symbol_ref(Resolution("external", declaring_hint=hint), member, kind, node)
             return None
 
-        res = ctx.resolver.resolve_member(receiver_type, member)
+        res = ctx.resolver.resolve_member(receiver, member)
         emit_symbol_ref(res, member, kind, node)
         if res.ok:
-            return ctx.resolver.member_type(receiver_type, member)
+            return ctx.resolver.member_type(receiver, member)
         return None
 
     def resolve_invocation(node) -> str | None:
@@ -276,7 +282,7 @@ def extract_references(code: bytes, ctx: ReferenceContext) -> dict:
             name = _text(function).strip()
             receiver = current_type()
             res = ctx.resolver.resolve_method(receiver, name, arg_count)
-            emit_method_call(res, name, arg_count, node, receiver)
+            emit_method_call(res, name, arg_count, node, receiver[1] if receiver else None)
             walk_argument_list(args)
             return ctx.resolver.method_return_type(res) if res.ok else None
 
@@ -284,16 +290,16 @@ def extract_references(code: bytes, ctx: ReferenceContext) -> dict:
             expr = _child_by_field(function, "expression")
             name = _member_name(_child_by_field(function, "name"))
             receiver_hint = _text(expr).strip()[:80] if expr is not None else None
-            receiver_type = resolve_expression(expr, "read")
+            receiver = resolve_expression(expr, "read")
 
-            if receiver_type is None:
+            if _is_type_key(receiver):
+                res = ctx.resolver.resolve_method(receiver, name, arg_count)
+            elif receiver is None:
                 hint = f"{receiver_hint}.{name}" if receiver_hint else name
                 res = Resolution("unresolved", declaring_hint=hint)
-            elif receiver_type not in ctx.resolver.types:
-                res = Resolution("external", declaring_hint=f"{receiver_type}.{name}")
             else:
-                res = ctx.resolver.resolve_method(receiver_type, name, arg_count)
-            emit_method_call(res, name, arg_count, node, receiver_type or receiver_hint)
+                res = Resolution("external", declaring_hint=f"{receiver}.{name}")
+            emit_method_call(res, name, arg_count, node, receiver if isinstance(receiver, str) else receiver_hint)
             walk_argument_list(args)
             if res.ok:
                 return ctx.resolver.method_return_type(res)
@@ -313,9 +319,9 @@ def extract_references(code: bytes, ctx: ReferenceContext) -> dict:
         res = resolve_type_name(_text(type_node))
         walk_argument_list(args)
         if res.ok:
-            ctor = ctx.resolver.resolve_method(res.type_full, ".ctor", arg_count, constructor=True)
+            ctor = ctx.resolver.resolve_method(res.type_key, ".ctor", arg_count, constructor=True)
             emit_method_call(ctor, ".ctor", arg_count, node, res.type_full)
-            return res.type_full
+            return res.type_key
         return None
 
     def walk_assignment(node):
@@ -392,7 +398,7 @@ def extract_references(code: bytes, ctx: ReferenceContext) -> dict:
             if not is_var:
                 emit_type_node_refs(type_node, "type_use")
                 res = resolve_type_name(type_text)
-                declared_type = res.type_full if res.ok else None
+                declared_type = res.type_key if res.ok else None
                 if declared_type is None and res.status == "external":
                     declared_type = strip_generics(type_text)
         for child in var_decl.children:
@@ -422,7 +428,7 @@ def extract_references(code: bytes, ctx: ReferenceContext) -> dict:
             emit_type_node_refs(type_node, "type_use")
             if type_text != "var":
                 res = resolve_type_name(type_text)
-                elem_type = res.type_full if res.ok else (strip_generics(type_text) if res.status == "external" else None)
+                elem_type = res.type_key if res.ok else (strip_generics(type_text) if res.status == "external" else None)
         if var_name:
             state["scope"][var_name] = elem_type
         for child in node.children:
@@ -445,7 +451,7 @@ def extract_references(code: bytes, ctx: ReferenceContext) -> dict:
         if type_node is not None:
             emit_type_node_refs(type_node, "type_use")
             res = resolve_type_name(_text(type_node))
-            caught = res.type_full if res.ok else None
+            caught = res.type_key if res.ok else None
         if var_name:
             state["scope"][var_name] = caught
         for child in node.children:
@@ -471,6 +477,8 @@ def extract_references(code: bytes, ctx: ReferenceContext) -> dict:
                 walk_declaration(child, merged)
             state["namespace"] = previous
             return
+        if t == "file_scoped_namespace_declaration":
+            return  # applied globally by the entry pre-scan
         if t in TYPE_KINDS:
             walk_type_declaration(node, namespace)
             return
@@ -481,8 +489,8 @@ def extract_references(code: bytes, ctx: ReferenceContext) -> dict:
         name_node = _child_by_field(node, "name")
         name = _text(name_node).strip() if name_node is not None else "?"
         parent = current_type()
-        full = f"{parent}.{name}" if parent else (f"{namespace}.{name}" if namespace else name)
-        state["type_chain"].append(full)
+        full = f"{parent[1]}.{name}" if parent else (f"{namespace}.{name}" if namespace else name)
+        state["type_chain"].append((ctx.source, full))
 
         base_list = next((c for c in node.children if c.type == "base_list"), None)
         if base_list is not None:
@@ -513,7 +521,7 @@ def extract_references(code: bytes, ctx: ReferenceContext) -> dict:
                         emit_type_node_refs(type_node, "parameter_type")
                         res = resolve_type_name(_text(type_node))
                         if res.ok:
-                            ptype = res.type_full
+                            ptype = res.type_key
                         elif res.status == "external":
                             ptype = strip_generics(_text(type_node).strip())
                     pname = _text(name_node).strip() if name_node is not None else None
@@ -570,8 +578,19 @@ def extract_references(code: bytes, ctx: ReferenceContext) -> dict:
             name = _text(name_node).strip() if name_node is not None else "?"
         return f"{name}({_parameter_signature(_child_by_field(node, 'parameters'))})"
 
+    # entry: using directives + declarations (file-scoped namespace applies to all siblings)
+    file_namespace = ""
     for child in root.children:
-        walk_declaration(child, "")
+        if child.type == "file_scoped_namespace_declaration":
+            name_node = _child_by_field(child, "name")
+            file_namespace = _text(name_node).strip() if name_node is not None else ""
+            break
+    if file_namespace:
+        state["namespace"] = file_namespace
+    for child in root.children:
+        if child.type == "file_scoped_namespace_declaration":
+            continue
+        walk_declaration(child, file_namespace)
 
     return {
         "symbol_references": symbol_references,

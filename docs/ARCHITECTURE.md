@@ -162,3 +162,21 @@ Search / Symbol / Show  (wbkb search | symbol | string | show | stats)
 ## Out of Scope for v0
 
 具体 SQLite tables、DLL extraction、WorldBox/NeoModLoader/reference mod 索引流程均属于后续任务（Z1+），现在不做决定。
+
+## Unified Multi-Source Layer (v0.6)
+
+```text
+WorldBox ─────────────┐
+                     │
+NeoModLoader ─────────┼─→ Unified Declaration Index (schema v2, sources 表)
+                     │
+                     └─→ Cross-Source Reference Graph (NML → WorldBox)
+                               ↓
+                         Unified Query Layer ([source] 标识 / --source 过滤 / source:: 限定)
+```
+
+> Sources retain independent identities inside one local database.
+
+* extraction 泛化为 `extract <source_id>`：NML 输入 = registry 登记的核心 assembly 集合（依赖 DLL 保持 external），`source_mode=decompiled`，snapshot id 绑定 commit/assembly hashes。
+* 任何 `index` 命令都做 **complete unified rebuild**（~20s / 33MB），幂等 identity 含全部 source snapshot。
+* 跨源解析 precision-first：current source 优先，worldbox 同名类型绝不自动遮蔽；NML→WorldBox 边以 namespace/using/receiver 证据解析。

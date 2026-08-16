@@ -36,3 +36,14 @@ v2 = v1 声明层 + 引用层。SQL 定义：`schemas/schema-v2.sql`；v1 文档
 - virtual/interface 调用链接到 compile-time 目标；`wbkb overrides` / `wbkb derived` 经 inheritance graph 独立计算。
 - 不解析：复杂泛型推断、lambda/LINQ、delegate、dynamic、reflection、字符串→symbol。
 - 预定义类型（int/void/…）不产生 type_reference。
+
+## Multi-Source Semantics (Z5, schema 不变)
+
+v2 schema 自 Z3 起即为多源设计，Z5 直接启用，无 schema 变更（schema_version 仍为 2）：
+
+- `sources` 表同时登记 `worldbox` 与 `neomodloader`；所有 declaration/reference 行携带各自 `source_id`（数据库行 id，查询经 JOIN `sources`，不依赖固定行号）。
+- logical key 带源前缀：`type:{source}:{full_name}`、`method:{source}:{owner}.{sig}`、`field:{source}:{owner}.{name}`。
+- 跨源解析顺序（NML 文件内）：current source 优先 → worldbox 回退（namespace/using/receiver 证据支持时）→ external/unresolved；同名类型绝不盲绑。
+- `inheritance.target_type_id` 可跨源回链（NML 类型继承 WorldBox 基类）。
+- meta 记录 `snapshot:{source_id}` / `sources_count`，任一 source snapshot 变化 → index STALE。
+- 查询层：所有结果带 `[source]` 标识；`--source` 过滤、`source::Type` 限定、`refs --from-source`。

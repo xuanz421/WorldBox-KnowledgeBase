@@ -1,8 +1,8 @@
-"""WorldBox assembly -> decompiled raw source snapshot pipeline (Z2).
+"""Source extraction pipelines (Z2 WorldBox + Z5 NeoModLoader).
 
-Decompiled source is generated evidence, not hand-maintained code. The
-snapshot is keyed by game version + assembly SHA-256 and reproducible via
-`dotnet tool restore` + `python -m wbkb extract worldbox`.
+Decompiled source is generated evidence, not hand-maintained code. Snapshots
+are keyed by source identity (assembly SHA-256 / commit) and reproducible via
+`dotnet tool restore` + `python -m wbkb extract <source_id>`.
 """
 
 from __future__ import annotations
@@ -21,6 +21,11 @@ EXTRACTION_MANIFEST_SCHEMA_VERSION = 1
 GENERATED_ROOT = Path("data/generated/worldbox")
 SNAPSHOTS_DIR = GENERATED_ROOT / "snapshots"
 TMP_DIR = GENERATED_ROOT / ".tmp"
+
+NML_GENERATED_ROOT = Path("data/generated/neomodloader")
+NML_SNAPSHOTS_DIR = NML_GENERATED_ROOT / "snapshots"
+NML_TMP_DIR = NML_GENERATED_ROOT / ".tmp"
+NML_MIN_CSHARP_FILES = 20
 
 MIN_CSHARP_FILES = 50
 CORE_TYPES = ("Actor", "City", "Kingdom")
@@ -371,3 +376,220 @@ def _atomic_swap(snap_dir: Path, temp_dir: Path) -> None:
             os.rename(trash, snap_dir)  # restore previous snapshot
         raise
     shutil.rmtree(trash, ignore_errors=True)
+
+
+# --- NeoModLoader extraction (Z5) --------------------------------------------
+#
+# Input comes exclusively from the local registry (source_id=neomodloader):
+# the NML core assemblies it records. Dependency DLLs next to them (Harmony,
+# Mono.Cecil, ...) stay external and are never ingested. No matching local
+# source tree exists for the installed NML build, so the evidence baseline is
+# the decompiled assembly set (source_mode=decompiled).
+
+
+def _nml_source(registry: dict) -> dict:
+    source = (registry.get("sources") or {}).get("neomodloader")
+    if not source:
+        raise ExtractionError("neomodloader not found in local registry; run: python -m wbkb discover")
+    return source
+
+
+def nml_snapshot_id(registry: dict) -> str:
+    source = _nml_source(registry)
+    commit = (source.get("commit") or "").strip()
+    if commit:
+        return f"neomodloader-{commit[:12]}"
+    assemblies = source.get("assemblies") or []
+    if assemblies and assemblies[0].get("sha256"):
+        return f"neomodloader-{assemblies[0]['sha256'][:12]}"
+    raise ExtractionError("neomodloader registry entry has neither commit nor assemblies")
+
+
+def _verify_nml_assemblies(registry: dict) -> list[dict]:
+    """Every registered core assembly must exist and hash-match the registry."""
+    source = _nml_source(registry)
+    verified = []
+    for record in source.get("assemblies") or []:
+        path = record.get("path")
+        if not path or not Path(path).is_file():
+            raise ExtractionError(f"registered NML assembly missing on disk: {record.get('filename')}")
+        actual = util.sha256_file(path)
+        if actual != record.get("sha256"):
+            raise ExtractionError(
+                f"NML assembly changed since discovery: {record.get('filename')}; run: python -m wbkb discover"
+            )
+        verified.append(
+            {"path": path, "sha256": actual, "name": record.get("filename") or Path(path).stem}
+        )
+    if not verified:
+        raise ExtractionError("neomodloader registry entry records no assemblies")
+    return verified
+
+
+def nml_snapshot_state(repo_root: Path, registry: dict | None, extractor_info: dict | None = None) -> dict:
+    """OK / MISSING / STALE for the NML extraction snapshot."""
+    if registry is None or not (registry.get("sources") or {}).get("neomodloader"):
+        return {"state": "MISSING", "reason": "neomodloader not registered"}
+    try:
+        snap = nml_snapshot_id(registry)
+    except ExtractionError as exc:
+        return {"state": "MISSING", "reason": str(exc)}
+    manifest_path = Path(repo_root) / NML_SNAPSHOTS_DIR / snap / "extraction-manifest.json"
+    if not manifest_path.is_file():
+        return {"state": "MISSING", "snapshot": snap}
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {"state": "STALE", "snapshot": snap}
+    if manifest.get("status") != "completed":
+        return {"state": "STALE", "snapshot": snap}
+    if registry is not None:
+        try:
+            current = {a["sha256"] for a in _verify_nml_assemblies(registry)}
+        except ExtractionError:
+            return {"state": "STALE", "snapshot": snap, "reason": "registered assemblies changed"}
+        recorded = {a.get("sha256") for a in manifest.get("assemblies") or []}
+        if current != recorded:
+            return {"state": "STALE", "snapshot": snap, "reason": "assembly set changed"}
+    state = "OK"
+    if extractor_info and manifest.get("extractor", {}).get("version") != extractor_info["version"]:
+        state = "OK-EXTRACTOR-CHANGED"
+    return {"state": state, "snapshot": snap, "manifest": manifest}
+
+
+def perform_nml_extraction(
+    repo_root: Path,
+    registry: dict,
+    force: bool = False,
+    runner=subprocess,
+    extractor_info: dict | None = None,
+) -> dict:
+    repo_root = Path(repo_root)
+    assemblies = _verify_nml_assemblies(registry)
+    source = _nml_source(registry)
+    snap = nml_snapshot_id(registry)
+    snap_dir = repo_root / NML_SNAPSHOTS_DIR / snap
+    manifest_path = snap_dir / "extraction-manifest.json"
+
+    extractor = extractor_info or detect_extractor(repo_root, runner=runner)
+    if extractor is None:
+        raise ExtractionError(
+            "no decompiler available; run `dotnet tool restore` in the WBKB root (requires .NET SDK)"
+        )
+
+    recorded_hashes = {a["sha256"] for a in assemblies}
+    if manifest_path.is_file() and not force:
+        try:
+            existing = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            existing = None
+        if (
+            isinstance(existing, dict)
+            and existing.get("status") == "completed"
+            and existing.get("extractor", {}).get("version") == extractor["version"]
+            and {a.get("sha256") for a in existing.get("assemblies") or []} == recorded_hashes
+            and (snap_dir / "source").is_dir()
+        ):
+            return {"status": "UNCHANGED", "snapshot": snap, "dir": snap_dir, "manifest": existing}
+
+    temp_dir = repo_root / NML_TMP_DIR / snap
+    log_path = repo_root / "data/cache" / f"extract-{snap}.log"
+    shutil.rmtree(temp_dir, ignore_errors=True)
+    (temp_dir / "source").mkdir(parents=True)
+
+    cmd_log = []
+    for assembly in assemblies:
+        sub_dir = temp_dir / "source" / Path(assembly["name"]).stem
+        sub_dir.mkdir(parents=True, exist_ok=True)
+        cmd = ["dotnet", "ilspycmd", assembly["path"], "-p", "-o", str(sub_dir)]
+        cmd_log.append(" ".join(cmd))
+        try:
+            proc = runner.run(
+                cmd, cwd=str(repo_root), capture_output=True, text=True, timeout=DECOMPILE_TIMEOUT_SECONDS
+            )
+        except subprocess.TimeoutExpired:
+            shutil.rmtree(temp_dir, ignore_errors=True)
+            raise ExtractionError(f"decompiler timed out on {assembly['name']}; log: {log_path}")
+        if proc.returncode != 0:
+            log_path.parent.mkdir(parents=True, exist_ok=True)
+            log_path.write_text(
+                "\n\n---\n".join(cmd_log)
+                + f"\n\n--- stdout ---\n{proc.stdout or ''}\n--- stderr ---\n{proc.stderr or ''}\n",
+                encoding="utf-8",
+            )
+            shutil.rmtree(temp_dir, ignore_errors=True)
+            raise ExtractionError(
+                f"decompiler exited with {proc.returncode} on {assembly['name']}; log: {log_path}"
+            )
+
+    validation = validate_source(temp_dir / "source")
+    # evidence-driven core check: the assembly set must yield its own namespace
+    nml_namespace_types = _count_nml_namespace_types(temp_dir / "source")
+    ok = validation["ok"] and validation["csharp_files"] >= NML_MIN_CSHARP_FILES and nml_namespace_types > 0
+    if not ok:
+        problems = validation["problems"] or [f"only {validation['csharp_files']} .cs files"]
+        if nml_namespace_types == 0:
+            problems.append("no NeoModLoader-namespace types found in output")
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        log_path.write_text("\n".join(cmd_log), encoding="utf-8")
+        shutil.rmtree(temp_dir, ignore_errors=True)
+        raise ExtractionError("NML extraction validation failed: " + "; ".join(problems))
+
+    manifest = {
+        "schema_version": EXTRACTION_MANIFEST_SCHEMA_VERSION,
+        "source_id": "neomodloader",
+        "snapshot_id": snap,
+        "status": "completed",
+        "version": source.get("version"),
+        "commit": source.get("commit"),
+        "source_mode": "decompiled",
+        "assemblies": [
+            {"name": a["name"], "sha256": a["sha256"], "size": Path(a["path"]).stat().st_size}
+            for a in assemblies
+        ],
+        "extractor": {
+            "name": extractor["name"],
+            "version": extractor["version"],
+            "mode": extractor.get("mode"),
+            "install": extractor.get("install"),
+            "options": extractor.get("options", []),
+        },
+        "output": {
+            "csharp_files": validation["csharp_files"],
+            "total_files": validation["total_files"],
+            "total_bytes": validation["total_bytes"],
+            "project_files": validation["project_files"],
+        },
+        "validation": {
+            "nml_namespace_types": nml_namespace_types,
+            "content_problems": validation["problems"],
+        },
+        "notes": "Decompiled source is reconstructed reference material, not original source code.",
+        "generated_at": datetime.now(tz=timezone.utc).isoformat(timespec="seconds"),
+    }
+    (temp_dir / "extraction-manifest.json").write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+
+    status = "CREATED"
+    if snap_dir.exists():
+        status = "REPLACED-EXTRACTOR" if manifest_path.is_file() else "REPLACED"
+    _atomic_swap(snap_dir, temp_dir)
+    return {"status": status, "snapshot": snap, "dir": snap_dir, "manifest": manifest}
+
+
+def _count_nml_namespace_types(source_dir: Path) -> int:
+    """Probe the actual output for NeoModLoader's own namespace (evidence-driven)."""
+    count = 0
+    for base, _dirs, files in os.walk(source_dir):
+        for fn in files:
+            if not fn.lower().endswith(".cs"):
+                continue
+            path = Path(base) / fn
+            try:
+                text = path.read_text(encoding="utf-8", errors="replace")
+            except OSError:
+                continue
+            if re.search(r"^\s*namespace\s+NeoModLoader", text, re.MULTILINE):
+                count += 1
+    return count
