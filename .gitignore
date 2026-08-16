@@ -1,0 +1,44 @@
+# Generated / local data
+data/raw/*
+data/generated/*
+data/cache/*
+
+# Keep directory structure
+!data/raw/.gitkeep
+!data/generated/.gitkeep
+!data/cache/.gitkeep
+
+# Assemblies / binaries
+*.dll
+*.exe
+*.pdb
+
+# Decompiled bulk sources if later placed locally
+data/**/decompiled/
+
+# Databases
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Archives
+*.zip
+*.7z
+*.rar
+
+# IDE
+.vs/
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build/cache
+bin/
+obj/
+__pycache__/
+*.pyc
