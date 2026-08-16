@@ -11,7 +11,7 @@ from pathlib import Path
 
 from wbkb import csharp, indexer, query
 
-SCHEMA = (Path(__file__).resolve().parents[3] / "schemas" / "schema-v1.sql").read_text(encoding="utf-8")
+SCHEMA = (Path(__file__).resolve().parents[3] / "schemas" / "schema-v2.sql").read_text(encoding="utf-8")
 
 SAMPLE = b"""
 using System;

@@ -39,15 +39,25 @@ python -m wbkb doctor
 ```
 
 Query the index (search types/methods/fields/properties/strings/files,
-inspect a symbol, or show exact source context from the snapshot):
+inspect a symbol, navigate the reference graph, or show exact source
+context from the snapshot):
 
 ```bash
 python -m wbkb search miner --limit 20
 python -m wbkb symbol Actor
 python -m wbkb string citizen_job
 python -m wbkb show Actor.cs:3875 --context 10
+python -m wbkb refs Actor.data
+python -m wbkb callers "AssetLibrary.get(string)"
+python -m wbkb callees Actor.foo --depth 2
+python -m wbkb derived BaseSimObject --recursive
+python -m wbkb overrides BaseSimObject.update
 python -m wbkb stats
 ```
+
+Most query commands support `--json` for deterministic machine-readable
+output. Reference resolution is precision-first: ambiguous stays ambiguous,
+unknowns stay unresolved — never guessed.
 
 Decompiled snapshots and the index database stay local under
 `data/generated/` and are never committed.

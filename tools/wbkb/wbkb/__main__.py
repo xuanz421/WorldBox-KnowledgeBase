@@ -3,11 +3,16 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import sys
 from pathlib import Path
 
 from . import config, discovery, extractor, indexer, query, manifest as manifest_mod, registry as registry_mod, util
+
+
+def _rows_to_dicts(rows):
+    return [dict(r) if not isinstance(r, dict) else r for r in rows]
 
 
 def repo_root() -> Path:
@@ -211,6 +216,11 @@ def cmd_search(args) -> int:
         print(f"Search failed: {exc}", file=sys.stderr)
         return 1
     limit = result["limit"]
+    if args.json:
+        payload = {key: _rows_to_dicts(value) for key, value in result.items() if key != "limit"}
+        payload["limit"] = limit
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+        return 0
 
     print("Types")
     print("-----")
@@ -352,18 +362,180 @@ def cmd_stats(_args) -> int:
     print(f"Assembly          {meta.get('assembly_sha256', '?')[:12]}…")
     print(f"Snapshot          {meta.get('source_snapshot_id', '?')}")
     print(f"Extractor         {meta.get('extractor_name', '?')} {meta.get('extractor_version', '?')}")
-    print(f"Indexer           {meta.get('indexer_version', '?')} (schema v{meta.get('schema_version', '?')})")
+    print(f"Indexer           {meta.get('indexer_version', '?')} (schema v{meta.get('schema_version', '?')},"
+          f" resolver {meta.get('resolver_version', '?')})")
     print(f"Built at          {meta.get('built_at', '?')}")
     print(f"Source files      {counts['files']}"
           f"  (OK {stats['parse'].get('OK', 0)} / PARTIAL {stats['parse'].get('PARTIAL', 0)}"
           f" / FAILED {stats['parse'].get('FAILED', 0)})")
+    ref_status = stats.get("ref_status", {})
+    if ref_status:
+        print(f"Reference pass    {ref_status.get('OK', 0)} OK / {ref_status.get('PARTIAL', 0)} PARTIAL")
     print(f"Types             {counts['types']}")
     print(f"Methods           {counts['methods']}")
     print(f"Fields            {counts['fields']}")
     print(f"Properties        {counts['properties']}")
     print(f"Strings           {counts['strings']}")
     print(f"Inheritance edges {counts['inheritance']}")
+    cr = stats.get("call_resolution", {})
+    rr = stats.get("ref_resolution", {})
+    total_calls = sum(cr.values()) or 1
+    total_refs = sum(rr.values()) or 1
+    print(f"Symbol references {counts.get('symbol_references', 0)}"
+          f"  (resolved {rr.get('resolved', 0)} {rr.get('resolved', 0) / total_refs:.0%}"
+          f" / ambiguous {rr.get('ambiguous', 0)} {rr.get('ambiguous', 0) / total_refs:.0%}"
+          f" / unresolved {rr.get('unresolved', 0)} {rr.get('unresolved', 0) / total_refs:.0%}"
+          f" / external {rr.get('external', 0)} {rr.get('external', 0) / total_refs:.0%})")
+    print(f"Method calls      {counts.get('method_calls', 0)}"
+          f"  (resolved {cr.get('resolved', 0)} {cr.get('resolved', 0) / total_calls:.0%}"
+          f" / ambiguous {cr.get('ambiguous', 0)} {cr.get('ambiguous', 0) / total_calls:.0%}"
+          f" / unresolved {cr.get('unresolved', 0)} {cr.get('unresolved', 0) / total_calls:.0%}"
+          f" / external {cr.get('external', 0)} {cr.get('external', 0) / total_calls:.0%})")
+    print(f"Type references   {counts.get('type_references', 0)}")
     print(f"Database size     {_fmt_size(stats['db_size'])}  ({path.relative_to(root)})")
+    return 0
+
+
+def cmd_refs(args) -> int:
+    root = repo_root()
+    try:
+        result = query.refs(root, args.symbol, limit=args.limit, include_all=args.all)
+    except query.QueryError as exc:
+        print(f"Refs failed: {exc}", file=sys.stderr)
+        return 1
+    if result["target"]["kind"] == "not_found":
+        print(f"Symbol not found: {args.symbol}")
+        return 1
+    if result["target"]["kind"] == "ambiguous":
+        print(f"Ambiguous symbol: {args.symbol}")
+        for candidate in result["target"]["candidates"]:
+            print(f"  {candidate}")
+        return 2
+    if args.json:
+        print(json.dumps({"definition": result["definition"], "references": result["references"]}, ensure_ascii=False, indent=2))
+        return 0
+    print("Definition")
+    print("----------")
+    print(f"  {result['definition'] or '?'}")
+    print("\nReferences")
+    print("----------")
+    for ref in result["references"]:
+        print(f"  {ref['location']}  {ref['kind']}  [{ref['status']}]")
+    if not result["references"]:
+        print("  (none)")
+    if args.context > 0:
+        for ref in result["references"][: args.limit]:
+            _print_context(root, ref["location"], args.context)
+    print(f"\n(limit {args.limit}" + (", --all)" if args.all else ", resolved only)"))
+    return 0
+
+
+def _print_context(root: Path, location: str, context: int) -> None:
+    try:
+        snippet = query.show(root, location, context=context)
+    except query.QueryError:
+        return
+    print(f"\n  --- {location} ---")
+    for number, text in snippet["lines"]:
+        marker = ">" if number == snippet["line"] else " "
+        print(f"  {marker}{number:6d}  {text}")
+
+
+def cmd_callers(args) -> int:
+    root = repo_root()
+    try:
+        result = query.callers(root, args.symbol, limit=args.limit, include_all=args.all)
+    except query.QueryError as exc:
+        print(f"Callers failed: {exc}", file=sys.stderr)
+        return 1
+    if result["target"]["kind"] == "ambiguous":
+        print(f"Ambiguous symbol: {args.symbol}")
+        for candidate in result["target"]["candidates"]:
+            print(f"  {candidate}")
+        return 2
+    if args.json:
+        payload = {key: value for key, value in result.items() if key != "target"}
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+        return 0
+    print("Caller")
+    print("------")
+    for caller in result["callers"]:
+        print(f"  {caller['caller']}  [{caller['status']}]")
+    if not result["callers"]:
+        print("  (none)")
+    print(f"\n(limit {args.limit})")
+    return 0
+
+
+def cmd_callees(args) -> int:
+    root = repo_root()
+    try:
+        result = query.callees(root, args.symbol, depth=args.depth, limit=args.limit)
+    except query.QueryError as exc:
+        print(f"Callees failed: {exc}", file=sys.stderr)
+        return 1
+    if result["target"]["kind"] == "ambiguous":
+        print(f"Ambiguous symbol: {args.symbol}")
+        for candidate in result["target"]["candidates"]:
+            print(f"  {candidate}")
+        return 2
+    if args.json:
+        payload = {key: value for key, value in result.items() if key != "target"}
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+        return 0
+
+    def dump(entries, indent=2):
+        for entry in entries:
+            print(" " * indent + f"-> {entry['call']}  [{entry['status']}]  {entry['location']}")
+            dump(entry["children"], indent + 2)
+
+    print("Callees")
+    print("-------")
+    dump(result["tree"])
+    if not result["tree"]:
+        print("  (none)")
+    print(f"\n(depth {args.depth}, limit {args.limit})")
+    return 0
+
+
+def cmd_derived(args) -> int:
+    root = repo_root()
+    try:
+        result = query.derived(root, args.symbol, recursive=args.recursive)
+    except query.QueryError as exc:
+        print(f"Derived failed: {exc}", file=sys.stderr)
+        return 1
+    if not result.get("found"):
+        print(f"Type not found: {args.symbol}")
+        return 1
+    if result.get("ambiguous"):
+        print(f"Ambiguous type: {args.symbol}")
+        for candidate in result["candidates"]:
+            print(f"  {candidate}")
+        return 2
+    label = "Derived (recursive)" if result["recursive"] else "Derived (direct)"
+    print(label)
+    print("-" * len(label))
+    for name in result["derived"]:
+        print(f"  {name}")
+    if not result["derived"]:
+        print("  (none)")
+    return 0
+
+
+def cmd_overrides(args) -> int:
+    root = repo_root()
+    try:
+        result = query.overrides(root, args.symbol)
+    except query.QueryError as exc:
+        print(f"Overrides failed: {exc}", file=sys.stderr)
+        return 1
+    print("Overrides")
+    print("---------")
+    for entry in result["overrides"]:
+        print(f"  {entry}")
+    if not result["overrides"]:
+        print("  (none)")
     return 0
 
 
@@ -418,6 +590,12 @@ def cmd_doctor(_args) -> int:
     index = indexer.index_state(root, registry)
     print(f"{'WorldBox Index':<16}{index['state']}")
     schema = (index.get("meta") or {}).get("schema_version")
+    has_refs = (index.get("meta") or {}).get("resolver_version") is not None
+    if index["state"] == "OK":
+        graph_state = "OK" if has_refs else "MISSING"
+    else:
+        graph_state = index["state"]
+    print(f"{'Reference Graph':<16}{graph_state}")
     print(f"{'SQLite Schema':<16}{'v' + schema if schema else '-'}")
 
     hard_ok = wb["root"] and wb["assembly"]
@@ -457,10 +635,38 @@ def main(argv: list[str] | None = None) -> int:
     search_parser.add_argument("--limit", type=int, default=query.DEFAULT_LIMIT)
     search_parser.add_argument("--exact", action="store_true", help="exact match instead of substring")
     search_parser.add_argument("--all", action="store_true", help="include compiler-generated symbols")
+    search_parser.add_argument("--json", action="store_true", help="machine-readable output")
 
     symbol_parser = sub.add_parser("symbol", help="inspect a type by name")
     symbol_parser.add_argument("name")
     symbol_parser.add_argument("--all", action="store_true", help="include compiler-generated types")
+    symbol_parser.add_argument("--json", action="store_true", help="machine-readable output")
+
+    refs_parser = sub.add_parser("refs", help="definition + references of a symbol (Type or Type.member)")
+    refs_parser.add_argument("symbol")
+    refs_parser.add_argument("--limit", type=int, default=query.RELATION_LIMIT)
+    refs_parser.add_argument("--all", action="store_true", help="include unresolved/external references")
+    refs_parser.add_argument("--context", type=int, default=0, help="attach source context lines")
+    refs_parser.add_argument("--json", action="store_true", help="machine-readable output")
+
+    callers_parser = sub.add_parser("callers", help="who calls this method")
+    callers_parser.add_argument("symbol")
+    callers_parser.add_argument("--limit", type=int, default=query.RELATION_LIMIT)
+    callers_parser.add_argument("--all", action="store_true", help="include ambiguous/unresolved callers")
+    callers_parser.add_argument("--json", action="store_true", help="machine-readable output")
+
+    callees_parser = sub.add_parser("callees", help="what this method calls")
+    callees_parser.add_argument("symbol")
+    callees_parser.add_argument("--depth", type=int, default=1, help="1-5, default 1")
+    callees_parser.add_argument("--limit", type=int, default=query.RELATION_LIMIT)
+    callees_parser.add_argument("--json", action="store_true", help="machine-readable output")
+
+    derived_parser = sub.add_parser("derived", help="types directly inheriting from a type")
+    derived_parser.add_argument("symbol")
+    derived_parser.add_argument("--recursive", action="store_true")
+
+    overrides_parser = sub.add_parser("overrides", help="derived overrides of a base method")
+    overrides_parser.add_argument("symbol", help="Type.method")
 
     string_parser = sub.add_parser("string", help="search string literal occurrences")
     string_parser.add_argument("value")
@@ -490,6 +696,16 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_show(args)
     if args.command == "stats":
         return cmd_stats(args)
+    if args.command == "refs":
+        return cmd_refs(args)
+    if args.command == "callers":
+        return cmd_callers(args)
+    if args.command == "callees":
+        return cmd_callees(args)
+    if args.command == "derived":
+        return cmd_derived(args)
+    if args.command == "overrides":
+        return cmd_overrides(args)
     return cmd_doctor(args)
 
 

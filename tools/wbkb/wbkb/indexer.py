@@ -15,13 +15,13 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from . import csharp, extractor, util
+from . import csharp, extractor, references, resolver as resolver_mod, util
 
-SCHEMA_VERSION = 1
-INDEXER_VERSION = "1.0.0"
+SCHEMA_VERSION = 2
+INDEXER_VERSION = "2.0.0"
 DB_REL = Path("data/generated/index/wbkb.db")
 TMP_DB_REL = Path("data/generated/index/wbkb.tmp.db")
-SCHEMA_REL = Path("schemas/schema-v1.sql")
+SCHEMA_REL = Path("schemas/schema-v2.sql")
 
 MAX_FAILED_RATIO = 0.01  # more than 1% FAILED files => validation failure
 CORE_TYPES = ("Actor", "City", "Kingdom")
@@ -253,6 +253,7 @@ def build_index(
                 totals["inheritance"] += 1
 
         _resolve_inheritance(conn)
+        _run_reference_pass(conn, source_dir, cs_files, stats, db_source_id)
         _write_meta(conn, meta, stats, totals)
         conn.commit()
         _validate_index(
@@ -304,10 +305,76 @@ def _resolve_inheritance(conn: sqlite3.Connection) -> None:
             conn.execute("UPDATE inheritance SET target_type_id = ? WHERE id = ?", (resolved, edge_id))
 
 
+def _run_reference_pass(conn: sqlite3.Connection, source_dir: Path, cs_files: list[Path], stats: dict, db_source_id: int) -> None:
+    """Pass 2: resolve and record symbol references, call edges, type references."""
+    symbol_resolver = resolver_mod.Resolver(conn)
+    type_ids = {full: info["id"] for full, info in symbol_resolver.types.items()}
+    method_ids: dict[tuple[str, str], int] = {}
+    for owner, by_name in symbol_resolver.methods.items():
+        for methods in by_name.values():
+            for method in methods:
+                method_ids[(owner, method["signature"])] = method["id"]
+
+    file_ids = {row[0]: row[1] for row in conn.execute("SELECT relative_path, id FROM files")}
+    for path in cs_files:
+        rel = path.relative_to(source_dir).as_posix()
+        file_id = file_ids.get(rel)
+        if file_id is None:
+            continue
+        try:
+            code = path.read_bytes()
+            result = references.extract_references(
+                code, references.ReferenceContext(symbol_resolver, file_id, type_ids, method_ids)
+            )
+            for row in result["symbol_references"]:
+                conn.execute(
+                    "INSERT INTO symbol_references (source_id, from_file_id, from_type_id, from_method_id,"
+                    " target_kind, target_name, target_logical_key, target_id, reference_kind,"
+                    " start_line, start_column, end_line, end_column, resolution_status, resolution_confidence)"
+                    " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                    (
+                        db_source_id, row["from_file_id"], row["from_type_id"], row["from_method_id"],
+                        row["target_kind"], row["target_name"], row["target_logical_key"], row["target_id"],
+                        row["reference_kind"], row["start_line"], row["start_column"],
+                        row["end_line"], row["end_column"], row["resolution_status"],
+                        row["resolution_confidence"],
+                    ),
+                )
+            for row in result["method_calls"]:
+                conn.execute(
+                    "INSERT INTO method_calls (source_id, caller_method_id, callee_method_id, callee_name,"
+                    " callee_signature_hint, declaring_type_hint, file_id, line, column, resolution_status)"
+                    " VALUES (?,?,?,?,?,?,?,?,?,?)",
+                    (
+                        db_source_id, row["caller_method_id"], row["callee_method_id"], row["callee_name"],
+                        row["callee_signature_hint"], row["declaring_type_hint"], row["file_id"],
+                        row["line"], row["column"], row["resolution_status"],
+                    ),
+                )
+            for row in result["type_references"]:
+                conn.execute(
+                    "INSERT INTO type_references (source_id, from_file_id, from_type_id, from_method_id,"
+                    " target_type_id, target_name, reference_kind, line, resolution_status)"
+                    " VALUES (?,?,?,?,?,?,?,?,?)",
+                    (
+                        db_source_id, row["from_file_id"], row["from_type_id"], row["from_method_id"],
+                        row["target_type_id"], row["target_name"], row["reference_kind"],
+                        row["line"], row["resolution_status"],
+                    ),
+                )
+        except Exception as exc:  # per-file best-effort: keep declarations, mark PARTIAL
+            stats["REF_PARTIAL"] = stats.get("REF_PARTIAL", 0) + 1
+            conn.execute(
+                "UPDATE files SET reference_status='PARTIAL', reference_error=? WHERE id=?",
+                (str(exc)[:200], file_id),
+            )
+
+
 def _write_meta(conn: sqlite3.Connection, meta: dict, stats: dict, totals: dict) -> None:
     entries = {
         "schema_version": str(SCHEMA_VERSION),
         "indexer_version": INDEXER_VERSION,
+        "resolver_version": resolver_mod.RESOLVER_VERSION,
         "source_id": "worldbox",
         "worldbox_version": meta.get("worldbox_version") or "unknown",
         "assembly_sha256": meta.get("assembly_sha256") or "",
@@ -335,6 +402,18 @@ def _validate_index(conn: sqlite3.Connection, cs_count: int, stats: dict, requir
         count = conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
         if count <= 0:
             problems.append(f"table {table} is empty")
+    # reference layer sanity (schema v2) — strict mode only; tiny fixtures
+    # may legitimately contain no calls
+    if require_core_types:
+        for table in ("symbol_references", "method_calls", "type_references"):
+            count = conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
+            if count <= 0:
+                problems.append(f"table {table} is empty")
+        resolved_calls = conn.execute(
+            "SELECT COUNT(*) FROM method_calls WHERE resolution_status='resolved'"
+        ).fetchone()[0]
+        if resolved_calls <= 0:
+            problems.append("no resolved method calls — resolver failure?")
     if require_core_types:
         for name in CORE_TYPES:
             found = conn.execute(
@@ -366,8 +445,9 @@ def index_state(repo_root: Path, registry: dict | None) -> dict:
         return {"state": "BROKEN", "reason": "unreadable or missing meta table"}
     state = {"state": "OK", "meta": meta, "db": path}
     if meta.get("schema_version") != str(SCHEMA_VERSION):
-        state["state"] = "BROKEN"
-        state["reason"] = f"schema mismatch: {meta.get('schema_version')}"
+        # older schema is rebuildable, not corrupt
+        state["state"] = "STALE"
+        state["reason"] = f"schema v{meta.get('schema_version')} (current v{SCHEMA_VERSION}); rebuild required"
         return state
     if registry is not None:
         source = (registry.get("sources") or {}).get("worldbox")
@@ -407,6 +487,7 @@ def perform_indexing(repo_root: Path, registry: dict, force: bool = False) -> di
         if existing and (
             existing.get("schema_version") == str(SCHEMA_VERSION)
             and existing.get("indexer_version") == INDEXER_VERSION
+            and existing.get("resolver_version") == resolver_mod.RESOLVER_VERSION
             and existing.get("source_snapshot_id") == snap_id
             and existing.get("extractor_version") == (meta["extractor_version"] or "")
         ):
@@ -428,12 +509,32 @@ def read_stats(db_file: Path) -> dict:
     try:
         meta = dict(conn.execute("SELECT key, value FROM meta").fetchall())
         counts = {}
-        for table in ("files", "types", "methods", "fields", "properties", "strings", "inheritance", "sources"):
+        for table in (
+            "files", "types", "methods", "fields", "properties", "strings",
+            "inheritance", "sources", "symbol_references", "method_calls", "type_references",
+        ):
             counts[table] = conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
         parse = dict(
             conn.execute("SELECT parse_status, COUNT(*) FROM files GROUP BY parse_status").fetchall()
         )
+        ref_status = dict(
+            conn.execute("SELECT reference_status, COUNT(*) FROM files GROUP BY reference_status").fetchall()
+        )
+        call_resolution = dict(
+            conn.execute("SELECT resolution_status, COUNT(*) FROM method_calls GROUP BY resolution_status").fetchall()
+        )
+        ref_resolution = dict(
+            conn.execute("SELECT resolution_status, COUNT(*) FROM symbol_references GROUP BY resolution_status").fetchall()
+        )
         size = Path(db_file).stat().st_size
     finally:
         conn.close()
-    return {"meta": meta, "counts": counts, "parse": parse, "db_size": size}
+    return {
+        "meta": meta,
+        "counts": counts,
+        "parse": parse,
+        "ref_status": ref_status,
+        "call_resolution": call_resolution,
+        "ref_resolution": ref_resolution,
+        "db_size": size,
+    }

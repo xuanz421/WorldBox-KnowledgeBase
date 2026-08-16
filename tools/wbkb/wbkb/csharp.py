@@ -73,9 +73,19 @@ def _row(node) -> int:
     return point[0] if isinstance(point, (tuple, list)) else point.row
 
 
+def _start_col(node) -> int:
+    point = node.start_point
+    return point[1] if isinstance(point, (tuple, list)) else point.column
+
+
 def _end_row(node) -> int:
     point = node.end_point
     return point[0] if isinstance(point, (tuple, list)) else point.row
+
+
+def _end_col(node) -> int:
+    point = node.end_point
+    return point[1] if isinstance(point, (tuple, list)) else point.column
 
 
 def _child_by_field(node, name):
@@ -246,13 +256,18 @@ class _FileCollector:
         )
 
 
-def parse_source(code: bytes) -> dict:
-    """Parse one C# file and extract indexable declarations (best-effort)."""
+def get_parser():
+    """Shared tree-sitter C# parser (raises if deps are missing)."""
     if not TREE_SITTER_AVAILABLE:
         raise RuntimeError(
             "tree-sitter packages missing; run: pip install -r tools/wbkb/requirements.txt"
         )
-    tree = _PARSER.parse(code)
+    return _PARSER
+
+
+def parse_source(code: bytes) -> dict:
+    """Parse one C# file and extract indexable declarations (best-effort)."""
+    tree = get_parser().parse(code)
     root = tree.root_node
     collector = _FileCollector()
     type_counter = 0

@@ -57,6 +57,28 @@ Future Structured Index  (Z3)
 * 幂等：相同 assembly + extractor → `UNCHANGED`，跳过重新反编译；`--force` 才允许重建。临时目录验证通过后才原子替换 snapshot。
 * 完整反编译源码只留在本地：`data/generated/*` 不进 Git，也不上传。
 
+## Reference Graph Layer (v0.5)
+
+```text
+Raw Source
+   ↓
+Declaration Index  (schema v1 layer)
+   ↓
+Symbol Resolution  (tools/wbkb/resolver.py — 继承链 + 作用域 + overload 仲裁)
+   ↓
+Reference Graph  (symbol_references / method_calls / type_references, schema v2)
+   ↓
+Query Layer  (refs | callers | callees | derived | overrides | show, 支持 --json)
+```
+
+> WBKB reference resolution is best-effort static analysis and explicitly
+> preserves unresolved/ambiguous edges rather than guessing.
+
+* 两遍构建：Pass 1 声明 → Pass 2 引用（局部作用域推导：参数/局部/`var new`/cast/as/链式访问/隐式 this）。
+* resolution status 四态：resolved / ambiguous / unresolved / external，precision 优先于 recall。
+* virtual/interface 调用按 compile-time 目标链接；`derived`/`overrides` 经 inheritance graph 独立查询。
+* 幂等 identity = source snapshot + schema version + indexer version + resolver version。
+
 ## Structured Index Layer (v0.4)
 
 ```text
