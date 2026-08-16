@@ -23,10 +23,21 @@ WBKB 未来负责：
 * WBKB 不修改 reference mods
 * WBKB 不修改 NeoModLoader
 
+## Quick Start
+
+Configure / auto-discover sources:
+
+```bash
+cd tools/wbkb
+python -m wbkb discover
+python -m wbkb doctor
+```
+
 ## Layout
 
 ```text
 docs/        architecture documents
+config/      local source config (wbkb.local.json, not in Git; example committed)
 schemas/     future database / structured data schemas
 tools/       future ingestion, indexing, search CLIs
 knowledge/   curated high-level knowledge with evidence sources

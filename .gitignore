@@ -8,6 +8,9 @@ data/cache/*
 !data/generated/.gitkeep
 !data/cache/.gitkeep
 
+# Machine-specific local config (absolute paths)
+config/wbkb.local.json
+
 # Assemblies / binaries
 *.dll
 *.exe

@@ -22,6 +22,23 @@ Humans + Coding Agents
 * **Knowledge / Retrieval** — 面向人类与 coding agents 的检索入口：structured code search、API usage lookup、pattern lookup、version diff。
 * **Humans + Coding Agents** — 最终消费者（Codex / ZCode / 其他 agent，以及人类）。
 
+## Discovery Layer (v0.2)
+
+```text
+External Sources (read-only)
+      ↓
+Discovery  (tools/wbkb — python -m wbkb discover)
+      ↓
+Local Source Registry  (data/cache/source-registry.local.json — 不进 Git，含绝对路径)
+      ↓
+Committed Source Manifest  (manifests/source-registry.json — 进 Git，仅身份信息)
+```
+
+* `config/wbkb.local.json`（不进 Git）记录本机源位置；`config/wbkb.example.json`（进 Git）是 schema 模板。发现优先级：existing local config → 兄弟项目 csproj `<WorldBoxDir>` → Steam library 探测。
+* **Committed manifest = source identity**（hash、版本、稳定 ID：`worldbox` / `worldbox-publicized` / `neomodloader` / `ref:<name>`）；**Local registry = source location**（绝对路径、时间戳）。二者严格分离，manifest 不得包含本机绝对路径。
+* External sources 严格 read-only；重复运行 discover 输出每个源的 `UNCHANGED / CHANGED / NEW / MISSING`，内容未变时不重写文件。
+* `python -m wbkb doctor` 提供简短健康检查（optional source 缺失不算致命）。
+
 ## Directory Responsibilities
 
 ### `tools/`

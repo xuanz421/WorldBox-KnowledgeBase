@@ -1,0 +1,156 @@
+{
+  "generated_at": "2026-08-16T03:39:17+00:00",
+  "neomodloader": {
+    "assemblies": [
+      {
+        "filename": "NeoModLoader.dll",
+        "sha256": "e05ffb01b1e29a07f1bdd94d7bde2a00a536c8ac8703a63f51bbba743e40f93d",
+        "size": 22558208
+      },
+      {
+        "filename": "NeoModLoader.AutoUpdate_memload.dll",
+        "sha256": "1d153a0cf30e5de354c55f88d25c349776961eed8f141d7b68b4ca3664a1dc43",
+        "size": 26112
+      }
+    ],
+    "commit": "02266fe8185d940c4065185de0a117c18975cf09",
+    "version": null
+  },
+  "reference_mods": [
+    {
+      "csharp_file_count": 23,
+      "git_commit": null,
+      "id": "ref:actorhistory",
+      "name": "角色史书ActorHistory"
+    },
+    {
+      "csharp_file_count": 1,
+      "git_commit": null,
+      "id": "ref:buzzoff",
+      "name": "BuzzOff_1.1.1"
+    },
+    {
+      "csharp_file_count": 23,
+      "git_commit": null,
+      "id": "ref:chinesename",
+      "name": "中文名"
+    },
+    {
+      "csharp_file_count": 2,
+      "git_commit": null,
+      "id": "ref:creepmobboost",
+      "name": "天灾强化"
+    },
+    {
+      "csharp_file_count": 8,
+      "git_commit": null,
+      "id": "ref:familytree",
+      "name": "FamilyTree"
+    },
+    {
+      "csharp_file_count": 198,
+      "git_commit": null,
+      "id": "ref:guigu-cultivation",
+      "name": "Guigu_Cultivation_1.0.6.2"
+    },
+    {
+      "csharp_file_count": 13,
+      "git_commit": null,
+      "id": "ref:incensefiredway",
+      "name": "IncensefiredWay_0.0.4.1"
+    },
+    {
+      "csharp_file_count": 3,
+      "git_commit": null,
+      "id": "ref:mapdeal",
+      "name": "Map Deal"
+    },
+    {
+      "csharp_file_count": 2,
+      "git_commit": null,
+      "id": "ref:nerffiredamage",
+      "name": "Nerf Fire Damage"
+    },
+    {
+      "csharp_file_count": 10,
+      "git_commit": null,
+      "id": "ref:optime",
+      "name": "Optime"
+    },
+    {
+      "csharp_file_count": 104,
+      "git_commit": null,
+      "id": "ref:powerbox",
+      "name": "PowerBox"
+    },
+    {
+      "csharp_file_count": 27,
+      "git_commit": null,
+      "id": "ref:sandbox",
+      "name": "Sandbox_1.0.8"
+    },
+    {
+      "csharp_file_count": 20,
+      "git_commit": null,
+      "id": "ref:shtoolkitmod0.1.4-worldbox",
+      "name": "寒海的辅助工具"
+    },
+    {
+      "csharp_file_count": 39,
+      "git_commit": null,
+      "id": "ref:thefantasyworld",
+      "name": "TheFantasyWorld_0.8.6"
+    },
+    {
+      "csharp_file_count": 1,
+      "git_commit": null,
+      "id": "ref:unlock-all",
+      "name": "Unlock all"
+    },
+    {
+      "csharp_file_count": 2,
+      "git_commit": null,
+      "id": "ref:worldresilience",
+      "name": "WorldResilience_0.4.0"
+    },
+    {
+      "csharp_file_count": 78,
+      "git_commit": null,
+      "id": "ref:xaviinationtypes",
+      "name": "Xavii's Nation Types Mod (XNTM)"
+    },
+    {
+      "csharp_file_count": 1,
+      "git_commit": null,
+      "id": "ref:寒海的全解锁",
+      "name": "寒海的全解锁"
+    },
+    {
+      "csharp_file_count": 110,
+      "git_commit": null,
+      "id": "ref:玄鉴仙族",
+      "name": "玄鉴仙族"
+    },
+    {
+      "csharp_file_count": 55,
+      "git_commit": null,
+      "id": "ref:玄门道界",
+      "name": "玄门道界_beta1.1.3"
+    },
+    {
+      "csharp_file_count": 1,
+      "git_commit": null,
+      "id": "ref:简单汉化",
+      "name": "简单汉化"
+    }
+  ],
+  "schema_version": 1,
+  "worldbox": {
+    "assembly_sha256": "51d275f0168be2f6ca26341ab292406714e694e0270eafcb25b999d5df6dd69f",
+    "assembly_size": 4535296,
+    "game_version": "0.51.2",
+    "game_version_status": "verified:local-metadata",
+    "publicized_sha256": "8c54a0b93a3b929834fb426fce8ce66344444e7709484956ddf04267de718234",
+    "steam_buildid": "19962337"
+  }
+}
