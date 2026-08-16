@@ -57,6 +57,30 @@ Future Structured Index  (Z3)
 * 幂等：相同 assembly + extractor → `UNCHANGED`，跳过重新反编译；`--force` 才允许重建。临时目录验证通过后才原子替换 snapshot。
 * 完整反编译源码只留在本地：`data/generated/*` 不进 Git，也不上传。
 
+## Structured Index Layer (v0.4)
+
+```text
+External Sources
+       ↓
+Discovery / Registry
+       ↓
+Extraction
+       ↓
+Raw Source Snapshot
+       ↓
+Structured Index  (tools/wbkb — python -m wbkb index worldbox, tree-sitter C# parser)
+       ↓
+SQLite  (data/generated/index/wbkb.db, schema v1, 不进 Git)
+       ↓
+Search / Symbol / Show  (wbkb search | symbol | string | show | stats)
+```
+
+* raw source = **generated evidence**；index = **structured retrieval layer**——只存原始事实、source location、symbol identity、relationships、searchable text，不存 LLM 摘要。
+* 索引以 source snapshot 为 key（assembly sha + extractor 版本），数据库 meta 自描述对应关系；重复运行 `index worldbox` 在输入未变时返回 UNCHANGED。
+* 解析 best-effort：单文件 parse failure 记录 parse_status（OK/PARTIAL/FAILED）后继续，失败率超阈值才判定 index 无效。
+* 所有查询结果都带 `relative_path:line`（相对 snapshot，无机器路径）；`show` 只能读 snapshot 内文件（path traversal 防护）。
+* deterministic tooling：全程不调用 LLM/外部 API，可无限免费 rebuild。
+
 ## Directory Responsibilities
 
 ### `tools/`

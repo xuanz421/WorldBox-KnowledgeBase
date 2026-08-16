@@ -25,18 +25,32 @@ WBKB 未来负责：
 
 ## Quick Start
 
-Configure / auto-discover sources, then extract the registered WorldBox
+Configure / auto-discover sources, extract the registered WorldBox
 Assembly-CSharp into a local generated source snapshot (requires .NET SDK;
-run `dotnet tool restore` once in the repository root):
+run `dotnet tool restore` once in the repository root), then build the
+structured SQLite index (requires `pip install -r tools/wbkb/requirements.txt`):
 
 ```bash
 cd tools/wbkb
 python -m wbkb discover
 python -m wbkb extract worldbox
+python -m wbkb index worldbox
 python -m wbkb doctor
 ```
 
-Decompiled snapshots stay local under `data/generated/` and are never committed.
+Query the index (search types/methods/fields/properties/strings/files,
+inspect a symbol, or show exact source context from the snapshot):
+
+```bash
+python -m wbkb search miner --limit 20
+python -m wbkb symbol Actor
+python -m wbkb string citizen_job
+python -m wbkb show Actor.cs:3875 --context 10
+python -m wbkb stats
+```
+
+Decompiled snapshots and the index database stay local under
+`data/generated/` and are never committed.
 
 ## Layout
 
