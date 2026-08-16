@@ -1,0 +1,997 @@
+[
+  {
+    "source_id": "ref:guigu-cultivation",
+    "name": "Guigu Cultivation",
+    "tier": "A",
+    "summary": "完整修仙/武道体系：月结修炼、境界突破、功法绝技、轮回转世、宗门王国社会系统，含大量读档稳定性补丁",
+    "primary_systems": [
+      "Actor",
+      "Traits",
+      "Combat",
+      "Kingdom",
+      "Save/Persistence"
+    ],
+    "secondary_systems": [
+      "City",
+      "Events",
+      "UI",
+      "World",
+      "Mod Lifecycle",
+      "Utility"
+    ],
+    "techniques": [
+      "Harmony Prefix",
+      "Harmony Postfix",
+      "Harmony Transpiler",
+      "Reflection",
+      "Asset registration",
+      "Custom data",
+      "Save/load",
+      "Event subscription",
+      "UI injection",
+      "Localization"
+    ],
+    "worldbox_api_areas": [
+      "Actor.data",
+      "Actor.updateStats",
+      "AssetManager",
+      "Kingdom.setKing",
+      "MapBox.on_world_loaded",
+      "BatchActors",
+      "SaveManager",
+      "TabManager.CreateTab"
+    ],
+    "nml_api_areas": [
+      "BasicMod<T>.OnModLoad (Verified)",
+      "BasicMod<T>.GetConfig (Unverified)"
+    ],
+    "harmony": true,
+    "ui": true,
+    "assets": true,
+    "persistence": true,
+    "key_files": [
+      "mods/guigu-cultivation.md"
+    ],
+    "pattern_candidates": [
+      "per-patch-isolated-patching",
+      "actor-data-key-state-store",
+      "frame-sliced-world-simulation",
+      "save-slot-file-persistence"
+    ],
+    "confidence": "Mostly Verified",
+    "profile": "mods/guigu-cultivation.md"
+  },
+  {
+    "source_id": "ref:powerbox",
+    "name": "PowerBox",
+    "tier": "A",
+    "summary": "NML Feature 体系实现 40+ 新神力（建筑升降级/指定国王/创建文化宗教氏族/特殊生物），Feature 自动发现的教学样本",
+    "primary_systems": [
+      "Assets",
+      "UI",
+      "Mod Lifecycle"
+    ],
+    "secondary_systems": [
+      "Kingdom",
+      "City",
+      "Culture",
+      "Religion",
+      "Actor",
+      "Diplomacy",
+      "Utility"
+    ],
+    "techniques": [
+      "NML Feature registration",
+      "Asset registration",
+      "UI injection",
+      "Custom scheduler",
+      "Reflection"
+    ],
+    "worldbox_api_areas": [
+      "AssetManager.drops",
+      "GodPower",
+      "DropAsset",
+      "Kingdom.setKing",
+      "Actor.setProfession",
+      "Finder.getUnitsFromChunk",
+      "TabManager.CreateTab"
+    ],
+    "nml_api_areas": [
+      "NeoModLoader.api.features.* (Verified)",
+      "BasicMod<T> (Verified)",
+      "ResourcesFinder (Unverified)"
+    ],
+    "harmony": true,
+    "ui": true,
+    "assets": true,
+    "persistence": false,
+    "key_files": [
+      "mods/powerbox.md"
+    ],
+    "pattern_candidates": [
+      "nml-feature-per-power",
+      "godpower-dropasset-pair",
+      "custom-power-tab-sections",
+      "clone-derive-actor-asset"
+    ],
+    "confidence": "Verified",
+    "profile": "mods/powerbox.md"
+  },
+  {
+    "source_id": "ref:xavii-nation-types",
+    "name": "Xavii Nation Types",
+    "tier": "A",
+    "summary": "57 种国家类型系统（继承模式驱动王位/头衔/意见）+ Land Types 城市加成 + BetterWars 战争结局重做 + 国策法",
+    "primary_systems": [
+      "Kingdom",
+      "Diplomacy",
+      "Traits",
+      "Events"
+    ],
+    "secondary_systems": [
+      "City",
+      "Save/Persistence",
+      "UI",
+      "Culture",
+      "Religion",
+      "Combat",
+      "World",
+      "Mod Lifecycle"
+    ],
+    "techniques": [
+      "Harmony Prefix",
+      "Harmony Postfix",
+      "Custom asset",
+      "Custom data",
+      "UI injection",
+      "Localization"
+    ],
+    "worldbox_api_areas": [
+      "AssetManager.kingdoms_traits",
+      "KingdomTrait",
+      "WorldLogAsset",
+      "kingdom.data.custom_data_string",
+      "KingdomBehCheckKing.execute",
+      "WarManager",
+      "SuccessionTool.findNextHeir"
+    ],
+    "nml_api_areas": [
+      "BasicMod<T> (Verified)",
+      "ModObjectFeature<Harmony> (Verified)"
+    ],
+    "harmony": true,
+    "ui": true,
+    "assets": true,
+    "persistence": true,
+    "key_files": [
+      "mods/xavii-nation-types.md"
+    ],
+    "pattern_candidates": [
+      "kingdom-trait-custom-data-hybrid",
+      "worldlog-asset-text-replacer",
+      "behaviour-node-prefix-system-tick",
+      "definition-table-driven-content"
+    ],
+    "confidence": "Mostly Verified",
+    "profile": "mods/xavii-nation-types.md"
+  },
+  {
+    "source_id": "ref:xuanjian-xianzu",
+    "name": "玄鉴仙族 (WuLin)",
+    "tier": "A",
+    "summary": "修仙文明模拟：境界 trait/法宝物品/洞天建筑/权柄争夺，反编译代码，硬依赖 VideoCopilot",
+    "primary_systems": [
+      "Actor",
+      "Traits",
+      "Buildings",
+      "Combat",
+      "Items",
+      "UI",
+      "Save/Persistence"
+    ],
+    "secondary_systems": [
+      "World",
+      "Events",
+      "Utility",
+      "Mod Lifecycle"
+    ],
+    "techniques": [
+      "Harmony Prefix",
+      "Harmony Postfix",
+      "Reflection",
+      "Custom data",
+      "Save/load",
+      "Asset registration",
+      "UI injection"
+    ],
+    "worldbox_api_areas": [
+      "AssetManager.traits",
+      "Actor.getHit",
+      "MapBox.updateSimulation",
+      "World.world.buildings.addBuilding",
+      "ActorEquipmentSlot.setItem",
+      "MapStats.custom_data"
+    ],
+    "nml_api_areas": [
+      "BasicMod.OnModLoad (Verified)",
+      "TabManager/PowerButtonCreator (Verified)"
+    ],
+    "harmony": true,
+    "ui": true,
+    "assets": true,
+    "persistence": true,
+    "key_files": [
+      "mods/xuanjian-xianzu.md"
+    ],
+    "pattern_candidates": [
+      "safe-harmony-batch-apply",
+      "world-string-tsv-persistence",
+      "sim-tick-bus-postfix"
+    ],
+    "confidence": "Mostly Verified",
+    "profile": "mods/xuanjian-xianzu.md"
+  },
+  {
+    "source_id": "ref:actorhistory",
+    "name": "ActorHistory",
+    "tier": "A",
+    "summary": "收藏单位生平史书：钩 40+ 事件按 7 类叙事生成着色文本，写 SQLite+txt，NML 窗口 UI + 热键",
+    "primary_systems": [
+      "Events",
+      "Save/Persistence",
+      "UI"
+    ],
+    "secondary_systems": [
+      "Actor",
+      "Kingdom",
+      "City",
+      "Clan",
+      "Alliance",
+      "War"
+    ],
+    "techniques": [
+      "Harmony Prefix",
+      "Harmony Postfix",
+      "Custom data",
+      "Save/load",
+      "UI injection",
+      "Event subscription"
+    ],
+    "worldbox_api_areas": [
+      "Actor.checkDeath",
+      "Actor.newKillAction",
+      "WarManager.endWar",
+      "Kingdom.setKing",
+      "UnitWindow.OnEnable",
+      "MapBox.clearWorld",
+      "actor.data"
+    ],
+    "nml_api_areas": [
+      "BasicMod<T> (Verified)",
+      "SingleAutoLayoutWindow.CreateWindow (Verified)",
+      "PowerButtonCreator (Verified)"
+    ],
+    "harmony": true,
+    "ui": true,
+    "assets": false,
+    "persistence": true,
+    "key_files": [
+      "mods/actorhistory.md"
+    ],
+    "pattern_candidates": [
+      "favorite-actor-event-recorder",
+      "sqlite-mod-storage",
+      "clone-button-ui-injection"
+    ],
+    "confidence": "Verified",
+    "profile": "mods/actorhistory.md"
+  },
+  {
+    "source_id": "ref:xuanmen-daojie",
+    "name": "玄门道界",
+    "tier": "A",
+    "summary": "修仙模拟：11 境界/18 自定义属性/真伤克制战斗/灵炁经济/天劫轮回夺舍飞行/幽冥领域 terraform，约 1.6 万行",
+    "primary_systems": [
+      "Actor",
+      "Traits",
+      "Combat",
+      "Save/Persistence",
+      "UI"
+    ],
+    "secondary_systems": [
+      "World",
+      "Map",
+      "Events",
+      "Assets",
+      "Utility"
+    ],
+    "techniques": [
+      "Harmony Prefix",
+      "Harmony Postfix",
+      "Harmony Transpiler",
+      "Custom data",
+      "Asset registration",
+      "UI injection",
+      "Save/load"
+    ],
+    "worldbox_api_areas": [
+      "Actor.getHit",
+      "Actor.updateStats",
+      "BatchActors",
+      "BaseStats",
+      "MapStats.custom_data",
+      "MapAction.terraformMain",
+      "UnitWindow"
+    ],
+    "nml_api_areas": [
+      "BasicMod<T>.OnModLoad/GetConfig (Verified)",
+      "TabManager.CreateTab (Verified)"
+    ],
+    "harmony": true,
+    "ui": true,
+    "assets": true,
+    "persistence": true,
+    "key_files": [
+      "mods/xuanmen-daojie.md"
+    ],
+    "pattern_candidates": [
+      "dual-track-stat-persistence",
+      "custom-data-world-resource",
+      "batchactors-system-bus",
+      "transpiler-stat-injection",
+      "persistent-actor-archive"
+    ],
+    "confidence": "Mostly Verified",
+    "profile": "mods/xuanmen-daojie.md"
+  },
+  {
+    "source_id": "ref:thefantasyworld",
+    "name": "TheFantasyWorld",
+    "tier": "A",
+    "summary": "RPG 层：12 职业/修仙式升级突破（grade1-91）/天赋特质/战斗计算（护盾魔抗闪避）/神明复活",
+    "primary_systems": [
+      "Actor",
+      "Traits",
+      "Combat",
+      "Mod Lifecycle"
+    ],
+    "secondary_systems": [
+      "UI",
+      "Save/Persistence",
+      "World",
+      "Assets",
+      "Events"
+    ],
+    "techniques": [
+      "Harmony Prefix",
+      "Harmony Postfix",
+      "Asset registration",
+      "Custom data",
+      "UI injection"
+    ],
+    "worldbox_api_areas": [
+      "AssetManager.base_stats_library",
+      "Actor.die",
+      "BaseSimObject.changeHealth",
+      "BabyMaker.makeBaby",
+      "map_stats.custom_data"
+    ],
+    "nml_api_areas": [
+      "BasicMod<T> (Verified)",
+      "TabManager/PowerButtonCreator (Verified)"
+    ],
+    "harmony": true,
+    "ui": true,
+    "assets": true,
+    "persistence": true,
+    "key_files": [
+      "mods/thefantasyworld.md"
+    ],
+    "pattern_candidates": [
+      "custom-basestat-registration",
+      "trait-factory-with-action-delegate",
+      "death-protection-prefix-chain"
+    ],
+    "confidence": "Mostly Verified",
+    "profile": "mods/thefantasyworld.md"
+  },
+  {
+    "source_id": "ref:shtoolkit",
+    "name": "SHToolkit",
+    "tier": "A",
+    "summary": "辅助工具集：自定义地图尺寸/超级暂停/随机刷兵 WorldBehaviour/自动存档间隔/UI 增强/本地化扩展/DLL 释放",
+    "primary_systems": [
+      "Utility",
+      "UI",
+      "Save/Persistence",
+      "Mod Lifecycle"
+    ],
+    "secondary_systems": [
+      "World",
+      "Actor",
+      "Events",
+      "Assets"
+    ],
+    "techniques": [
+      "Harmony Prefix",
+      "Harmony Postfix",
+      "Asset registration",
+      "Save/load",
+      "UI injection",
+      "Reflection"
+    ],
+    "worldbox_api_areas": [
+      "WorldBehaviourAsset",
+      "AssetManager.world_behaviours",
+      "AutoSaveManager",
+      "MapBox.checkMainSimulationUpdate",
+      "WorldTile.setTileType"
+    ],
+    "nml_api_areas": [
+      "BasicMod.OnModLoad (Verified)",
+      "[ModEntry] (Unverified-NCMS)"
+    ],
+    "harmony": true,
+    "ui": true,
+    "assets": true,
+    "persistence": true,
+    "key_files": [
+      "mods/shtoolkit.md"
+    ],
+    "pattern_candidates": [
+      "worldbehaviour-runtime-scheduler",
+      "dictionary-toggle-settings-center",
+      "persistent-json-config"
+    ],
+    "confidence": "Mostly Verified",
+    "profile": "mods/shtoolkit.md"
+  },
+  {
+    "source_id": "ref:chinesename",
+    "name": "ChineseName",
+    "tier": "A",
+    "summary": "中文词库+模板引擎替换全游戏命名，数据驱动+热重载，IPatch 程序集扫描自动注册的工程化范本",
+    "primary_systems": [
+      "Utility",
+      "Assets",
+      "Mod Lifecycle"
+    ],
+    "secondary_systems": [
+      "Save/Persistence",
+      "Events",
+      "Culture",
+      "Religion",
+      "City",
+      "Kingdom"
+    ],
+    "techniques": [
+      "Harmony Prefix",
+      "Harmony Transpiler",
+      "Reflection",
+      "Custom asset",
+      "Localization",
+      "Custom data"
+    ],
+    "worldbox_api_areas": [
+      "Actor.getName",
+      "ActionLibrary.turnIntoZombie",
+      "City.generateName",
+      "Kingdom.newCivKingdom",
+      "WarManager.newWar",
+      "Actor.data"
+    ],
+    "nml_api_areas": [
+      "BasicMod/IReloadable (Verified)",
+      "Hotfixable attribute (Verified)"
+    ],
+    "harmony": true,
+    "ui": false,
+    "assets": true,
+    "persistence": true,
+    "key_files": [
+      "mods/chinesename.md"
+    ],
+    "pattern_candidates": [
+      "assembly-scan-auto-patch-registration",
+      "dual-asset-registration-compat",
+      "transpiler-literal-replace",
+      "non-destructive-prefix-fill-and-pass"
+    ],
+    "confidence": "Verified",
+    "profile": "mods/chinesename.md"
+  },
+  {
+    "source_id": "ref:sandbox",
+    "name": "Sandbox",
+    "tier": "B",
+    "summary": "上帝沙盒操控：强制归属/封王/画线定居/建筑放置/基因编辑/特质禁用器；含泛型类 manual patch 配方",
+    "primary_systems": [
+      "Actor",
+      "City",
+      "Kingdom",
+      "UI"
+    ],
+    "secondary_systems": [
+      "Traits",
+      "World",
+      "Assets",
+      "Buildings",
+      "Mod Lifecycle"
+    ],
+    "techniques": [
+      "Harmony Prefix",
+      "Harmony Postfix",
+      "Asset registration",
+      "UI injection",
+      "Reflection"
+    ],
+    "worldbox_api_areas": [
+      "AssetManager.powers.clone",
+      "GodPower",
+      "MetaObjectWithTraits.addTrait",
+      "kingdom.setKing",
+      "WindowPreloader",
+      "ScrollWindow"
+    ],
+    "nml_api_areas": [
+      "BasicMod.OnModLoad (Verified)",
+      "Config.preload_windows (Verified)",
+      "TabManager (Verified)"
+    ],
+    "harmony": true,
+    "ui": true,
+    "assets": true,
+    "persistence": false,
+    "key_files": [
+      "mods/sandbox.md"
+    ],
+    "pattern_candidates": [
+      "generic-type-manual-harmony-patch",
+      "powers-clone-drop-power-template",
+      "button-builder-fluent-ui"
+    ],
+    "confidence": "Verified",
+    "profile": "mods/sandbox.md"
+  },
+  {
+    "source_id": "ref:optime",
+    "name": "Optime",
+    "tier": "B",
+    "summary": "QoL+性能：相机静止跳帧/暂停冻结弹道/屏蔽分析/高帧率模拟平滑/开发者模式；Feature<T> 开关框架",
+    "primary_systems": [
+      "Utility",
+      "World"
+    ],
+    "secondary_systems": [
+      "UI",
+      "Mod Lifecycle"
+    ],
+    "techniques": [
+      "Harmony Prefix",
+      "Config callback hot-toggle"
+    ],
+    "worldbox_api_areas": [
+      "Config",
+      "MapBox.calculateCurElapsed",
+      "ZoneCamera.update",
+      "Projectile.update",
+      "MapStats.recalcCounters"
+    ],
+    "nml_api_areas": [
+      "BasicMod<T>/GetConfig (Verified)",
+      "default_config.json Callback (Verified)"
+    ],
+    "harmony": true,
+    "ui": false,
+    "assets": false,
+    "persistence": false,
+    "key_files": [
+      "mods/optime.md"
+    ],
+    "pattern_candidates": [
+      "feature-toggle-framework",
+      "frame-rate-adaptive-sim"
+    ],
+    "confidence": "Verified",
+    "profile": "mods/optime.md"
+  },
+  {
+    "source_id": "ref:incensefiredway",
+    "name": "IncensefiredWay",
+    "tier": "B",
+    "summary": "神道内容：6 岁随机神性天赋，香火值 93 级阶梯升级（属性/攻击/转化信徒/传送/召唤），FMOD 直放音频",
+    "primary_systems": [
+      "Traits",
+      "Actor"
+    ],
+    "secondary_systems": [
+      "Combat",
+      "Assets",
+      "UI",
+      "Save/Persistence",
+      "Kingdom"
+    ],
+    "techniques": [
+      "Harmony Prefix",
+      "Harmony Postfix",
+      "Asset registration",
+      "Custom data",
+      "UI injection"
+    ],
+    "worldbox_api_areas": [
+      "ActorTrait",
+      "BaseStatAsset",
+      "ProjectileAsset",
+      "AssetManager",
+      "Actor.updateAge",
+      "World.world.projectiles"
+    ],
+    "nml_api_areas": [
+      "BasicMod<T>/ModConfig (Verified)",
+      "Hotfixable (Verified)"
+    ],
+    "harmony": true,
+    "ui": true,
+    "assets": true,
+    "persistence": true,
+    "key_files": [
+      "mods/incensefiredway.md"
+    ],
+    "pattern_candidates": [
+      "actor-data-custom-stat",
+      "trait-upgrade-chain",
+      "immunity-prefix-veto-suite"
+    ],
+    "confidence": "Mostly Verified",
+    "profile": "mods/incensefiredway.md"
+  },
+  {
+    "source_id": "ref:familytree",
+    "name": "FamilyTree",
+    "tier": "B",
+    "summary": "单位窗口族谱按钮：全屏平移缩放思维导图（含死者+死因），countDeath 快照补全死者亲属关系",
+    "primary_systems": [
+      "UI"
+    ],
+    "secondary_systems": [
+      "Actor",
+      "Events",
+      "Kingdom",
+      "Clan"
+    ],
+    "techniques": [
+      "Harmony Prefix",
+      "Harmony Postfix",
+      "UI injection",
+      "UGUI overlay"
+    ],
+    "worldbox_api_areas": [
+      "Actor.countDeath",
+      "Actor.getParents/getChildren",
+      "UnitWindow.OnEnable",
+      "ScrollWindow",
+      "World.world.units"
+    ],
+    "nml_api_areas": [
+      "BasicMod (Verified)",
+      "AutoLayoutWindow<T> (Verified)"
+    ],
+    "harmony": true,
+    "ui": true,
+    "assets": false,
+    "persistence": false,
+    "key_files": [
+      "mods/familytree.md"
+    ],
+    "pattern_candidates": [
+      "death-snapshot-recorder",
+      "ugui-pan-zoom-overlay"
+    ],
+    "confidence": "Verified",
+    "profile": "mods/familytree.md"
+  },
+  {
+    "source_id": "ref:buzzoff",
+    "name": "BuzzOff",
+    "tier": "B",
+    "summary": "阻止昆虫单位进化 + 蜂巢生成否决与定时清扫；'Prefix 置空 __result' 否决范式微型样本",
+    "primary_systems": [
+      "Buildings",
+      "Actor"
+    ],
+    "secondary_systems": [
+      "Utility"
+    ],
+    "techniques": [
+      "Harmony Prefix",
+      "Coroutine polling"
+    ],
+    "worldbox_api_areas": [
+      "BuildingManager.addBuilding",
+      "ActionLibrary.tryToEvolveUnitViaMonolith",
+      "World.world.buildings"
+    ],
+    "nml_api_areas": [
+      "BasicMod<T>/GetConfig (Verified)"
+    ],
+    "harmony": true,
+    "ui": false,
+    "assets": false,
+    "persistence": false,
+    "key_files": [
+      "mods/buzzoff.md"
+    ],
+    "pattern_candidates": [
+      "spawn-veto-prefix"
+    ],
+    "confidence": "Verified",
+    "profile": "mods/buzzoff.md"
+  },
+  {
+    "source_id": "ref:mapdeal",
+    "name": "MapDeal",
+    "tier": "B",
+    "summary": "IMGUI 地图工具：tile 快照→镜像/列阵/四角/缩放盖章回地图+去噪+自定义 Zone 重建；零 Harmony 纯反射",
+    "primary_systems": [
+      "Map"
+    ],
+    "secondary_systems": [
+      "World",
+      "UI",
+      "Assets"
+    ],
+    "techniques": [
+      "Reflection",
+      "Public API only",
+      "OnGUI",
+      "Generation chain replay"
+    ],
+    "worldbox_api_areas": [
+      "MapBox.tiles_map",
+      "MapAction.terrafoamTile",
+      "SmoothLoader",
+      "MapSizeLibrary",
+      "WorldTile.neighboursAll"
+    ],
+    "nml_api_areas": [
+      "(none - NCMS legacy)"
+    ],
+    "harmony": false,
+    "ui": true,
+    "assets": false,
+    "persistence": false,
+    "key_files": [
+      "mods/mapdeal.md"
+    ],
+    "pattern_candidates": [
+      "map-snapshot-stamp",
+      "smoothloader-generation-chain"
+    ],
+    "confidence": "Verified",
+    "profile": "mods/mapdeal.md"
+  },
+  {
+    "source_id": "ref:creepmobboost",
+    "name": "CreepMobBoost",
+    "tier": "B",
+    "summary": "天灾衍生生物 AI 主动筑巢：运行时注入 BehaviourTaskActor+DecisionAsset 到现有种族，零 Harmony",
+    "primary_systems": [
+      "Actor",
+      "Buildings"
+    ],
+    "secondary_systems": [
+      "AI",
+      "Assets",
+      "Mod Lifecycle"
+    ],
+    "techniques": [
+      "Runtime asset injection",
+      "BehaviourActionActor inheritance",
+      "Config"
+    ],
+    "worldbox_api_areas": [
+      "AssetManager.tasks_actor",
+      "AssetManager.decisions_library",
+      "Toolbox.checkArraySize",
+      "World.world.buildings.addBuilding"
+    ],
+    "nml_api_areas": [
+      "BasicMod<T>/GetConfig (Verified)"
+    ],
+    "harmony": false,
+    "ui": false,
+    "assets": true,
+    "persistence": false,
+    "key_files": [
+      "mods/creepmobboost.md"
+    ],
+    "pattern_candidates": [
+      "runtime-decision-injection",
+      "building-asset-rebalance-config"
+    ],
+    "confidence": "Verified",
+    "profile": "mods/creepmobboost.md"
+  },
+  {
+    "source_id": "ref:worldresilience",
+    "name": "WorldResilience",
+    "tier": "B",
+    "summary": "侵蚀反向化：岩石风化成土/荒地复绿——世界自愈；自定义 world_regrow 法则；NML 旧式 IMod 接口",
+    "primary_systems": [
+      "Map",
+      "World"
+    ],
+    "secondary_systems": [
+      "Assets",
+      "Utility"
+    ],
+    "techniques": [
+      "Harmony Prefix(replace)",
+      "Traverse private access",
+      "Custom asset"
+    ],
+    "worldbox_api_areas": [
+      "WorldBehaviourActionErosion.updateErosion",
+      "WorldLaws.init",
+      "PlayerOptionData",
+      "MapAction.terraformMain",
+      "IslandsCalculator"
+    ],
+    "nml_api_areas": [
+      "IMod OnLoad/OnUnload (Verified-legacy)"
+    ],
+    "harmony": true,
+    "ui": false,
+    "assets": true,
+    "persistence": false,
+    "key_files": [
+      "mods/worldresilience.md"
+    ],
+    "pattern_candidates": [
+      "reverse-erosion-regrow",
+      "custom-world-law-option",
+      "traverse-private-map-api"
+    ],
+    "confidence": "Verified",
+    "profile": "mods/worldresilience.md"
+  },
+  {
+    "source_id": "ref:nerffiredamage",
+    "name": "NerfFireDamage",
+    "tier": "C",
+    "summary": "Prefix 全量替换 burningEffect：烧血 10%→1%；教科书级状态效果替换微型样本",
+    "primary_systems": [
+      "Combat"
+    ],
+    "secondary_systems": [
+      "Utility"
+    ],
+    "techniques": [
+      "Harmony Prefix(replace)"
+    ],
+    "worldbox_api_areas": [
+      "StatusLibrary.burningEffect",
+      "BaseSimObject.getMaxHealthPercent"
+    ],
+    "nml_api_areas": [
+      "BasicMod<T>/LogInfo (Verified)"
+    ],
+    "harmony": true,
+    "ui": false,
+    "assets": false,
+    "persistence": false,
+    "key_files": [
+      "mods/nerffiredamage.md"
+    ],
+    "pattern_candidates": [
+      "status-effect-replace-prefix"
+    ],
+    "confidence": "Verified",
+    "profile": "mods/nerffiredamage.md"
+  },
+  {
+    "source_id": "ref:unlock-all",
+    "name": "Unlock all",
+    "tier": "C",
+    "summary": "NCMS 遗留：开诅咒世界法则+献祭计数 500 全解锁",
+    "primary_systems": [
+      "World"
+    ],
+    "secondary_systems": [],
+    "techniques": [
+      "Direct asset field flip",
+      "Manual Harmony postfix"
+    ],
+    "worldbox_api_areas": [
+      "WorldLawAsset.default_state",
+      "CursedSacrifice.reset"
+    ],
+    "nml_api_areas": [
+      "(none - NCMS)"
+    ],
+    "harmony": true,
+    "ui": false,
+    "assets": false,
+    "persistence": false,
+    "key_files": [
+      "mods/unlock-all.md"
+    ],
+    "pattern_candidates": [
+      "world-law-default-flip"
+    ],
+    "confidence": "Verified",
+    "profile": "mods/unlock-all.md"
+  },
+  {
+    "source_id": "ref:hanhai-unlock-all",
+    "name": "寒海的全解锁",
+    "tier": "C",
+    "summary": "NCMS 遗留：首帧+组合键调用 GameProgress 官方解锁后门",
+    "primary_systems": [
+      "Utility"
+    ],
+    "secondary_systems": [],
+    "techniques": [
+      "Update polling",
+      "First-frame gate"
+    ],
+    "worldbox_api_areas": [
+      "GameProgress.unlockAllAchievements",
+      "GameProgress.debugUnlockAll"
+    ],
+    "nml_api_areas": [
+      "(none - NCMS)"
+    ],
+    "harmony": false,
+    "ui": false,
+    "assets": false,
+    "persistence": false,
+    "key_files": [
+      "mods/hanhai-unlock-all.md"
+    ],
+    "pattern_candidates": [
+      "gameprogress-debug-unlock"
+    ],
+    "confidence": "Verified",
+    "profile": "mods/hanhai-unlock-all.md"
+  },
+  {
+    "source_id": "ref:simple-chinese-localization",
+    "name": "简单汉化",
+    "tier": "C",
+    "summary": "NML 本地化管线参考实现：IReloadable 热重载 + LocalizedText.Start Postfix 修刷新",
+    "primary_systems": [
+      "Localization"
+    ],
+    "secondary_systems": [
+      "UI"
+    ],
+    "techniques": [
+      "Harmony Postfix",
+      "IReloadable hot reload",
+      "LM.LoadLocale"
+    ],
+    "worldbox_api_areas": [
+      "LocalizedText.Start",
+      "LocalizedTextManager",
+      "PossessionUI"
+    ],
+    "nml_api_areas": [
+      "BasicMod/IReloadable (Verified)",
+      "LM.LoadLocale/ApplyLocale (Verified)"
+    ],
+    "harmony": true,
+    "ui": false,
+    "assets": false,
+    "persistence": false,
+    "key_files": [
+      "mods/simple-chinese-localization.md"
+    ],
+    "pattern_candidates": [
+      "locale-hot-reload",
+      "localizedtext-refresh-postfix"
+    ],
+    "confidence": "Verified",
+    "profile": "mods/simple-chinese-localization.md"
+  }
+]

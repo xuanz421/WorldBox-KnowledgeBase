@@ -1,0 +1,22 @@
+mod_id,name,tier,harmony,ui,assets,persistence,primary_systems,confidence,profile
+ref:guigu-cultivation,Guigu Cultivation,A,True,True,True,True,Actor|Traits|Combat|Kingdom|Save/Persistence,Mostly Verified,mods/guigu-cultivation.md
+ref:powerbox,PowerBox,A,True,True,True,False,Assets|UI|Mod Lifecycle,Verified,mods/powerbox.md
+ref:xavii-nation-types,Xavii Nation Types,A,True,True,True,True,Kingdom|Diplomacy|Traits|Events,Mostly Verified,mods/xavii-nation-types.md
+ref:xuanjian-xianzu,玄鉴仙族 (WuLin),A,True,True,True,True,Actor|Traits|Buildings|Combat|Items|UI|Save/Persistence,Mostly Verified,mods/xuanjian-xianzu.md
+ref:actorhistory,ActorHistory,A,True,True,False,True,Events|Save/Persistence|UI,Verified,mods/actorhistory.md
+ref:xuanmen-daojie,玄门道界,A,True,True,True,True,Actor|Traits|Combat|Save/Persistence|UI,Mostly Verified,mods/xuanmen-daojie.md
+ref:thefantasyworld,TheFantasyWorld,A,True,True,True,True,Actor|Traits|Combat|Mod Lifecycle,Mostly Verified,mods/thefantasyworld.md
+ref:shtoolkit,SHToolkit,A,True,True,True,True,Utility|UI|Save/Persistence|Mod Lifecycle,Mostly Verified,mods/shtoolkit.md
+ref:chinesename,ChineseName,A,True,False,True,True,Utility|Assets|Mod Lifecycle,Verified,mods/chinesename.md
+ref:sandbox,Sandbox,B,True,True,True,False,Actor|City|Kingdom|UI,Verified,mods/sandbox.md
+ref:optime,Optime,B,True,False,False,False,Utility|World,Verified,mods/optime.md
+ref:incensefiredway,IncensefiredWay,B,True,True,True,True,Traits|Actor,Mostly Verified,mods/incensefiredway.md
+ref:familytree,FamilyTree,B,True,True,False,False,UI,Verified,mods/familytree.md
+ref:buzzoff,BuzzOff,B,True,False,False,False,Buildings|Actor,Verified,mods/buzzoff.md
+ref:mapdeal,MapDeal,B,False,True,False,False,Map,Verified,mods/mapdeal.md
+ref:creepmobboost,CreepMobBoost,B,False,False,True,False,Actor|Buildings,Verified,mods/creepmobboost.md
+ref:worldresilience,WorldResilience,B,True,False,True,False,Map|World,Verified,mods/worldresilience.md
+ref:nerffiredamage,NerfFireDamage,C,True,False,False,False,Combat,Verified,mods/nerffiredamage.md
+ref:unlock-all,Unlock all,C,True,False,False,False,World,Verified,mods/unlock-all.md
+ref:hanhai-unlock-all,寒海的全解锁,C,False,False,False,False,Utility,Verified,mods/hanhai-unlock-all.md
+ref:simple-chinese-localization,简单汉化,C,True,False,False,False,Localization,Verified,mods/simple-chinese-localization.md

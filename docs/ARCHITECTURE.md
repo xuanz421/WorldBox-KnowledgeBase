@@ -180,3 +180,19 @@ NeoModLoader ─────────┼─→ Unified Declaration Index (sch
 * extraction 泛化为 `extract <source_id>`：NML 输入 = registry 登记的核心 assembly 集合（依赖 DLL 保持 external），`source_mode=decompiled`，snapshot id 绑定 commit/assembly hashes。
 * 任何 `index` 命令都做 **complete unified rebuild**（~20s / 33MB），幂等 identity 含全部 source snapshot。
 * 跨源解析 precision-first：current source 优先，worldbox 同名类型绝不自动遮蔽；NML→WorldBox 边以 namespace/using/receiver 证据解析。
+
+## Knowledge Layer (v0.7)
+
+```text
+Raw Facts (WBKB index / raw source)
+   ↓
+Reference Mod Evidence (targeted code reading, file:line)
+   ↓
+Knowledge Profiles (knowledge/reference-mods/mods/*.md, 21 mods)
+   ↓
+Pattern / System Knowledge (pattern-candidates → Z7; system map → Z8)
+```
+
+> Reference Mod profiles are evidence-backed knowledge artifacts, not copies
+> of source projects. 采掘期间 Reference Mods 保持 READ ONLY；基础设施冻结
+> （Z5 不改 parser/resolver/schema），缺口记入 unresolved.jsonl。

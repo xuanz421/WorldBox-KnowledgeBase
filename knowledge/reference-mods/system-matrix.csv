@@ -1,0 +1,137 @@
+mod_id,system,role,evidence_count,confidence
+ref:actorhistory,Actor,secondary,1,Verified
+ref:actorhistory,Alliance,secondary,1,Verified
+ref:actorhistory,City,secondary,1,Verified
+ref:actorhistory,Clan,secondary,1,Verified
+ref:actorhistory,Events,primary,6,Verified
+ref:actorhistory,Kingdom,secondary,1,Verified
+ref:actorhistory,Save/Persistence,primary,6,Verified
+ref:actorhistory,UI,primary,6,Verified
+ref:actorhistory,War,secondary,1,Verified
+ref:buzzoff,Actor,primary,4,Verified
+ref:buzzoff,Buildings,primary,4,Verified
+ref:buzzoff,Utility,secondary,1,Verified
+ref:chinesename,Assets,primary,5,Verified
+ref:chinesename,City,secondary,1,Verified
+ref:chinesename,Culture,secondary,1,Verified
+ref:chinesename,Events,secondary,1,Verified
+ref:chinesename,Kingdom,secondary,1,Verified
+ref:chinesename,Mod Lifecycle,primary,5,Verified
+ref:chinesename,Religion,secondary,1,Verified
+ref:chinesename,Save/Persistence,secondary,1,Verified
+ref:chinesename,Utility,primary,5,Verified
+ref:creepmobboost,AI,secondary,1,Verified
+ref:creepmobboost,Actor,primary,4,Verified
+ref:creepmobboost,Assets,secondary,1,Verified
+ref:creepmobboost,Buildings,primary,4,Verified
+ref:creepmobboost,Mod Lifecycle,secondary,1,Verified
+ref:familytree,Actor,secondary,1,Verified
+ref:familytree,Clan,secondary,1,Verified
+ref:familytree,Events,secondary,1,Verified
+ref:familytree,Kingdom,secondary,1,Verified
+ref:familytree,UI,primary,5,Verified
+ref:guigu-cultivation,Actor,primary,7,Mostly Verified
+ref:guigu-cultivation,City,secondary,1,Mostly Verified
+ref:guigu-cultivation,Combat,primary,7,Mostly Verified
+ref:guigu-cultivation,Events,secondary,1,Mostly Verified
+ref:guigu-cultivation,Kingdom,primary,7,Mostly Verified
+ref:guigu-cultivation,Mod Lifecycle,secondary,1,Mostly Verified
+ref:guigu-cultivation,Save/Persistence,primary,7,Mostly Verified
+ref:guigu-cultivation,Traits,primary,7,Mostly Verified
+ref:guigu-cultivation,UI,secondary,1,Mostly Verified
+ref:guigu-cultivation,Utility,secondary,1,Mostly Verified
+ref:guigu-cultivation,World,secondary,1,Mostly Verified
+ref:hanhai-unlock-all,Utility,primary,2,Verified
+ref:incensefiredway,Actor,primary,6,Mostly Verified
+ref:incensefiredway,Assets,secondary,1,Mostly Verified
+ref:incensefiredway,Combat,secondary,1,Mostly Verified
+ref:incensefiredway,Kingdom,secondary,1,Mostly Verified
+ref:incensefiredway,Save/Persistence,secondary,1,Mostly Verified
+ref:incensefiredway,Traits,primary,6,Mostly Verified
+ref:incensefiredway,UI,secondary,1,Mostly Verified
+ref:mapdeal,Assets,secondary,1,Verified
+ref:mapdeal,Map,primary,5,Verified
+ref:mapdeal,UI,secondary,1,Verified
+ref:mapdeal,World,secondary,1,Verified
+ref:nerffiredamage,Combat,primary,2,Verified
+ref:nerffiredamage,Utility,secondary,1,Verified
+ref:optime,Mod Lifecycle,secondary,1,Verified
+ref:optime,UI,secondary,1,Verified
+ref:optime,Utility,primary,5,Verified
+ref:optime,World,primary,5,Verified
+ref:powerbox,Actor,secondary,1,Verified
+ref:powerbox,Assets,primary,5,Verified
+ref:powerbox,City,secondary,1,Verified
+ref:powerbox,Culture,secondary,1,Verified
+ref:powerbox,Diplomacy,secondary,1,Verified
+ref:powerbox,Kingdom,secondary,1,Verified
+ref:powerbox,Mod Lifecycle,primary,5,Verified
+ref:powerbox,Religion,secondary,1,Verified
+ref:powerbox,UI,primary,5,Verified
+ref:powerbox,Utility,secondary,1,Verified
+ref:sandbox,Actor,primary,6,Verified
+ref:sandbox,Assets,secondary,1,Verified
+ref:sandbox,Buildings,secondary,1,Verified
+ref:sandbox,City,primary,6,Verified
+ref:sandbox,Kingdom,primary,6,Verified
+ref:sandbox,Mod Lifecycle,secondary,1,Verified
+ref:sandbox,Traits,secondary,1,Verified
+ref:sandbox,UI,primary,6,Verified
+ref:sandbox,World,secondary,1,Verified
+ref:shtoolkit,Actor,secondary,1,Mostly Verified
+ref:shtoolkit,Assets,secondary,1,Mostly Verified
+ref:shtoolkit,Events,secondary,1,Mostly Verified
+ref:shtoolkit,Mod Lifecycle,primary,5,Mostly Verified
+ref:shtoolkit,Save/Persistence,primary,5,Mostly Verified
+ref:shtoolkit,UI,primary,5,Mostly Verified
+ref:shtoolkit,Utility,primary,5,Mostly Verified
+ref:shtoolkit,World,secondary,1,Mostly Verified
+ref:simple-chinese-localization,Localization,primary,2,Verified
+ref:simple-chinese-localization,UI,secondary,1,Verified
+ref:thefantasyworld,Actor,primary,5,Mostly Verified
+ref:thefantasyworld,Assets,secondary,1,Mostly Verified
+ref:thefantasyworld,Combat,primary,5,Mostly Verified
+ref:thefantasyworld,Events,secondary,1,Mostly Verified
+ref:thefantasyworld,Mod Lifecycle,primary,5,Mostly Verified
+ref:thefantasyworld,Save/Persistence,secondary,1,Mostly Verified
+ref:thefantasyworld,Traits,primary,5,Mostly Verified
+ref:thefantasyworld,UI,secondary,1,Mostly Verified
+ref:thefantasyworld,World,secondary,1,Mostly Verified
+ref:unlock-all,World,primary,2,Verified
+ref:worldresilience,Assets,secondary,1,Verified
+ref:worldresilience,Map,primary,4,Verified
+ref:worldresilience,Utility,secondary,1,Verified
+ref:worldresilience,World,primary,4,Verified
+ref:xavii-nation-types,City,secondary,1,Mostly Verified
+ref:xavii-nation-types,Combat,secondary,1,Mostly Verified
+ref:xavii-nation-types,Culture,secondary,1,Mostly Verified
+ref:xavii-nation-types,Diplomacy,primary,6,Mostly Verified
+ref:xavii-nation-types,Events,primary,6,Mostly Verified
+ref:xavii-nation-types,Kingdom,primary,6,Mostly Verified
+ref:xavii-nation-types,Mod Lifecycle,secondary,1,Mostly Verified
+ref:xavii-nation-types,Religion,secondary,1,Mostly Verified
+ref:xavii-nation-types,Save/Persistence,secondary,1,Mostly Verified
+ref:xavii-nation-types,Traits,primary,6,Mostly Verified
+ref:xavii-nation-types,UI,secondary,1,Mostly Verified
+ref:xavii-nation-types,World,secondary,1,Mostly Verified
+ref:xuanjian-xianzu,Actor,primary,6,Mostly Verified
+ref:xuanjian-xianzu,Buildings,primary,6,Mostly Verified
+ref:xuanjian-xianzu,Combat,primary,6,Mostly Verified
+ref:xuanjian-xianzu,Events,secondary,1,Mostly Verified
+ref:xuanjian-xianzu,Items,primary,6,Mostly Verified
+ref:xuanjian-xianzu,Mod Lifecycle,secondary,1,Mostly Verified
+ref:xuanjian-xianzu,Save/Persistence,primary,6,Mostly Verified
+ref:xuanjian-xianzu,Traits,primary,6,Mostly Verified
+ref:xuanjian-xianzu,UI,primary,6,Mostly Verified
+ref:xuanjian-xianzu,Utility,secondary,1,Mostly Verified
+ref:xuanjian-xianzu,World,secondary,1,Mostly Verified
+ref:xuanmen-daojie,Actor,primary,6,Mostly Verified
+ref:xuanmen-daojie,Assets,secondary,1,Mostly Verified
+ref:xuanmen-daojie,Combat,primary,6,Mostly Verified
+ref:xuanmen-daojie,Events,secondary,1,Mostly Verified
+ref:xuanmen-daojie,Map,secondary,1,Mostly Verified
+ref:xuanmen-daojie,Save/Persistence,primary,6,Mostly Verified
+ref:xuanmen-daojie,Traits,primary,6,Mostly Verified
+ref:xuanmen-daojie,UI,primary,6,Mostly Verified
+ref:xuanmen-daojie,Utility,secondary,1,Mostly Verified
+ref:xuanmen-daojie,World,secondary,1,Mostly Verified
