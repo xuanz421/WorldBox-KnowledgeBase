@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "worldbox_version": "0.51.2",
+  "assembly_sha256_prefix": "51d275f0168b",
+  "systems": [
+    {"system_id": "jobs", "title": "Jobs and Professions", "category": "economy", "priority": "S", "status": "planned", "core_types": ["ActorJob", "ActorJobLibrary", "CitizenJobAsset", "CitizenJobLibrary", "ProfessionAsset", "ProfessionLibrary", "UnitProfession"], "related_systems": ["resources", "city", "actor", "behaviour"], "file": "economy/jobs.md"},
+    {"system_id": "resources", "title": "Resources and Storage", "category": "economy", "priority": "S", "status": "planned", "core_types": ["ResourceAsset", "CityStorageSlot"], "related_systems": ["jobs", "city", "buildings"], "file": "economy/resources.md"},
+    {"system_id": "items", "title": "Items and Equipment", "category": "economy", "priority": "S", "status": "planned", "core_types": ["ItemAsset", "ItemLibrary", "ActorEquipment", "ItemCrafting"], "related_systems": ["resources", "actor", "city"], "file": "economy/items.md"},
+    {"system_id": "city", "title": "City", "category": "settlement", "priority": "S", "status": "planned", "core_types": ["City", "CityData", "CityManager"], "related_systems": ["buildings", "kingdom", "resources", "jobs"], "file": "settlement/city.md"},
+    {"system_id": "buildings", "title": "Buildings and Construction", "category": "settlement", "priority": "S", "status": "planned", "core_types": ["BuildingAsset", "BuildingLibrary", "BuildingManager"], "related_systems": ["city", "resources"], "file": "settlement/buildings.md"},
+    {"system_id": "actor", "title": "Actor and Entity", "category": "entity", "priority": "S", "status": "planned", "core_types": ["Actor", "ActorAsset", "ActorData", "ActorManager"], "related_systems": ["jobs", "traits", "city", "kingdom"], "file": "entity/actor.md"},
+    {"system_id": "traits", "title": "Traits", "category": "entity", "priority": "S", "status": "planned", "core_types": ["ActorTrait"], "related_systems": ["actor", "assets"], "file": "entity/traits.md"},
+    {"system_id": "kingdom", "title": "Kingdom and Political", "category": "political", "priority": "S", "status": "planned", "core_types": ["Kingdom", "KingdomData", "KingdomManager", "Alliance", "WarManager"], "related_systems": ["city", "culture", "combat"], "file": "political/kingdom.md"},
+    {"system_id": "assets", "title": "Asset Framework", "category": "technical", "priority": "S", "status": "planned", "core_types": ["AssetManager"], "related_systems": [], "file": "technical/assets.md"},
+    {"system_id": "save", "title": "Save and Persistence", "category": "technical", "priority": "S", "status": "planned", "core_types": ["SaveManager", "SaveCustomData", "AutoSaveManager"], "related_systems": ["actor", "city", "kingdom"], "file": "technical/save.md"},
+    {"system_id": "culture", "title": "Culture, Knowledge, Books, Language", "category": "civilization", "priority": "A", "status": "planned", "core_types": ["Culture", "CultureData", "KnowledgeAsset", "KnowledgeLibrary", "BookManager", "Language"], "related_systems": ["kingdom", "city"], "file": "civilization/culture.md"},
+    {"system_id": "combat", "title": "Combat and Military", "category": "military", "priority": "A", "status": "planned", "core_types": ["AttackAction", "CombatActionAsset"], "related_systems": ["kingdom", "actor"], "file": "military/combat.md"},
+    {"system_id": "boats", "title": "Boats, Transport and Trade", "category": "transport", "priority": "A", "status": "planned", "core_types": ["Boat", "BehBoatFindTargetForTrade", "BehBoatMakeTrade"], "related_systems": ["kingdom", "resources"], "file": "transport/boats.md"},
+    {"system_id": "behaviour", "title": "AI and Behaviour Trees", "category": "technical", "priority": "A", "status": "planned", "core_types": ["DecisionAsset", "DecisionsLibrary", "BehaviourTaskActor"], "related_systems": ["jobs", "actor", "city"], "file": "technical/behaviour.md"},
+    {"system_id": "world", "title": "World, Map and Time", "category": "world", "priority": "B", "status": "planned", "core_types": ["MapBox", "WorldTile", "TileLibrary", "BiomeLibrary"], "related_systems": [], "file": "world/world.md"},
+    {"system_id": "ui", "title": "UI", "category": "technical", "priority": "B", "status": "partial", "core_types": ["UnitWindow", "KingdomWindow", "ScrollWindow"], "related_systems": [], "file": "technical/ui.md"},
+    {"system_id": "events", "title": "World Events and Disasters", "category": "world", "priority": "B", "status": "partial", "core_types": ["WorldLogAsset"], "related_systems": [], "file": "world/events.md"}
+  ]
+}
