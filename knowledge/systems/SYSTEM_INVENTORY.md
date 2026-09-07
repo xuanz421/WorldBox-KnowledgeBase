@@ -4,7 +4,7 @@
 
 | system_id | Title | Category | Tier | 核心类型（WBKB verified） | 状态 |
 |---|---|---|---|---|---|
-| jobs | Jobs / Professions | economy | S | ActorJob, ActorJobLibrary, CitizenJobAsset, CitizenJobLibrary, CitizenJobCondition, ProfessionAsset, ProfessionLibrary, UnitProfession, BehCityActorFindNewJob, BehEndJob, BehCheckEndCityActorJob | planned |
+| jobs | Jobs / Professions | economy | S | ActorJob, ActorJobLibrary, CitizenJobAsset, CitizenJobLibrary, CitizenJobCondition, ProfessionAsset, ProfessionLibrary, UnitProfession, BehCityActorFindNewJob, BehEndJob, BehCheckEndCityActorJob | verified（economy/jobs.md，2026-09-07） |
 | resources | Resources / Storage | economy | S | ResourceAsset, CityStorageSlot, BehCityActorGetResourceFromStorage, BehCityActorFindStorage(Wheat) | verified（economy/resources.md，2026-09-07） |
 | items | Items / Equipment | economy | S | ItemAsset, ItemLibrary, ActorEquipment, ItemCrafting | planned |
 | city | City | settlement | S | City, CityData, CityManager + Beh*City* 节点群 | verified（settlement/city.md，2026-09-07） |
@@ -49,3 +49,9 @@ System Harvest 进度（第四批，2026-09-07）：
 - 关键结论：无统一 city store（amount 在各 Building.data.resources 的 CityStorageSlot）；生产/消耗/搬运 API 级调用链闭环；mod 新增资源仅 add 可用但 linkAssets 缺失（strategic 列表/order/sprite 不更新）
 - 新增 deferred：供给/贸易数值消费位置（→ jobs/boats-trade）、产出数值计算、DropAsset 拾取（→ behaviour）
 - 剩余 S 级：jobs / items
+
+System Harvest 进度（第五批，2026-09-07）：
+- jobs 完成 evidence-backed 系统调查（verified）；关闭 city.md CitizenJobs gap、buildings.md 建造决策边界（部分）、resources.md 搬运调度项
+- 关键结论：Job/Profession 是**两轴四层**（职业轴：UnitProfession↔ProfessionAsset 持久化；工作轴：CitizenJob 工种（City 名额池）+ ActorJob AI 编排（均 runtime））；仅 data.profession 持久化，job load 后全重选
+- modding 关键：新增 CitizenJobAsset 仅 add **不进分配列表**（linkAssets 不重跑）且 unit_job_default 需自设；UnitProfession 枚举封闭不可新增职业
+- 剩余 S 级：items

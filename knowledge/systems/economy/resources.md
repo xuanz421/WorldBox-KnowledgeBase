@@ -197,12 +197,14 @@ putToDict(slot)                dict + asset.food ? _list_food : _list_other 双�
 
 ## Known Gaps
 
-- `supply_bound_give/supply_bound_take/supply_give`（城邦供给循环）与 `trade_*`（贸易数值）的实际消费位置——deferred: jobs / boats-trade 域
+- `supply_bound_give/supply_bound_take/supply_give`（城邦供给循环）与 `trade_*`（贸易数值）的实际消费位置——deferred: boats-trade 域（**jobs 侧已确认非消费方**，2026-09-07 jobs 调查未见引用）
 - `mine_rate/drop_per_mass/produce_min` 的产出数值计算（矿/植被再生循环）
 - `ingredients/ingredients_amount` 与 ItemCrafting 的完整经济（→ items）
 - DropAsset 掉落 → Actor 拾取入口（未见直接 pickup API；Beh 侧拾取行为 → behaviour）
 - `getRandomSuitableFood` 的 diet 交集算法细节（subspecies.getAllowedFoodByDiet 内部）
 - NML ResourcesPatch 对 mod 资源 JSON 的加载映射（→ NML 深挖）
+
+> 更新（2026-09-07，→ economy/jobs.md）：搬运的 job 侧驱动已闭环——woodcutter/gatherer/farmer 工种 → ActorJob task（chop_trees/collect_*）→ extractResources/addToInventory；builder → BehBuildTarget → updateBuild。仅 Beh 节点内部仍 deferred: behaviour。
 
 ## Related Patterns
 

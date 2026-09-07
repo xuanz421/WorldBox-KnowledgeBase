@@ -177,7 +177,7 @@ MapBox → BuildingManager.update(pElapsed)                                  Bui
 
 - ~~ResourceAsset 完整字段（maximum/storage_max/strategic_resource_assets 语义）~~ **已关闭（2026-09-07，→ economy/resources.md）**：maximum = change 钳制上限；storage_max = 每建筑容量（hasSpaceForResource）；strategic 列表为 linkAssets 产物（mod 后注册不进）
 - 资源生产/采集循环（BehCityActorGetResourceFromStorage 等）——deferred: resources/jobs（**API 级调用链已由 economy/resources.md 记录**，行为调度仍 deferred）
-- 建造决策行为（谁决定 addBuilding + canBeUpgraded/upgradeBuilding）——deferred: behaviour
+- 建造决策行为——**部分关闭（2026-09-07，→ economy/jobs.md）**：builder 工种 → ActorJob "builder" → try_build_building → BehCityActorFindBuilding("new_building") → BehBuildTarget → updateBuild 已验证；CityBehBuild 选址算法内部仍 deferred: behaviour
 - StorageBooks/书槽（book_slots）内部
 - BuildingFundament 旋转/异形占地规则全貌
 - `initBuildingsFromArchitectures` 的派生映射规则

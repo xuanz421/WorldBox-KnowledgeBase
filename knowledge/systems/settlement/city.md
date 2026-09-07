@@ -174,8 +174,8 @@ loadCities 之后再 addZone 一轮（saveVersion≥7 路径，CityManager.cs:13
 
 ## Known Gaps
 
-- `CityTasksData`/`AiSystemCity` 任务编排（→ behaviour 系统）
-- `CitizenJobs`/`CityEquipment` 内部结构（→ jobs/items 系统）
+- `CityTasksData`/`AiSystemCity` 任务编排——**部分关闭（2026-09-07，→ economy/jobs.md）**：CitizenJobs 名额池机制（jobs/occupied 双 dict、CityBehCheckCitizenTasks 环境派生、setCitizenJob 分配）已验证；AiSystemCity 执行引擎仍 deferred: behaviour
+- ~~CitizenJobs/`CityEquipment` 内部结构（→ jobs/items 系统）~~ **CitizenJobs 已关闭（2026-09-07，→ economy/jobs.md）**；CityEquipment 仍 deferred: items
 - Zone 生长/废弃机制（canGrowZones/_dirty_abandoned_zones）
 - LoyaltyCalculator / CityStatus 状态机细节
 - `CityManager.isLocked` / MetaObjectCounter 计数器用途全貌
