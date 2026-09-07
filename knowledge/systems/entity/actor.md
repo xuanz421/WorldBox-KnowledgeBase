@@ -112,7 +112,7 @@ ActorManager.loadFromSave(List<ActorData>)          ActorManager.cs:772
    └─ 恢复 health/nutrition/stamina/mana → updateStats
 ```
 
-保存侧：`saveTraits()` → `data.saved_traits = ids`（Actor.cs:8850）；`finishSaving()` → `data.save()`（Actor.cs:8855，SQLite ORM 落盘细节 deferred: save system）。
+保存侧：`saveTraits()` → `data.saved_traits = ids`（Actor.cs:8850）；`finishSaving()` → `data.save()`（Actor.cs:8855）。落盘路径已确认（→ technical/save.md）：`Actor.prepareForSave()` 17 步把全部对象引用 id 化，`ActorData` 作为 SavedMap.actors_data 列表元素随 `map.wbox`（zlib 压缩 JSON）写出；custom_data_* 容器内嵌同一 JSON。**id 跨存档稳定**：分配走 `map_stats.getNextId("unit")`，MapStats 计数器随存档往返（MapStats.cs:120-160, SavedMap.cs:228）。
 
 ## Important APIs
 
@@ -157,7 +157,7 @@ ActorManager.loadFromSave(List<ActorData>)          ActorManager.cs:772
 
 ## Known Gaps
 
-- **Deferred: Save system investigation** — ActorData 如何写入 SQLite 存档库、`data.save()` 的落盘时机、跨存档 id 稳定性
+- ~~Deferred: Save system investigation~~ **已关闭（2026-09-07，→ technical/save.md）**：ActorData 随 SavedMap.actors_data 写入 map.wbox（zlib JSON）；`data.save()` 仅清空空 custom_data 容器（BaseSystemData.checkInt 等）；id 经 map_stats 计数器随档往返，跨存档稳定
 - **Deferred: Behaviour system investigation** — AiSystemActor 内部、BehaviourTaskActor/DecisionAsset 结构
 - `ActorSimpleComponent`（children_pre_behaviour）与 `_dict_special` 的完整使用面
 - `ActorManager.evolutionEvent`（进化）与 `checkNewSpecies` 突变机制的深层数值规则

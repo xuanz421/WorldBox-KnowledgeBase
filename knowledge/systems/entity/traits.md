@@ -149,7 +149,7 @@ AssetManager.init() → AssetManager.add(traits, "traits") → ActorTraitLibrary
 
 ## Known Gaps
 
-- **Deferred: Save system investigation** — saved_traits 与世界存档的一致性（trait id 在存档/版本间的漂移行为）
+- ~~Deferred: Save system investigation~~ **已关闭（2026-09-07，→ technical/save.md）**：saved_traits 随 ActorData 内嵌 map.wbox JSON 往返；加载侧 TraitTools.loadTraits 直填集合（id 经 AssetManager.traits.get 重解析，trait id 缺失时静默跳过该条目）；版本间 trait id 改名风险由 SaveConverter.assetIDFixer 仅部分覆盖（其映射表只含原版单位 id，不含 trait id）
 - `BaseTrait.base_stats_meta` 与 `BaseStats` 的完整字段/标记语义（stats 系统深挖时补充）
 - TraitRainLibrary（trait_rains）与 trait 掉落的交互
 - `checkTraitsMod`（likeability 社交修正，ActorTraitLibrary.cs:1648-1670）的调用面
