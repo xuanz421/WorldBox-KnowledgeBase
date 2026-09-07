@@ -5,7 +5,7 @@
 | system_id | Title | Category | Tier | 核心类型（WBKB verified） | 状态 |
 |---|---|---|---|---|---|
 | jobs | Jobs / Professions | economy | S | ActorJob, ActorJobLibrary, CitizenJobAsset, CitizenJobLibrary, CitizenJobCondition, ProfessionAsset, ProfessionLibrary, UnitProfession, BehCityActorFindNewJob, BehEndJob, BehCheckEndCityActorJob | planned |
-| resources | Resources / Storage | economy | S | ResourceAsset, CityStorageSlot, BehCityActorGetResourceFromStorage, BehCityActorFindStorage(Wheat) | planned |
+| resources | Resources / Storage | economy | S | ResourceAsset, CityStorageSlot, BehCityActorGetResourceFromStorage, BehCityActorFindStorage(Wheat) | verified（economy/resources.md，2026-09-07） |
 | items | Items / Equipment | economy | S | ItemAsset, ItemLibrary, ActorEquipment, ItemCrafting | planned |
 | city | City | settlement | S | City, CityData, CityManager + Beh*City* 节点群 | verified（settlement/city.md，2026-09-07） |
 | buildings | Buildings / Construction | settlement | S | BuildingAsset, BuildingLibrary, BuildingManager | verified（settlement/buildings.md，2026-09-07） |
@@ -43,3 +43,9 @@ System Harvest 进度（第三批，2026-09-07）：
 - 关键概念澄清：Kingdom 双层身份（KingdomAsset 类别 + wild 常驻实例 vs civ 动态实例）；建筑容量属于 ResourceAsset 而非 Building/City
 - 新增 deferred：War/Alliance/Diplomacy 内部（→ war/alliance/diplomacy）、ResourceAsset 字段与生产循环（→ resources）、建造决策行为（→ behaviour）、StorageBooks（→ items/culture 域）
 - 剩余 S 级：jobs / resources / items；建议下一批 resources（buildings 边界已就绪）
+
+System Harvest 进度（第四批，2026-09-07）：
+- resources 完成 evidence-backed 系统调查（verified）；关闭 buildings.md 资源字段 gap 并**修正其容量表述**（storage_max=每建筑容量 vs maximum=change 钳制）
+- 关键结论：无统一 city store（amount 在各 Building.data.resources 的 CityStorageSlot）；生产/消耗/搬运 API 级调用链闭环；mod 新增资源仅 add 可用但 linkAssets 缺失（strategic 列表/order/sprite 不更新）
+- 新增 deferred：供给/贸易数值消费位置（→ jobs/boats-trade）、产出数值计算、DropAsset 拾取（→ behaviour）
+- 剩余 S 级：jobs / items

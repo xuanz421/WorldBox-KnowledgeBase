@@ -40,7 +40,7 @@ BuildingData (持久化: mainX/mainY + asset_id + cityID + state + resources + b
 - **BuildingData**（BuildingData.cs:6-65）：位置存 `mainX/mainY`（**主 tile 坐标**，非 long id）；`asset_id` string；`cityID` long（prepareForSave 时写，Building.cs:845-858）；`state : BuildingState`（状态机持久化）；`resources : CityResources`（**storage 资产的建筑物才有**）；`books : StorageBooks`；`frameID` 动画帧；施工进度走 `data.change("construction_progress", ...)`（**custom_data int 容器**，Building.cs:1138）
 - **runtime-only**：`tiles : List<WorldTile>`（fundament 展开）、`zones`、`residents`、`components_list`、`chopped`、动画状态、`kingdom`（对象引用）
 - **CityResources**（CityResources.cs:4-208）：`_resources : Dictionary<string, CityStorageSlot>` + `_list_food/_list_other` 缓存 + `saved_resources : List<CityStorageSlot>`（持久化载体，save() 只留非零槽）；`change()` 上限裁剪 `value.asset.maximum`
-- **容量归属（重要澄清，Verified）**：单资源上限在 **ResourceAsset**（`maximum`/`storage_max`，CityResources.cs:53-76 引用）；**建筑不定义容量**——capacity 判定 `hasSpaceForResource(asset)` 完全查询 ResourceAsset；City 层无独立容量
+- **容量归属（Verified，2026-09-07 经 economy/resources.md 复核修正）**：上限字段都在 **ResourceAsset**（建筑与 City 均不定义容量），但两者语义不同：`storage_max` = **每栋 storage Building 的单资源容量**（`hasSpaceForResource` 判定 `get(id) < storage_max`）；`maximum` = `change()` 的钳制上限。City 层无独立容量（聚合实时遍历）
 
 ## Lifecycle / Flow
 
@@ -175,8 +175,8 @@ MapBox → BuildingManager.update(pElapsed)                                  Bui
 
 ## Known Gaps
 
-- ResourceAsset 完整字段（maximum/storage_max/strategic_resource_assets 语义）——deferred: resources 系统
-- 资源生产/采集循环（BehCityActorGetResourceFromStorage 等）——deferred: resources/jobs
+- ~~ResourceAsset 完整字段（maximum/storage_max/strategic_resource_assets 语义）~~ **已关闭（2026-09-07，→ economy/resources.md）**：maximum = change 钳制上限；storage_max = 每建筑容量（hasSpaceForResource）；strategic 列表为 linkAssets 产物（mod 后注册不进）
+- 资源生产/采集循环（BehCityActorGetResourceFromStorage 等）——deferred: resources/jobs（**API 级调用链已由 economy/resources.md 记录**，行为调度仍 deferred）
 - 建造决策行为（谁决定 addBuilding + canBeUpgraded/upgradeBuilding）——deferred: behaviour
 - StorageBooks/书槽（book_slots）内部
 - BuildingFundament 旋转/异形占地规则全貌
