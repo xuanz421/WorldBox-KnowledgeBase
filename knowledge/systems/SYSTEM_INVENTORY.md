@@ -9,10 +9,10 @@
 | items | Items / Equipment | economy | S | ItemAsset, ItemLibrary, ActorEquipment, ItemCrafting | planned |
 | city | City | settlement | S | City, CityData, CityManager + Beh*City* 节点群 | planned |
 | buildings | Buildings / Construction | settlement | S | BuildingAsset, BuildingLibrary, BuildingManager | planned |
-| actor | Actor / Entity | entity | S | Actor, ActorAsset, ActorData, BaseActorComponent, ActorManager | planned（部分被 Z5/Z6 覆盖） |
-| traits | Traits | entity | S | ActorTrait, TraitGroupAsset, AssetManager.traits/trait_groups | planned（Z6 pattern 已覆盖注册面） |
+| actor | Actor / Entity | entity | S | Actor, ActorAsset, ActorData, BaseActorComponent, ActorManager | verified（entity/actor.md，2026-09-07） |
+| traits | Traits | entity | S | ActorTrait, TraitGroupAsset, AssetManager.traits/trait_groups | verified（entity/traits.md，2026-09-07） |
 | kingdom | Kingdom / Political | political | S | Kingdom, KingdomData, KingdomManager, ClanTrait, Alliance, WarManager, Diplomacy*（详见 xavii profile） | planned |
-| assets | Asset Framework | technical | S | AssetManager, *Library, *Asset 基类群 | planned（Z6 patterns 部分覆盖） |
+| assets | Asset Framework | technical | S | AssetManager, *Library, *Asset 基类群 | verified（technical/assets.md，2026-09-07） |
 | save | Save / Persistence | technical | S | SaveManager, SaveCustomData, AutoSaveManager, SaveConverter | planned |
 | culture | Culture / Knowledge / Books / Language | civilization | A | Culture, CultureData, KnowledgeAsset, KnowledgeLibrary, BookManager, BookData, BookTypeAsset, Language, GameLanguageLibrary | planned |
 | combat | Combat / Military | military | A | AttackAction, CombatActionAsset, DamageSystem 相关（mod 证据多） | planned |
@@ -27,3 +27,8 @@
 - 无 `Storage`/`CityStorage` 类——存储由 `CityStorageSlot` 与 City 内部容器承担（待 jobs/resources 调查确认）
 - Culture 系统实际存在且比预期丰富（Knowledge/Book/Language 均有类型）
 - Boats 与 trade 行为直接相关（BehBoatFindTargetForTrade）
+
+System Harvest 进度（第一批，2026-09-07）：
+- actor / traits / assets 完成 evidence-backed 系统调查（verified）——覆盖 core_types / data_model / lifecycle / registration / runtime_access / cross_system_relationships / modding_extension_points / evidence / known_gaps 九维
+- 已知 deferred：save 落盘细节（→ save 系统）、AiSystemActor 内部（→ behaviour 系统）、NML ResourcesPatch/MasterBuilder 内部（→ NML 深挖）
+- 方法验证：search → targeted read → refs/callers 交叉确认的流程可行，建议继续用于下一批（city / save / behaviour 优先）
