@@ -68,7 +68,7 @@ WorldBox 职业/工作系统的系统级调查。基于 worldbox-0.51.2-51d275f0
      （sapient 无城者强制 Unit，Actor.cs:8868-8872）
 ```
 
-**profession 影响（Verified）**：① stats 经 `profession_asset.hasDecisions()` → decisions 数组填充（updateStats 内，Actor.cs:5130 附近，影响 AI 决策池而非数值）；② nextJobActor 选 job 分支（Warrior→job_attacker）；③ city `_professions_dict` 分组缓存（updateCitizens，见 city.md）。**不影响 base_stats 数值**。
+**profession 影响（Verified，2026-09-08 audit 修正定位）**：① `profession_asset.hasDecisions()` → decisions 数组填充（`updateStats` → `registerDecisions()`，Actor.cs:1695 → 4867-4953，影响 AI 决策池而非数值）；② nextJobActor 选 job 分支（Warrior→job_attacker）；③ city `_professions_dict` 分组缓存（updateCitizens，见 city.md）。**不影响 base_stats 数值**。
 
 ### Citizen Job 生命周期（Verified 全链）
 
@@ -166,7 +166,7 @@ gatherer_* → collect_fruits/herbs/honey 同构（→ economy/resources.md 搬�
 |---|---|---|
 | 四层概念模型（枚举/职业资产/工种/AI job 分属两轴） | worldbox | UnitProfession.cs:3-12, ProfessionAsset.cs, CitizenJobAsset.cs, ActorJob.cs+JobAsset.cs, Actor.cs:5013-5044 |
 | profession 赋予/持久化/恢复 | worldbox | Actor.cs setProfession/checkDefaultProfession/saveProfession:8692-8695/loadFromSave:8868-8872 |
-| profession 影响 decisions 而非数值 | worldbox | Actor.cs updateStats decisions 填充段:5130 附近 |
+| profession 影响 decisions 而非数值 | worldbox | Actor.updateStats:1695 → registerDecisions:4867（profession 段 4943-4953） |
 | 名额生成（环境派生 + occupied 反查） | worldbox | CityBehCheckCitizenTasks.cs execute/checkOccupied/addToJob |
 | 三张优先级列表 linkAssets 构建 | worldbox | CitizenJobLibrary.cs:143-167 |
 | 分配链（BehFindNewJob→City.setCitizenJob→checkCitizenJob→takeJob） | worldbox | BehCityActorFindNewJob.cs:7; City.cs:1851-1903 |

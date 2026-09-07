@@ -143,11 +143,11 @@ loadCities 之后再 addZone 一轮（saveVersion≥7 路径，CityManager.cs:13
 | 系统 | 边界接口 | 深入方向 |
 |---|---|---|
 | Actor | `actor.city` / `data.cityID` / `joinCity`/`setCity`；City.units 为重建缓存 | 已覆盖（entity/actor.md） |
-| Kingdom | `city.kingdom` / `setKingdom` / `turnCityToNeutral`；kingdoms.setDirtyCities | deferred: kingdom |
-| Buildings | `zone.buildings_all` → listBuilding（city_building 资产）；storages/stockpiles 分类缓存；Building.data.cityID 持久化 | deferred: buildings |
-| Storage/Resources | 存储本体在 `Building.data.resources : CityResources`；City 仅聚合视图 | deferred: resources |
+| Kingdom | `city.kingdom` / `setKingdom` / `turnCityToNeutral`；kingdoms.setDirtyCities | 已覆盖（political/kingdom.md） |
+| Buildings | `zone.buildings_all` → listBuilding（city_building 资产）；storages/stockpiles 分类缓存；Building.data.cityID 持久化 | 已覆盖（settlement/buildings.md） |
+| Storage/Resources | 存储本体在 `Building.data.resources : CityResources`；City 仅聚合视图 | 已覆盖（economy/resources.md） |
 | Zone/Tile | `zones : List<TileZone>` / ZoneData 坐标持久化 / zone.city 互斥引用 | deferred: world |
-| Jobs | `city.jobs : CitizenJobs` / `_professions_dict`（updateCitizens 重建） | deferred: jobs |
+| Jobs | `city.jobs : CitizenJobs` / `_professions_dict`（updateCitizens 重建） | 已覆盖（economy/jobs.md） |
 | Save | cities.save/loadCities/loadCity/loadLeader（本文件加载节 + technical/save.md） | 已覆盖 |
 
 ## Evidence
@@ -175,7 +175,7 @@ loadCities 之后再 addZone 一轮（saveVersion≥7 路径，CityManager.cs:13
 ## Known Gaps
 
 - `CityTasksData`/`AiSystemCity` 任务编排——**部分关闭（2026-09-07，→ economy/jobs.md）**：CitizenJobs 名额池机制（jobs/occupied 双 dict、CityBehCheckCitizenTasks 环境派生、setCitizenJob 分配）已验证；AiSystemCity 执行引擎仍 deferred: behaviour
-- ~~CitizenJobs/`CityEquipment` 内部结构（→ jobs/items 系统）~~ **CitizenJobs 已关闭（2026-09-07，→ economy/jobs.md）**；CityEquipment 仍 deferred: items
+- ~~CitizenJobs/`CityEquipment` 内部结构（→ jobs/items 系统）~~ **CitizenJobs 已关闭（2026-09-07，→ economy/jobs.md）**；~~CityEquipment~~ **已关闭（2026-09-08，→ economy/items.md）**：按 EquipmentType 分桶 `List<long>` + status.maximum_items=15/槽 + tryToPutItemInStorage 价值替换 + loadFromSave 缺失条目清理
 - Zone 生长/废弃机制（canGrowZones/_dirty_abandoned_zones）
 - LoyaltyCalculator / CityStatus 状态机细节
 - `CityManager.isLocked` / MetaObjectCounter 计数器用途全貌

@@ -75,7 +75,7 @@ Actor.hasTrait(id)                                  Actor.cs:9294-9303
 ```text
 subspecies base_stats（或 asset.base_stats）→ clan → language → culture
 → data 教育属性（diplomacy/stewardship/intelligence/warfare）
-→ status effects → 默认武器 ItemAsset.base_stats
+→ status effects → 默认武器 EquipmentAsset.base_stats（default_attack，见 economy/items.md）
 → 每个 trait 的 base_stats（era 门控：only_active_on_era_flag/
    era_active_moon/era_active_night 不满足则跳过）+ action_get_hit 委托合并
 ```

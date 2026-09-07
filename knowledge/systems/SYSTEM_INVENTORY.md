@@ -63,3 +63,12 @@ System Harvest 进度（第六批，2026-09-08）：
 - modding 关键：新增 EquipmentAsset 仅 add **不进 equipment_by_subtypes → 永不被 AI 合成**（且全新 subtype 会 KeyNotFound）；新 ItemModAsset 不进 pools → 永不被随机抽取
 - 新增 deferred：Decision 调度内部（→ behaviour）、s_action_attack_target 消费（→ combat）、culture 武器偏好（→ culture）、装备 UI（→ ui）
 - S 级全部完成；后续建议 A 级：behaviour（多系统 deferred 汇聚点）或 combat
+
+S-Tier Closure Audit（2026-09-08，→ knowledge/systems/S_TIER_AUDIT.md）：
+- **10/10 S 级系统 verified 维持**；审计方式：文档交叉阅读 + 疑点 targeted source verification（未全量重扫）
+- 跨系统一致性：**0 处机制矛盾**；发现 6 项文档级问题（4+2 处 stale 引用、1 未关闭 gap、1 术语不精确、1 定位错误、1 边界缺失），已全部最小化回写
+- 系统性发现：源码行号引用存在 ±20~330 **双向非均匀漂移**（symbol/file 可靠，机制结论复核全部成立）；后续引用建议 file+symbol 为主，行号仅供参考
+- 统一规律确认：① `AssetLibrary.add ≠ 进入 post_init/linkAssets 派生结构`（六库实证 + 两条补救路线）；② 持久化统一 id 化 + 依赖序重解析 + 缺失静默丢弃 + runtime 缓存自动重建
+- Deferred Matrix：A 类 2 项全部关闭；B 类 21 项（behaviour 6 项为最大汇聚点）；C 类 2（NML）；D 类 22（保留）
+- Modding Readiness：**9 READY / 1 PARTIAL / 0 BLOCKED**（CitizenJob 任务链依赖 behaviour）
+- 最大知识盲区：Behaviour 系统（AiSystem 引擎 + DecisionAsset 消费）；下一阶段唯一推荐：Behaviour Harvest

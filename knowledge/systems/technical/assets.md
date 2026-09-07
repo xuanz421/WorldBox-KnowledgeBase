@@ -146,7 +146,7 @@ AssetLibrary<T>.clone(newId, fromId)                  AssetLibrary.cs:83-90
 - `ResourcesPatch`/`MasterBuilder` 内部：mod JSON → Asset 的字段映射规则、AssetBundle 加载（NML 源深挖任务）
 - 版本门控 `_assetgv[0] == '0'` 的完整语义（`Config.gv = Application.version`，InitLibraries.cs:24；门控行为仅在 0.x 版本验证过）
 - `exportAssets/importAssets`（GenAssets/wbassets）在正式游戏中的实际用途（疑似开发期工具）
-- 各业务 Library 的 post_init/linkAssets 特有逻辑清单（按需在各系统调查中补充）
+- ~~各业务 Library 的 post_init/linkAssets 特有逻辑清单~~ **S 级库已覆盖（2026-09-08 audit）**：traits（加权池/opposite/反向索引）、resources（strategic/order/sprite/diet）、citizen_jobs（三张优先级列表）、items（subtype/词缀池/unlock 池）、buildings（Architecture 派生）——逐库细则见各系统文档；A/B 级库（culture/combat/world 等）待各自 harvest 补充
 - NML `NCMSCompatibleLayer` 兼容层的资产桥接行为
 
 ## Related Patterns

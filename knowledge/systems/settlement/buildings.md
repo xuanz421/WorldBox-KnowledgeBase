@@ -145,7 +145,7 @@ MapBox → BuildingManager.update(pElapsed)                                  Bui
 | 系统 | 边界接口 | 深入方向 |
 |---|---|---|
 | City | `zone.buildings_all` → cities 重建；`data.cityID`；`city.storages/stockpiles` 聚合 storage 资产 | 已覆盖（settlement/city.md） |
-| Resources | 容量在 ResourceAsset（maximum/storage_max）；生产/消耗循环、strategic_resource_assets | deferred: resources |
+| Resources | 容量在 ResourceAsset（maximum/storage_max）；生产/消耗循环、strategic_resource_assets | 已覆盖（economy/resources.md） |
 | Kingdom | `asset.kingdom` string（wild 归属）；setKingdom/setKingdomCiv | 已覆盖（political/kingdom.md） |
 | Zone/Tile | addBuildingMain/fillTiles 占用；`building.city` 经 zone 推导 | deferred: world |
 | Actor | residents 居住（hasResidentSlots）；getNearbyBuildingToLive | 已覆盖边界 |

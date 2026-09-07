@@ -164,7 +164,7 @@ putToDict(slot)                dict + asset.food ? _list_food : _list_other 双�
 | Buildings | data.resources（storage 资产）；addResources/takeResource/extractResources；失效随 Dispose | 已覆盖（settlement/buildings.md） |
 | City | storages 聚合 API + _storage_version；无统一 store | 已覆盖（settlement/city.md） |
 | Actor | ActorBag 携带 + consumeFoodResource（食物效果）；BehThrowResources 转运 | 已覆盖 API 级 |
-| Jobs | BehCityActorGetResourceFromStorage 等 Beh 由 job 调度 | deferred: jobs |
+| Jobs | BehCityActorGetResourceFromStorage 等 Beh 由 job 调度（woodcutter/gatherer/farmer/builder 驱动链已闭环，见 2026-09-07 更新注） | 已覆盖（economy/jobs.md） |
 | Behaviour | Beh* execute 是所有搬运的驱动源 | deferred: behaviour |
 | Items | ItemCrafting cost_resource 扣料 + EquipmentAsset 经济字段 | 已覆盖（economy/items.md，2026-09-08 回写：合成材料全为 ResourceAsset（wood/stone/common_metals/silver/mythril/adamantine/gems/bones/leather）；Item 与 Resource 无转换/无 salvage；`hasResourcesForNewItems`（strategic>10 硬编码）是 make_items decision 门槛；ItemAsset.minimum_city_storage_resource_1 为 write-only 死字段，实际门槛非它） |
 | Subspecies | diet/getAllowedFoodByDiet 过滤食物（linkAssets 交叉） | deferred: culture/subspecies 域 |

@@ -216,6 +216,8 @@ attack action 绑定（战斗系统边界）:
   攻击类型: checkAttackTypes → _attack_asset = 当前武器 asset；
   isRangeAttack = weapon.attack_type（WeaponType.Melee/Range）
 spells: recalcSpells 逐槽合并 item.asset.spells               Actor.cs:5787-5800
+decisions: registerDecisions 内当前武器 asset.decisions_assets 进决策池
+  （Actor.cs:4971-4981，2026-09-08 audit 补录；消费侧 → combat/behaviour）
 触发: 任何装备变动 → slot.setItem/craft/steal 内置 setStatsDirty → 下次 updateStats 重算
 sprite: 装备影响外观（helmet on warrior 头像 Actor.cs:4560、ItemInHand 枚举
   Tool/Resource/Weapon、pool weapon gameplay_sprites）——渲染细节不展开
