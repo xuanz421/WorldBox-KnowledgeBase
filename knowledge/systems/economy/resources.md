@@ -166,7 +166,7 @@ putToDict(slot)                dict + asset.food ? _list_food : _list_other 双�
 | Actor | ActorBag 携带 + consumeFoodResource（食物效果）；BehThrowResources 转运 | 已覆盖 API 级 |
 | Jobs | BehCityActorGetResourceFromStorage 等 Beh 由 job 调度 | deferred: jobs |
 | Behaviour | Beh* execute 是所有搬运的驱动源 | deferred: behaviour |
-| Items | ItemCrafting cost_resource 扣料 + EquipmentAsset 经济字段 | deferred: items |
+| Items | ItemCrafting cost_resource 扣料 + EquipmentAsset 经济字段 | 已覆盖（economy/items.md，2026-09-08 回写：合成材料全为 ResourceAsset（wood/stone/common_metals/silver/mythril/adamantine/gems/bones/leather）；Item 与 Resource 无转换/无 salvage；`hasResourcesForNewItems`（strategic>10 硬编码）是 make_items decision 门槛；ItemAsset.minimum_city_storage_resource_1 为 write-only 死字段，实际门槛非它） |
 | Subspecies | diet/getAllowedFoodByDiet 过滤食物（linkAssets 交叉） | deferred: culture/subspecies 域 |
 | Assets | ResourceLibrary 三阶段（strategic/give_trait 在 linkAssets） | 已覆盖（technical/assets.md） |
 | Save | saved_resources 往返（零值不存/缺失丢弃） | 已覆盖（technical/save.md） |
@@ -199,12 +199,14 @@ putToDict(slot)                dict + asset.food ? _list_food : _list_other 双�
 
 - `supply_bound_give/supply_bound_take/supply_give`（城邦供给循环）与 `trade_*`（贸易数值）的实际消费位置——deferred: boats-trade 域（**jobs 侧已确认非消费方**，2026-09-07 jobs 调查未见引用）
 - `mine_rate/drop_per_mass/produce_min` 的产出数值计算（矿/植被再生循环）
-- `ingredients/ingredients_amount` 与 ItemCrafting 的完整经济（→ items）
+- ~~`ingredients/ingredients_amount` 与 ItemCrafting 的完整经济（→ items）~~ **已关闭（2026-09-08，→ economy/items.md）**：ItemCrafting **不消费 ingredients**——合成成本是 EquipmentAsset 自身的 `cost_gold + cost_resource_id_1/2 + cost_resource_1/2` 字段（无 recipe asset）；扣费走 `actor.spendMoney` + `pCity.takeResource`×2。ingredients/ingredients_amount 属 ResourceLibrary 食物配方链（initFoodRecipes），与 item crafting 无关——其消费位置仍 Unknown
 - DropAsset 掉落 → Actor 拾取入口（未见直接 pickup API；Beh 侧拾取行为 → behaviour）
 - `getRandomSuitableFood` 的 diet 交集算法细节（subspecies.getAllowedFoodByDiet 内部）
 - NML ResourcesPatch 对 mod 资源 JSON 的加载映射（→ NML 深挖）
 
 > 更新（2026-09-07，→ economy/jobs.md）：搬运的 job 侧驱动已闭环——woodcutter/gatherer/farmer 工种 → ActorJob task（chop_trees/collect_*）→ extractResources/addToInventory；builder → BehBuildTarget → updateBuild。仅 Beh 节点内部仍 deferred: behaviour。
+
+> 更新（2026-09-08，→ economy/items.md）：crafting 扣料链已闭环——ItemCrafting.craftItem → pCity.takeResource(cost_resource_id_1/2)（本文件 110 行预估的调用链确认无误）；Item 不进 CityResources（城市侧装备存于 CityData.equipment : CityEquipment，与资源存储完全分离）。
 
 ## Related Patterns
 

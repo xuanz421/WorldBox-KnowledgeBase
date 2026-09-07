@@ -140,6 +140,7 @@ loadWorld() → loadWorld(path)                         SaveManager.cs:~460-500
 - **City**：`cities.save()` 收集 CityData；loadCity 恢复 zones/culture/kingdom（见 settlement/city.md）
 - **Traits**：`saved_traits : List<string>` 在 prepareForSave.saveTraits 写入、TraitTools.loadTraits 直填恢复（traits.md 已记，本文件确认往返路径为 map.wbox JSON）
 - **Assets**：data.asset_id / original_actor_asset 存 string id，加载时 `AssetManager.<lib>.get(id)` 重解析；资产缺失 → 对象静默丢弃（ActorManager.loadObject null 返回，ActorManager.cs:782-798）
+- **Items**（2026-09-08 补，→ economy/items.md）：三处持久化——`SavedMap.items : List<ItemData>`（ItemManager.save，alive 过滤）、`ActorData.saved_items : List<long>`（equipment 槽位 id 列表）、`CityData.equipment : CityEquipment`（分桶 id 列表）；加载序 **items 先于 cities/actors**（引用安全序）；ItemAsset 缺失 → 物品整体丢弃，ItemModAsset 缺失 → 从 data.modifiers 剔除；id 走 map_stats.id_item（SaveConverter.cs:362-375 旧档 fixup）
 
 ## Evidence
 

@@ -6,7 +6,7 @@
 |---|---|---|---|---|---|
 | jobs | Jobs / Professions | economy | S | ActorJob, ActorJobLibrary, CitizenJobAsset, CitizenJobLibrary, CitizenJobCondition, ProfessionAsset, ProfessionLibrary, UnitProfession, BehCityActorFindNewJob, BehEndJob, BehCheckEndCityActorJob | verified（economy/jobs.md，2026-09-07） |
 | resources | Resources / Storage | economy | S | ResourceAsset, CityStorageSlot, BehCityActorGetResourceFromStorage, BehCityActorFindStorage(Wheat) | verified（economy/resources.md，2026-09-07） |
-| items | Items / Equipment | economy | S | ItemAsset, ItemLibrary, ActorEquipment, ItemCrafting | planned |
+| items | Items / Equipment | economy | S | ItemAsset, EquipmentAsset, ItemModAsset, Item, ItemData, ItemManager, ItemLibrary, ItemModifierLibrary, ActorEquipment, CityEquipment, ItemCrafting | verified（economy/items.md，2026-09-08） |
 | city | City | settlement | S | City, CityData, CityManager + Beh*City* 节点群 | verified（settlement/city.md，2026-09-07） |
 | buildings | Buildings / Construction | settlement | S | BuildingAsset, BuildingLibrary, BuildingManager | verified（settlement/buildings.md，2026-09-07） |
 | actor | Actor / Entity | entity | S | Actor, ActorAsset, ActorData, BaseActorComponent, ActorManager | verified（entity/actor.md，2026-09-07） |
@@ -55,3 +55,11 @@ System Harvest 进度（第五批，2026-09-07）：
 - 关键结论：Job/Profession 是**两轴四层**（职业轴：UnitProfession↔ProfessionAsset 持久化；工作轴：CitizenJob 工种（City 名额池）+ ActorJob AI 编排（均 runtime））；仅 data.profession 持久化，job load 后全重选
 - modding 关键：新增 CitizenJobAsset 仅 add **不进分配列表**（linkAssets 不重跑）且 unit_job_default 需自设；UnitProfession 枚举封闭不可新增职业
 - 剩余 S 级：items
+
+System Harvest 进度（第六批，2026-09-08）：
+- items 完成 evidence-backed 系统调查（verified）——**全部 S 级系统收齐**；关闭 resources.md ItemCrafting 边界项（materials 为 EquipmentAsset cost 字段而非 recipe asset、不消费 ingredients）
+- 关键结论：Item 是**有身份对象**（id/durability/modifiers/kills，Item+ItemData 双层）与 Resource（纯数量）完全正交；资产三层 ItemAsset(基类)→EquipmentAsset(装备)/ItemModAsset(词缀)，与 trait 共享 BaseAugmentationAsset 框架；持有侧 ActorEquipment（6 槽 Item 引用）/ CityEquipment（CityData 分桶 id 列表，15/槽）
+- 关键澄清：① crafting/repair/take_item 是 **Decision task 而非 CitizenJob 工种**（12 工种无 blacksmith）；② 装备死亡回城库不落地，ownerless 非收藏品被 GC；③ quality/value 不持久化（重算）；④ ItemData.material 与 ItemAsset.minimum_city_storage_resource_1 均为死字段；⑤ base attack（jaws/claws/boat_*）也是 ItemLibrary 资产
+- modding 关键：新增 EquipmentAsset 仅 add **不进 equipment_by_subtypes → 永不被 AI 合成**（且全新 subtype 会 KeyNotFound）；新 ItemModAsset 不进 pools → 永不被随机抽取
+- 新增 deferred：Decision 调度内部（→ behaviour）、s_action_attack_target 消费（→ combat）、culture 武器偏好（→ culture）、装备 UI（→ ui）
+- S 级全部完成；后续建议 A 级：behaviour（多系统 deferred 汇聚点）或 combat

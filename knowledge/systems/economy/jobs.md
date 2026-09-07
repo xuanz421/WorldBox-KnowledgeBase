@@ -158,6 +158,7 @@ gatherer_* → collect_fruits/herbs/honey 同构（→ economy/resources.md 搬�
 | Kingdom | setKing(King)；warrior 招募条件；stopBeingWarrior | 已覆盖（political/kingdom.md） |
 | Behaviour | AiSystem/BehaviourTask 执行引擎、Decision 资产 | deferred: behaviour（本批止于 setJob/nextJob 委托） |
 | Save | 仅 data.profession 持久化；job 全部重选 | 已覆盖（technical/save.md） |
+| Items | **边界澄清（2026-09-08，→ economy/items.md）**：crafting/repair/take_item（make_items/repair_equipment/try_to_take_city_item）是 **Decision task 而非 CitizenJob 工种**——12 工种中无 blacksmith，装备相关任务全部由 Decision 层（make_decision）+ AutoCivilization 驱动；工种系统不调度任何 item 行为 | 已覆盖（economy/items.md） |
 
 ## Evidence
 

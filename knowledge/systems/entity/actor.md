@@ -38,7 +38,7 @@ ActorData (持久化数据, SQLite 行 + custom_data 键值容器)
 
 - **ActorData**（ActorData.cs:7-241）：
   - 继承 `BaseObjectData`（health）→ `BaseSystemData`（BaseSystemData.cs:10-452）：`[PrimaryKey] id`、`name/created_time/died_time`、`custom_data_int/long/float/bool/string` + `custom_data_flags` 五型键值容器（BaseSystemData.cs:17-32）
-  - Actor 特有：`saved_traits : List<string>`（trait id 列表）、`saved_items : List<long>`、`inventory : ActorBag`、`x/y`、`profession`、`homeBuildingID`、`transportID`、`cityID`、`civ_kingdom_id` 及 42 个属性（ActorData.cs:15-45 字段清单）
+  - Actor 特有：`saved_traits : List<string>`（trait id 列表）、`saved_items : List<long>`（**equipment 六槽的序列化形式**——各槽 Item data.id，见 economy/items.md）、`inventory : ActorBag`（Resource 携带层，与 item 无关）、`x/y`、`profession`、`homeBuildingID`、`transportID`、`cityID`、`civ_kingdom_id` 及 42 个属性（ActorData.cs:15-45 字段清单）
 - **runtime-only state**（不持久化，重建）：`traits : HashSet<ActorTrait>`（从 saved_traits 重建）、`_traits_cache`、`stats : BaseStats`（脏标记重算）、`current_tile/current_position`（BaseSimObject.cs:17-33）、`ai : AiSystemActor`、`batch : BatchActors`
 - **custom data 扩展点**：`actor.data.get("mod.key", out float v, default)` / `set("mod.key", v)`（BaseSystemData.cs:262-350）——五型 + flags + `change()` 带上下限、`cloneCustomDataFrom`（Actor.cs:533 克隆单位时复制）
 - 教育属性持久化在 data 而非 asset：`stats["diplomacy"] += data["diplomacy"]`（Actor.cs:1804-1807）
