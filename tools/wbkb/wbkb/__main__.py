@@ -1,4 +1,4 @@
-"""WBKB CLI: python -m wbkb discover | doctor | extract | index | search | symbol | string | show | stats"""
+"""WBKB CLI: python -m wbkb discover | doctor | extract | index | search | symbol | string | show | stats | vector | semantic"""
 
 from __future__ import annotations
 
@@ -570,6 +570,56 @@ def cmd_overrides(args) -> int:
     return 0
 
 
+def cmd_vector(args) -> int:
+    from .rag import builder as rag_builder
+    from .rag.schema import RagError
+
+    root = repo_root()
+    try:
+        result = rag_builder.perform_vector_build(root, force=args.force)
+    except RagError as exc:
+        print(f"Vector build failed: {exc}", file=sys.stderr)
+        return 1
+    print(f"Sources {', '.join(result['roots'])}")
+    if result["status"] == "UNCHANGED":
+        print("Status UNCHANGED")
+        return 0
+    stats = result["stats"]
+    print(f"Files {stats['files']}  Chunks {stats['chunks']}")
+    print(f"Indexed {stats['indexed']}  Updated {stats['updated']}"
+          f"  Unchanged {stats['unchanged']}  Removed {stats['removed']}")
+    print(f"Embedding {result['backend']} ({result['model']}, {result['dimension']}d)")
+    print(f"Status {result['status']} ({result['mode']})")
+    return 0
+
+
+def cmd_semantic(args) -> int:
+    from .rag import retriever
+    from .rag.schema import RagError
+
+    root = repo_root()
+    try:
+        result = retriever.semantic_search(root, args.query, limit=args.limit)
+    except RagError as exc:
+        print(f"Semantic search failed: {exc}", file=sys.stderr)
+        return 1
+    if args.json:
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        return 0
+    print(f"Query \"{result['query']}\"")
+    print(f"Results ({len(result['results'])}/{result['limit']})")
+    print("--------")
+    for rank, hit in enumerate(result["results"], start=1):
+        section = f"  ›  {hit['section']}" if hit["section"] else ""
+        print(f"\n{rank}. {hit['score']:.4f}  {hit['source_path']}")
+        print(f"   [{hit['document_type']}] {hit['title']}{section}")
+        preview = " ".join(hit["text"].split())
+        if len(preview) > 200:
+            preview = preview[:200] + "…"
+        print(f"   {preview}")
+    return 0
+
+
 def cmd_doctor(_args) -> int:
     root = repo_root()
     scan = discovery.discover_sources(root)
@@ -741,6 +791,16 @@ def main(argv: list[str] | None = None) -> int:
 
     sub.add_parser("stats", help="index statistics")
 
+    vector_parser = sub.add_parser("vector", help="semantic vector index over knowledge/docs markdown")
+    vector_sub = vector_parser.add_subparsers(dest="vector_command", required=True)
+    vector_build = vector_sub.add_parser("build", help="chunk, embed and store knowledge/docs markdown")
+    vector_build.add_argument("--force", action="store_true", help="rebuild even if the vector index is current")
+
+    semantic_parser = sub.add_parser("semantic", help="semantic search over knowledge/docs markdown")
+    semantic_parser.add_argument("query")
+    semantic_parser.add_argument("--limit", type=int, default=5, help="top results, default 5")
+    semantic_parser.add_argument("--json", action="store_true", help="machine-readable output")
+
     args = parser.parse_args(argv)
     if args.command == "discover":
         return cmd_discover(args)
@@ -768,6 +828,10 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_derived(args)
     if args.command == "overrides":
         return cmd_overrides(args)
+    if args.command == "vector":
+        return cmd_vector(args)
+    if args.command == "semantic":
+        return cmd_semantic(args)
     return cmd_doctor(args)
 
 
