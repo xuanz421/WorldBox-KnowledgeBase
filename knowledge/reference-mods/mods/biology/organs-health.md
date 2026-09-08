@@ -1,3 +1,9 @@
+---
+title: 生物学 — 器官与健康机制
+aliases:
+  - Biology Organ Health Mechanics
+---
+
 # Biology — Organ / Health Mechanics
 
 Source: `ref:biology`（生物学 1.0.7）。Biology 研究分支子节点（B1 记录，父节点 [biology.md](../biology.md)）；mod 侧证据相对 `Mods/Biology_1.0.7/Code/`，原版侧为 WorldBox 反编译源码。

@@ -1,3 +1,9 @@
+---
+title: 生物学 — 架构基线
+aliases:
+  - Biology Architecture Baseline
+---
+
 # Biology — Architecture Baseline
 
 Source: `ref:biology`（生物学 1.0.7，信仰芙芙の博士，无 git）。31 .cs，`Code/` 平铺，namespace `RimWorldMod`。

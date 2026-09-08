@@ -4,6 +4,19 @@
 
 * 与用户沟通使用中文
 * code identifiers / API / class / method / field / compiler errors 保持英文
+* 技术性词语保持英文原文，不在术语位置翻译；解释以中文写在正文内容中
+
+## Knowledge Organization (Obsidian)
+
+知识库结构组织的完整规则在根目录 `知识组织规则.md`（Top-Level Index Authority / Index Responsibilities / Naming Rules / File Name vs Display Name / Recursive Forest / Weak Balance / Link Rules / Independent Markdown Files / Placement Decision / Maintenance Checklist）。md 的创建、管理、归纳、分类、拆分、接入与命名一律先参考该规则；整理 knowledge/、新建或移动知识文档前必读。
+
+不变量速览（细节以上述文档为准）：
+
+* 总索引固定三个：源代码索引（`knowledge/systems/`）/ 模组索引（`knowledge/reference-mods/`）/ 模块索引（`knowledge/patterns/`）；未经用户明确要求不得增删、合并、改名、调层级
+* 链接只沿 index / branch → child 方向；跨 system / tree / sibling 引用一律使用 stable ID（`pattern_id` / `ref:<mod-id>` / system 文件路径），不建叶子横向互链
+* 连接 ≠ 相关：链接只承载导航需要，内容相关性用 stable ID / 纯文本 provenance 承载；会用扩展测试判定——同类链接若随条目数线性增长即属重复索引，退回 stable ID
+* 孤立 md 仅限「无连接性 + 无连接需求」同时成立：有连接需要的必须接入森林，无连接需要的尽可能不连接
+* `knowledge/patterns/` 与 `knowledge/reference-mods/` 受 validators 强制结构约束，散落独立 md 不适用（见 Editing knowledge/）
 
 ## Core Principle
 
@@ -17,39 +30,6 @@ WBKB 的核心目标是：
 * `knowledge/reference-mods/catalog.json` — 23 个 reference mod 的证据化 profile（导航见 `knowledge/reference-mods/模组索引.md`）
 * `knowledge/systems/catalog.json` — WorldBox 系统 map（core types → `file` 入口；导航见 `knowledge/systems/源代码索引.md`）
 * `wbkb` 索引（见下）— 反编译源码的结构化查询
-
-### Recursive Forest
-
-Forest 不限制固定层数，允许递归分枝：
-
-- Index / Branch / Leaf 是结构角色，不是固定文件类型。
-- Leaf 只是"当前没有子节点"的结构角色，不是永久终点；Leaf 膨胀后可提升为 Branch，并继续拆出子 md。
-- 拆分依据优先级：1. mechanism boundary → 2. agent consumption/read cost → 3. document size；不按固定行数机械拆分。
-- 不按 class / method / symbol 一项一个 md；一个子 md 应回答一个相对完整的机制问题。
-
-**Leaf 升级为 Branch 的判定**（指导性，非硬性；出现以下任意多项时考虑拆分）：
-
-- 一个文件包含两个或以上可独立理解的机制闭环
-- 多个独立生命周期已经各自形成较长章节
-- 单个章节本身已经可以独立成为文档
-- Agent 为回答局部问题经常需要读取大量无关内容
-- 文档持续增长且后续已有明确的新机制要加入
-- definition/content table 与 mechanism explanation 大量混杂
-
-行数只作为信号：约 300–500 行是 review trigger，不能作为强制拆分阈值。
-
-**Branch / Index 文档职责**：只保留 Scope、核心对象/机制总览、子主题导航、推荐阅读顺序、当前 Evidence / Verification Status、Unknown / Deferred 总览；不复制子文档详细机制（父文档摘要 ≠ 子文档内容重复）。
-
-典型结构：
-
-```text
-Root Index
-└─ System / Mod
-   ├─ Mechanism A
-   └─ Mechanism B
-      ├─ B1
-      └─ B2
-```
 
 ## Commands
 

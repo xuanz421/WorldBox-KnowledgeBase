@@ -37,14 +37,14 @@ Cultiway-Reborn 克隆位置：`E:\WorldBox Modding\ReferenceSources\Cultiway-Re
 
 ## Batch Queue
 
-| Batch | 对象 | 边界 |
-|---|---|---|
-| R2-1 Boats | BoatRebalanceBox | 8 文件全读；船只武器/投射物/状态机制；1 批完成 |
-| R2-2 Biology | Biology_1.0.7 | 器官系统/疾病库/健康模拟/UI tab；31 文件按簇分 2-3 批。B0/B1 已完成 → [biology profile](../knowledge/reference-mods/mods/biology.md)（2026-09-08 入正式 catalog，`ref:biology`），余 B2 |
-| R2-E Economy | EconomyMod | **blocked**：先决定源码获取（作者源/GitHub）或 ilspycmd 反编译路线；未解决前不启动 |
-| R2-C0..C5 | Cultiway-Reborn | 见下节拆分；每子批 1 核心机制或 2-4 文件簇 |
-| R2-5 Cultivation Delta | （取消） | 旧修仙 mod 均 UNCHANGED，无 delta 可研究 |
-| R2-6 Cross-Mod Synthesis | 全部 R2 新 profile | 最后执行；更新 CROSS_MOD_SUMMARY / gaps |
+| Batch                    | 对象               | 边界                                                                                                                                                        |
+| ------------------------ | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R2-1 Boats               | BoatRebalanceBox | 8 文件全读；船只武器/投射物/状态机制；1 批完成                                                                                                                                |
+| R2-2 Biology             | Biology_1.0.7    | 器官系统/疾病库/健康模拟/UI tab；31 文件按簇分 2-3 批。B0/B1 已完成入档（`ref:biology`，2026-09-08 入正式 catalog），余 B2                                    |
+| R2-E Economy             | EconomyMod       | **blocked**：先决定源码获取（作者源/GitHub）或 ilspycmd 反编译路线；未解决前不启动                                                                                                   |
+| R2-C0..C5                | Cultiway-Reborn  | 见下节拆分；每子批 1 核心机制或 2-4 文件簇                                                                                                                                 |
+| R2-5 Cultivation Delta   | （取消）             | 旧修仙 mod 均 UNCHANGED，无 delta 可研究                                                                                                                           |
+| R2-6 Cross-Mod Synthesis | 全部 R2 新 profile  | 最后执行；更新 CROSS_MOD_SUMMARY / gaps                                                                                                                          |
 
 推荐第一个正式批次：**R2-1 BoatRebalanceBox**（S 规模、零重复、直接补显式空白，可单批收口）。
 
