@@ -8,6 +8,7 @@
 ## 结构
 
 ```text
+模组索引.md              导航根（By System / By Technique / By Tier）
 catalog.json             机器可读目录（主入口）
 catalog.csv              同内容的 CSV
 system-matrix.csv        mod × system 矩阵（role: primary/secondary）
@@ -27,25 +28,6 @@ CROSS_MOD_SUMMARY.md     跨 mod 对比与覆盖总结
 
 按系统：查 `system-matrix.csv`（role=primary 优先）；按技术：`catalog.json` 的 techniques/harmony_targets；按可复用做法：`pattern-candidates.jsonl`。
 
-## By System（primary，Top）
+## 导航
 
-- **Actor**：guigu-cultivation, xuanjian-xianzu, xuanmen-daojie, thefantasyworld, sandbox
-- **Traits**：guigu-cultivation, xuanjian-xianzu, xuanmen-daojie, thefantasyworld, incensefiredway, xavii-nation-types
-- **Combat**：guigu-cultivation, xuanmen-daojie, thefantasyworld, incensefiredway
-- **Kingdom**：guigu-cultivation, xavii-nation-types, sandbox
-- **UI**：powerbox, xuanjian-xianzu, actorhistory, familytree, sandbox
-- **Save/Persistence**：guigu-cultivation, actorhistory, xuanmen-daojie, xuanjian-xianzu
-- **Buildings**：xuanjian-xianzu, buzzoff, creepmobboost
-- **Map**：mapdeal, worldresilience
-- **Events**：xavii-nation-types, actorhistory
-
-## By Technique
-
-- **Harmony Prefix 否决/替换**：buzzoff, nerffiredamage, worldresilience, xuanmen-daojie
-- **Harmony Transpiler**：guigu-cultivation, xuanmen-daojie, chinesename
-- **NML Feature 体系**：powerbox（教学样本）
-- **运行时资产注入（零 Harmony）**：creepmobboost, mapdeal
-- **actor.data 键值持久化**：guigu-cultivation, incensefiredway, xuanmen-daojie, chinesename
-- **SQLite 存储**：actorhistory
-- **UI 克隆注入**：actorhistory, familytree, sandbox
-- **程序集扫描自动注册**：chinesename
+按 System / Technique / Tier 的完整导航见 [模组索引.md](模组索引.md)；权威机器可读目录为 `catalog.json` / `system-matrix.csv`。

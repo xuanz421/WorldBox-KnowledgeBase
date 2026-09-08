@@ -175,7 +175,9 @@ loadWorld() → loadWorld(path)                         SaveManager.cs:~460-500
 
 ## Related Patterns
 
-- [persistent-mod-data](../../patterns/persistence/persistent-mod-data.md) — mod 数据 5 级选型（本系统各层级的 modding 实践）
-- [actor-data-custom-state](../../patterns/actor/actor-data-custom-state.md) — 实体级 custom_data 用法
-- [actor-event-observation](../../patterns/actor/actor-event-observation.md) — 死亡快照（配合 on_world_loaded 重建观察者）
-- [world-tick-integration](../../patterns/lifecycle/world-tick-integration.md) — 加载后初始化时机
+稳定 pattern_id（完整索引：knowledge/patterns/模式索引.md）：
+
+- `persistent-mod-data` — mod 数据 5 级选型（本系统各层级的 modding 实践）
+- `actor-data-custom-state` — 实体级 custom_data 用法
+- `actor-event-observation` — 死亡快照（配合 on_world_loaded 重建观察者）
+- `world-tick-integration` — 加载后初始化时机

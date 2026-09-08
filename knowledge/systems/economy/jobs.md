@@ -194,7 +194,9 @@ gatherer_* → collect_fruits/herbs/honey 同构（→ economy/resources.md 搬�
 
 ## Related Patterns
 
-- [world-tick-integration](../../patterns/lifecycle/world-tick-integration.md) — City AI 周期驱动（CityBehCheckCitizenTasks 挂载点）
-- [register-custom-stat](../../patterns/actor/register-custom-stat.md) — 数值侧扩展（与 profession 解耦）
-- [actor-data-custom-state](../../patterns/actor/actor-data-custom-state.md) — per-actor 数据（profession 已占用 data.profession key）
-- [clone-modify-asset](../../patterns/assets/clone-modify-asset.md) — 工种派生路线
+稳定 pattern_id（完整索引：knowledge/patterns/模式索引.md）：
+
+- `world-tick-integration` — City AI 周期驱动（CityBehCheckCitizenTasks 挂载点）
+- `register-custom-stat` — 数值侧扩展（与 profession 解耦）
+- `actor-data-custom-state` — per-actor 数据（profession 已占用 data.profession key）
+- `clone-modify-asset` — 工种派生路线

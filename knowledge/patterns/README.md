@@ -6,7 +6,7 @@
 
 - **Strong Verified** — 多个独立 Reference Mod 实现 + WorldBox/NML API 对应关系经 WBKB 索引确认
 - **Verified** — 一个可靠实现，核心 API 已确认
-- **Mostly Verified / Inferred** — 不进入默认推荐（见 DEFERRED.md）
+- **Mostly Verified / Inferred** — 不进入默认推荐（见 DEFERRED_CANDIDATES.md）
 
 ## 与 Reference Mod Profile 的关系
 
@@ -14,7 +14,7 @@ Profile（`knowledge/reference-mods/mods/`）描述"每个 mod 是什么"；Patt
 
 ## 使用方式
 
-- 人类：从 [INDEX.md](INDEX.md) 按 Goal/System 10 秒定位
+- 人类：从 [模式索引.md](模式索引.md) 按 Goal/System 10 秒定位
 - Agent：`catalog.json` 的稳定 `pattern_id`（如 `register-godpower`）可被直接引用；验证 API 时用 `wbkb search/symbol/refs/show`
 
 ## 消费统计

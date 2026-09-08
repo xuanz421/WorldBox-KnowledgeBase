@@ -184,7 +184,9 @@ MapBox → BuildingManager.update(pElapsed)                                  Bui
 
 ## Related Patterns
 
-- [clone-modify-asset](../../patterns/assets/clone-modify-asset.md) — 建筑派生注册（本系统 add 路线的 modding 实践）
-- [custom-kingdom-system](../../patterns/kingdom/custom-kingdom-system.md) — 建筑 kingdom 联动玩法
-- [safe-asset-registration](../../patterns/assets/safe-asset-registration.md) — last-wins 防御
-- [persistent-mod-data](../../patterns/persistence/persistent-mod-data.md) — 建筑级数据选型
+稳定 pattern_id（完整索引：knowledge/patterns/模式索引.md）：
+
+- `clone-modify-asset` — 建筑派生注册（本系统 add 路线的 modding 实践）
+- `custom-kingdom-system` — 建筑 kingdom 联动玩法
+- `safe-asset-registration` — last-wins 防御
+- `persistent-mod-data` — 建筑级数据选型

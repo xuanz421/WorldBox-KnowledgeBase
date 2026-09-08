@@ -351,7 +351,9 @@ unlock 体系: EquipmentAsset.unlock() → pot_*_unlocked 池增量维护
 
 ## Related Patterns
 
-- [register-actor-trait](../../patterns/assets/register-actor-trait.md) — 同源 BaseAugmentationAsset 注册（trait 与 item 同框架）
-- [clone-modify-asset](../../patterns/assets/clone-modify-asset.md) — 材质族装备（armor_iron ← $armor clone）即此模式
-- [safe-asset-registration](../../patterns/assets/safe-asset-registration.md) — last-wins 防御
-- [actor-data-custom-state](../../patterns/actor/actor-data-custom-state.md) — ItemData 继承同款 custom_data 容器（per-item mod 数据可挂此层）
+稳定 pattern_id（完整索引：knowledge/patterns/模式索引.md）：
+
+- `register-actor-trait` — 同源 BaseAugmentationAsset 注册（trait 与 item 同框架）
+- `clone-modify-asset` — 材质族装备（armor_iron ← $armor clone）即此模式
+- `safe-asset-registration` — last-wins 防御
+- `actor-data-custom-state` — ItemData 继承同款 custom_data 容器（per-item mod 数据可挂此层）

@@ -154,7 +154,9 @@ MapBox → _list_meta_main_managers: KingdomManager.update(pElapsed)      Kingdo
 
 ## Related Patterns
 
-- [custom-kingdom-system](../../patterns/kingdom/custom-kingdom-system.md) — per-kingdom data + KingdomTrait 的 modding 实践（与本体 dirty 重建/trait 管线一致）
-- [harmony-prefix-recipes](../../patterns/patching/harmony-prefix-recipes.md) — 介入建国/灭亡流程
-- [persistent-mod-data](../../patterns/persistence/persistent-mod-data.md) — 王国级持久数据选型
-- [world-tick-integration](../../patterns/lifecycle/world-tick-integration.md) — 王国 AI 周期驱动
+稳定 pattern_id（完整索引：knowledge/patterns/模式索引.md）：
+
+- `custom-kingdom-system` — per-kingdom data + KingdomTrait 的 modding 实践（与本体 dirty 重建/trait 管线一致）
+- `harmony-prefix-recipes` — 介入建国/灭亡流程
+- `persistent-mod-data` — 王国级持久数据选型
+- `world-tick-integration` — 王国 AI 周期驱动

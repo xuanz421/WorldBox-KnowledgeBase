@@ -210,7 +210,9 @@ putToDict(slot)                dict + asset.food ? _list_food : _list_other 双�
 
 ## Related Patterns
 
-- [persistent-mod-data](../../patterns/persistence/persistent-mod-data.md) — 资源量持久化随 BuildingData（本系统 saved_resources 的 modding 语境）
-- [clone-modify-asset](../../patterns/assets/clone-modify-asset.md) — 资源模板 clone 路线（原版 initFood 同模式）
-- [safe-asset-registration](../../patterns/assets/safe-asset-registration.md) — last-wins 防御
-- [register-custom-stat](../../patterns/actor/register-custom-stat.md) — 平行的 BaseStatAsset 注册（linkAssets 缺失 caveat 同构）
+稳定 pattern_id（完整索引：knowledge/patterns/模式索引.md）：
+
+- `persistent-mod-data` — 资源量持久化随 BuildingData（本系统 saved_resources 的 modding 语境）
+- `clone-modify-asset` — 资源模板 clone 路线（原版 initFood 同模式）
+- `safe-asset-registration` — last-wins 防御
+- `register-custom-stat` — 平行的 BaseStatAsset 注册（linkAssets 缺失 caveat 同构）

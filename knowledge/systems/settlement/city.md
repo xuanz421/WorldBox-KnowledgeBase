@@ -185,7 +185,9 @@ loadCities 之后再 addZone 一轮（saveVersion≥7 路径，CityManager.cs:13
 
 ## Related Patterns
 
-- [custom-kingdom-system](../../patterns/kingdom/custom-kingdom-system.md) — per-city data + kingdom 联动（本系统 data 层的 modding 实践）
-- [persistent-mod-data](../../patterns/persistence/persistent-mod-data.md) — 城市级持久数据选型
-- [world-tick-integration](../../patterns/lifecycle/world-tick-integration.md) — 城市周期驱动接入
-- [harmony-prefix-recipes](../../patterns/patching/harmony-prefix-recipes.md) — 介入建城/吞并流程
+稳定 pattern_id（完整索引：knowledge/patterns/模式索引.md）：
+
+- `custom-kingdom-system` — per-city data + kingdom 联动（本系统 data 层的 modding 实践）
+- `persistent-mod-data` — 城市级持久数据选型
+- `world-tick-integration` — 城市周期驱动接入
+- `harmony-prefix-recipes` — 介入建城/吞并流程

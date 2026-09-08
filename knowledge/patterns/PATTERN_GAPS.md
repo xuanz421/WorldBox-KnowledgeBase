@@ -10,7 +10,7 @@
 | **City 深度行为** | 修改城市建造逻辑/存储访问——仅 xavii LandTypes 挂了生命周期钩子 | ref:xavii-nation-types（部分） |
 | **Boats / Transport** | 完全空白 | 无 |
 | **Books / Knowledge 系统** | 完全空白 | 无 |
-| **Harmony Transpiler 教程级 pattern** | 三 mod 有实现但高风险，未提炼（见 DEFERRED） | chinesename/xuanmen/guigu |
+| **Harmony Transpiler 教程级 pattern** | 三 mod 有实现但高风险，未提炼（见 DEFERRED_CANDIDATES） | chinesename/xuanmen/guigu |
 | **模组间依赖/通信** | 仅玄鉴仙族未声明硬依赖 VideoCopilot（反面教材）；无正面模式 | 无 |
 | **NML API 面权威清单** | 多处 Unverified 标注的根因（见 reference-mods/unresolved.jsonl）——Z6 API mining 待做 | 无 |
 | **性能工程** | 仅 optime + 各大 mod 私有实践，无统一 pattern | 分散 |

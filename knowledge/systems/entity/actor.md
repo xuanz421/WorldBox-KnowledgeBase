@@ -165,7 +165,9 @@ ActorManager.loadFromSave(List<ActorData>)          ActorManager.cs:772
 
 ## Related Patterns
 
-- [actor-data-custom-state](../../patterns/actor/actor-data-custom-state.md) — per-actor 持久状态（本系统 data.get/set 的 modding 用法）
-- [actor-event-observation](../../patterns/actor/actor-event-observation.md) — 死亡快照观察
-- [register-custom-stat](../../patterns/actor/register-custom-stat.md) — 自定义数值属性
-- [register-actor-trait](../../patterns/assets/register-actor-trait.md) — 给 Actor 加 trait（见 traits.md）
+稳定 pattern_id（完整索引：knowledge/patterns/模式索引.md）：
+
+- `actor-data-custom-state` — per-actor 持久状态（本系统 data.get/set 的 modding 用法）
+- `actor-event-observation` — 死亡快照观察
+- `register-custom-stat` — 自定义数值属性
+- `register-actor-trait` — 给 Actor 加 trait（见 traits.md）

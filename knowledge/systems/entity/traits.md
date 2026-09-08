@@ -157,7 +157,9 @@ AssetManager.init() → AssetManager.add(traits, "traits") → ActorTraitLibrary
 
 ## Related Patterns
 
-- [register-actor-trait](../../patterns/assets/register-actor-trait.md) — 注册侧 modding pattern（本系统 add 流程的 modding 包装）
-- [safe-asset-registration](../../patterns/assets/safe-asset-registration.md) — 防重复注册（对应 AssetLibrary.add 的 last-wins 行为）
-- [register-custom-stat](../../patterns/actor/register-custom-stat.md) — BaseStatAsset 路线（与 trait.base_stats 平行的另一数值路线）
-- [clone-modify-asset](../../patterns/assets/clone-modify-asset.md) — 派生已有 trait 的资产路线
+稳定 pattern_id（完整索引：knowledge/patterns/模式索引.md）：
+
+- `register-actor-trait` — 注册侧 modding pattern（本系统 add 流程的 modding 包装）
+- `safe-asset-registration` — 防重复注册（对应 AssetLibrary.add 的 last-wins 行为）
+- `register-custom-stat` — BaseStatAsset 路线（与 trait.base_stats 平行的另一数值路线）
+- `clone-modify-asset` — 派生已有 trait 的资产路线

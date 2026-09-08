@@ -67,6 +67,8 @@ Decompiled snapshots and the index database stay local under
 
 ## Layout
 
+知识导航入口：[知识库索引.md](知识库索引.md)（forest 索引：源代码 / 模式 / 模组三棵树）。
+
 ```text
 docs/        architecture documents
 config/      local source config (wbkb.local.json, not in Git; example committed)

@@ -151,8 +151,10 @@ AssetLibrary<T>.clone(newId, fromId)                  AssetLibrary.cs:83-90
 
 ## Related Patterns
 
-- [register-actor-trait](../../patterns/assets/register-actor-trait.md) — add() 的 modding 用法
-- [clone-modify-asset](../../patterns/assets/clone-modify-asset.md) — clone() 的 modding 用法与共享引用 caveat
-- [safe-asset-registration](../../patterns/assets/safe-asset-registration.md) — last-wins 覆盖的防御模式
-- [register-godpower](../../patterns/assets/register-godpower.md) — PowerLibrary 注册
-- [nml-feature-authoring](../../patterns/lifecycle/nml-feature-authoring.md) — NML 构建器路线
+稳定 pattern_id（完整索引：knowledge/patterns/模式索引.md）：
+
+- `register-actor-trait` — add() 的 modding 用法
+- `clone-modify-asset` — clone() 的 modding 用法与共享引用 caveat
+- `safe-asset-registration` — last-wins 覆盖的防御模式
+- `register-godpower` — PowerLibrary 注册
+- `nml-feature-authoring` — NML 构建器路线
