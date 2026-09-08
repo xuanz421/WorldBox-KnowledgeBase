@@ -1,3 +1,9 @@
+---
+title: CreepMobBoost
+aliases:
+  - creepmobboost
+---
+
 # CreepMobBoost
 
 ## Identity

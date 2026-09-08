@@ -13,10 +13,43 @@ WBKB 的核心目标是：
 
 回答 WorldBox/NML modding 问题前，先查已有知识，而不是从头调查（人类导航入口：根 `知识库索引.md`，forest 结构——链接只从索引指向叶子，跨树引用使用稳定 id 而非链接）：
 
-* `knowledge/patterns/catalog.json` — 16 个验证过的 modding pattern（导航见 `knowledge/patterns/模式索引.md`）
-* `knowledge/reference-mods/catalog.json` — 21 个 reference mod 的证据化 profile（导航见 `knowledge/reference-mods/模组索引.md`）
+* `knowledge/patterns/catalog.json` — 16 个验证过的可复用模块（`pattern_id` 即模块稳定 ID；导航根 `knowledge/patterns/模式索引.md`，节点显示名「模块索引」）
+* `knowledge/reference-mods/catalog.json` — 23 个 reference mod 的证据化 profile（导航见 `knowledge/reference-mods/模组索引.md`）
 * `knowledge/systems/catalog.json` — WorldBox 系统 map（core types → `file` 入口；导航见 `knowledge/systems/源代码索引.md`）
 * `wbkb` 索引（见下）— 反编译源码的结构化查询
+
+### Recursive Forest
+
+Forest 不限制固定层数，允许递归分枝：
+
+- Index / Branch / Leaf 是结构角色，不是固定文件类型。
+- Leaf 只是"当前没有子节点"的结构角色，不是永久终点；Leaf 膨胀后可提升为 Branch，并继续拆出子 md。
+- 拆分依据优先级：1. mechanism boundary → 2. agent consumption/read cost → 3. document size；不按固定行数机械拆分。
+- 不按 class / method / symbol 一项一个 md；一个子 md 应回答一个相对完整的机制问题。
+
+**Leaf 升级为 Branch 的判定**（指导性，非硬性；出现以下任意多项时考虑拆分）：
+
+- 一个文件包含两个或以上可独立理解的机制闭环
+- 多个独立生命周期已经各自形成较长章节
+- 单个章节本身已经可以独立成为文档
+- Agent 为回答局部问题经常需要读取大量无关内容
+- 文档持续增长且后续已有明确的新机制要加入
+- definition/content table 与 mechanism explanation 大量混杂
+
+行数只作为信号：约 300–500 行是 review trigger，不能作为强制拆分阈值。
+
+**Branch / Index 文档职责**：只保留 Scope、核心对象/机制总览、子主题导航、推荐阅读顺序、当前 Evidence / Verification Status、Unknown / Deferred 总览；不复制子文档详细机制（父文档摘要 ≠ 子文档内容重复）。
+
+典型结构：
+
+```text
+Root Index
+└─ System / Mod
+   ├─ Mechanism A
+   └─ Mechanism B
+      ├─ B1
+      └─ B2
+```
 
 ## Commands
 
@@ -68,7 +101,7 @@ python -m wbkb semantic "query"                      # 需先 vector build
 
 ## Editing knowledge/
 
-validators 硬编码期望条数（16 patterns / 21 mods）并校验结构；增删条目必须同步多处：
+validators 硬编码期望条数（16 patterns / 23 mods）并校验结构；增删条目必须同步多处：
 
 * patterns：`catalog.json` + `<category>/<id>.md`，文件必须含固定 section 集（`# Pattern:` / `## Status` / `## Goal` / … 完整列表见 `tools/validate_patterns.py`）且正文引用 `.cs:行号` 证据；不在 catalog 的散落 `.md` 会被拒。
 * reference-mods：`catalog.json` / `catalog.csv` / `system-matrix.csv` / `mods/<mod-id>.md` 四处 id 与条数必须一致；catalog 的 `primary_systems` 必须等于 matrix 中该 mod 的 role=primary 系统集合。

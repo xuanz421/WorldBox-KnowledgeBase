@@ -1,3 +1,9 @@
+---
+title: 克隆与魔改资产
+aliases:
+  - Clone & Modify Existing Assets
+---
+
 # Pattern: clone-modify-asset
 
 ## Status

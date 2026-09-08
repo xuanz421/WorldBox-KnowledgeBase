@@ -1,3 +1,9 @@
+---
+title: 模块缺口
+aliases:
+  - Pattern Library Gaps
+---
+
 # Pattern Library Gaps
 
 实际调查后仍缺少的高价值 Modding Pattern——未来任务队列，现在不解决。

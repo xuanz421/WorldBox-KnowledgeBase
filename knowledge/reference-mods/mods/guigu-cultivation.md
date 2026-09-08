@@ -1,3 +1,9 @@
+---
+title: 鬼谷修仙
+aliases:
+  - guigu-cultivation
+---
+
 # Guigu Cultivation（鬼谷修仙）
 
 ## Identity

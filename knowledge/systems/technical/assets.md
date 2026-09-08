@@ -1,3 +1,9 @@
+---
+title: Asset 系统
+aliases:
+  - Asset Framework
+---
+
 # System: Asset Framework
 
 WorldBox 资产框架的系统级调查。基于 worldbox-0.51.2-51d275f0168b 源码直接阅读 + NML 交叉验证。

@@ -1,3 +1,9 @@
+---
+title: Actor 系统
+aliases:
+  - Actor and Entity
+---
+
 # System: Actor / Entity
 
 WorldBox 单位系统的系统级调查。基于 worldbox-0.51.2-51d275f0168b 反编译源码直接阅读与 WBKB Reference Graph 交叉验证。

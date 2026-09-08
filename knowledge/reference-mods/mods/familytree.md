@@ -1,3 +1,9 @@
+---
+title: FamilyTree
+aliases:
+  - familytree
+---
+
 # FamilyTree（族谱）
 
 ## Identity

@@ -1,3 +1,9 @@
+---
+title: 注册神力
+aliases:
+  - Register a God Power (GodPower + DropAsset)
+---
+
 # Pattern: register-godpower
 
 ## Status

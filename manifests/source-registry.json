@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-16T03:39:17+00:00",
+  "generated_at": "2026-09-08T10:22:29+00:00",
   "neomodloader": {
     "assemblies": [
       {
@@ -24,6 +24,18 @@
       "name": "角色史书ActorHistory"
     },
     {
+      "csharp_file_count": 31,
+      "git_commit": null,
+      "id": "ref:biology",
+      "name": "生物学1.0.7"
+    },
+    {
+      "csharp_file_count": 8,
+      "git_commit": null,
+      "id": "ref:boatrebalancebox",
+      "name": "BoatRebalanceBox"
+    },
+    {
       "csharp_file_count": 1,
       "git_commit": null,
       "id": "ref:buzzoff",
@@ -40,6 +52,12 @@
       "git_commit": null,
       "id": "ref:creepmobboost",
       "name": "天灾强化"
+    },
+    {
+      "csharp_file_count": 0,
+      "git_commit": null,
+      "id": "ref:economymod",
+      "name": "古典经济学"
     },
     {
       "csharp_file_count": 8,
@@ -148,8 +166,8 @@
   "worldbox": {
     "assembly_sha256": "51d275f0168be2f6ca26341ab292406714e694e0270eafcb25b999d5df6dd69f",
     "assembly_size": 4535296,
-    "game_version": "0.51.2",
-    "game_version_status": "verified:local-metadata",
+    "game_version": null,
+    "game_version_status": "unknown",
     "publicized_sha256": "8c54a0b93a3b929834fb426fce8ce66344444e7709484956ddf04267de718234",
     "steam_buildid": "19962337"
   }

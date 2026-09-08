@@ -1,3 +1,9 @@
+---
+title: SHToolkit
+aliases:
+  - shtoolkit
+---
+
 # SHToolkit（寒海辅助工具）
 
 ## Identity

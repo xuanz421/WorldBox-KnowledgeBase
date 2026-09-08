@@ -1,3 +1,9 @@
+---
+title: Unlock all
+aliases:
+  - unlock-all
+---
+
 # Unlock all
 
 ## Identity

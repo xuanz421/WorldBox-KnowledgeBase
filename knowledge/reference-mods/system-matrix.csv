@@ -8,6 +8,12 @@ ref:actorhistory,Kingdom,secondary,1,Verified
 ref:actorhistory,Save/Persistence,primary,6,Verified
 ref:actorhistory,UI,primary,6,Verified
 ref:actorhistory,War,secondary,1,Verified
+ref:biology,Actor,primary,8,Mostly Verified
+ref:biology,Events,secondary,3,Mostly Verified
+ref:biology,Mod Lifecycle,secondary,1,Mostly Verified
+ref:biology,Save/Persistence,secondary,2,Mostly Verified
+ref:biology,Traits,primary,5,Mostly Verified
+ref:biology,UI,primary,6,Mostly Verified
 ref:buzzoff,Actor,primary,4,Verified
 ref:buzzoff,Buildings,primary,4,Verified
 ref:buzzoff,Utility,secondary,1,Verified
@@ -102,6 +108,10 @@ ref:worldresilience,Assets,secondary,1,Verified
 ref:worldresilience,Map,primary,4,Verified
 ref:worldresilience,Utility,secondary,1,Verified
 ref:worldresilience,World,primary,4,Verified
+ref:boatrebalancebox,Boats,primary,4,Verified
+ref:boatrebalancebox,Combat,primary,4,Verified
+ref:boatrebalancebox,Actor,secondary,1,Verified
+ref:boatrebalancebox,Assets,secondary,1,Verified
 ref:xavii-nation-types,City,secondary,1,Mostly Verified
 ref:xavii-nation-types,Combat,secondary,1,Mostly Verified
 ref:xavii-nation-types,Culture,secondary,1,Mostly Verified

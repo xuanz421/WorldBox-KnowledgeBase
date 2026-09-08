@@ -188,7 +188,7 @@ Raw Facts (WBKB index / raw source)
    ↓
 Reference Mod Evidence (targeted code reading, file:line)
    ↓
-Knowledge Profiles (knowledge/reference-mods/mods/*.md, 21 mods)
+Knowledge Profiles (knowledge/reference-mods/mods/*.md, 22 mods)
    ↓
 Pattern / System Knowledge (pattern-candidates → Z7; system map → Z8)
 ```

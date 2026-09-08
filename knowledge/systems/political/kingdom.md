@@ -1,3 +1,9 @@
+---
+title: Kingdom 系统
+aliases:
+  - Kingdom and Political
+---
+
 # System: Kingdom / Political
 
 WorldBox 王国系统的系统级调查。基于 worldbox-0.51.2-51d275f0168b 源码直接阅读。本文件同时关闭 city.md 的 Kingdom 边界类 Known Gap 项（见回写记录）。

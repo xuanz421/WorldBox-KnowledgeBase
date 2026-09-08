@@ -1,3 +1,9 @@
+---
+title: 安全资产注册
+aliases:
+  - Safe Asset Registration (dedup + dual-register)
+---
+
 # Pattern: safe-asset-registration
 
 ## Status

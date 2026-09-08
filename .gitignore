@@ -36,6 +36,15 @@ data/**/decompiled/
 .vscode/
 .idea/
 
+# Local agent / AI tooling configs (machine-specific, contains node_modules)
+.agents/
+.claude/
+.copilot/
+.opencode/
+.obsidian/
+copilot/
+CLAUDE.md
+
 # OS
 .DS_Store
 Thumbs.db

@@ -1,3 +1,9 @@
+---
+title: Jobs 系统
+aliases:
+  - Jobs and Professions
+---
+
 # System: Jobs / Professions
 
 WorldBox 职业/工作系统的系统级调查。基于 worldbox-0.51.2-51d275f0168b 源码直接阅读。本文件关闭 actor.md / city.md / resources.md / buildings.md 的 Jobs 边界 Known Gap（见回写记录）。

@@ -1,3 +1,9 @@
+---
+title: 单位事件观察
+aliases:
+  - Actor Event Observation (death snapshot)
+---
+
 # Pattern: actor-event-observation
 
 ## Status

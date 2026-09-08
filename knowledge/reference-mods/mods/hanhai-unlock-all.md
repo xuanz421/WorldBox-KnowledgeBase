@@ -1,3 +1,9 @@
+---
+title: 寒海的全解锁
+aliases:
+  - hanhai-unlock-all
+---
+
 # 寒海的全解锁
 
 ## Identity

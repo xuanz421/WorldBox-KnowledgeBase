@@ -1,3 +1,9 @@
+---
+title: UI 按钮注入
+aliases:
+  - UI Button Injection (clone existing)
+---
+
 # Pattern: ui-button-injection
 
 ## Status

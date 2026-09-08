@@ -1,3 +1,9 @@
+---
+title: 玄鉴仙族 (WuLin)
+aliases:
+  - xuanjian-xianzu
+---
+
 # 玄鉴仙族（WuLin）
 
 ## Identity

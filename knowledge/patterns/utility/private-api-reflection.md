@@ -1,3 +1,9 @@
+---
+title: 私有 API 反射
+aliases:
+  - Private API Reflection (last resort)
+---
+
 # Pattern: private-api-reflection
 
 ## Status

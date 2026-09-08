@@ -1,3 +1,9 @@
+---
+title: ActorHistory
+aliases:
+  - actorhistory
+---
+
 # ActorHistory（角色史书）
 
 ## Identity

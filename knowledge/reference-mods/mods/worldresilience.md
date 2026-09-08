@@ -1,3 +1,9 @@
+---
+title: WorldResilience
+aliases:
+  - worldresilience
+---
+
 # WorldResilience
 
 ## Identity

@@ -501,6 +501,58 @@
     "profile": "mods/chinesename.md"
   },
   {
+    "source_id": "ref:biology",
+    "name": "生物学",
+    "tier": "A",
+    "summary": "器官系统与健康模拟：47 器官五路合成瞬时状态/~120 疾病静态表/手术状态突变链/选中单位单点模拟，零持久化读档全失（有意设计），die prefix 快照复活链",
+    "primary_systems": [
+      "Actor",
+      "Traits",
+      "UI"
+    ],
+    "secondary_systems": [
+      "Events",
+      "Save/Persistence",
+      "Mod Lifecycle"
+    ],
+    "techniques": [
+      "Harmony Prefix",
+      "Harmony Postfix",
+      "Static dictionary state",
+      "UI injection",
+      "Death snapshot",
+      "Selected-unit simulation"
+    ],
+    "worldbox_api_areas": [
+      "Actor.updateStats",
+      "Actor.getHit",
+      "Actor.die",
+      "Actor.traits",
+      "BabyMaker.makeBaby",
+      "UnitWindow.OnEnable",
+      "actor.data"
+    ],
+    "nml_api_areas": [
+      "BasicMod<T>.OnModLoad (Verified)"
+    ],
+    "harmony": true,
+    "ui": true,
+    "assets": false,
+    "persistence": false,
+    "key_files": [
+      "mods/biology.md"
+    ],
+    "pattern_candidates": [
+      "selected-actor-singlepoint-simulation",
+      "computed-organ-state-from-sparse-wounds",
+      "post-stat-recalc-reapply",
+      "surgery-as-state-mutation-plus-stat-rebuild",
+      "persistent-trait-ephemeral-backing-mismatch"
+    ],
+    "confidence": "Mostly Verified",
+    "profile": "mods/biology.md"
+  },
+  {
     "source_id": "ref:sandbox",
     "name": "Sandbox",
     "tier": "B",
@@ -854,6 +906,57 @@
     ],
     "confidence": "Verified",
     "profile": "mods/worldresilience.md"
+  },
+  {
+    "source_id": "ref:boatrebalancebox",
+    "name": "BoatRebalanceBox",
+    "tier": "B",
+    "summary": "行星船重平衡双层范式：零 Harmony 直改 vanilla 船武器/船体资产数值 + 索敌/连发/免抖免退 Harmony 重写战斗行为；Boats 系统首个 reference",
+    "primary_systems": [
+      "Boats",
+      "Combat"
+    ],
+    "secondary_systems": [
+      "Actor",
+      "Assets"
+    ],
+    "techniques": [
+      "Harmony Prefix",
+      "Harmony Postfix",
+      "Runtime asset mutation",
+      "Asset registration",
+      "Reflection",
+      "Coroutine"
+    ],
+    "worldbox_api_areas": [
+      "AssetManager.items.clone",
+      "AssetManager.projectiles",
+      "ActorAsset.default_attack",
+      "ActorAsset.base_stats",
+      "BaseSimObject.findEnemyObjectTarget",
+      "CombatActionLibrary.attackRangeAction",
+      "MapBox.applyAttack",
+      "Actor.startShake",
+      "Actor.checkSpecialAttackLogic"
+    ],
+    "nml_api_areas": [
+      "BasicMod<T>.OnModLoad (Verified)"
+    ],
+    "harmony": true,
+    "ui": false,
+    "assets": true,
+    "persistence": false,
+    "key_files": [
+      "mods/boatrebalancebox.md"
+    ],
+    "pattern_candidates": [
+      "rebalance-vanilla-asset-stats",
+      "clone-rewire-weapon-projectile",
+      "timed-burst-projectile-patch",
+      "extended-sight-ring-cache-targeting"
+    ],
+    "confidence": "Verified",
+    "profile": "mods/boatrebalancebox.md"
   },
   {
     "source_id": "ref:nerffiredamage",

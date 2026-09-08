@@ -1,3 +1,9 @@
+---
+title: City 系统
+aliases:
+  - City
+---
+
 # System: City
 
 WorldBox 城市系统的系统级调查。基于 worldbox-0.51.2-51d275f0168b 源码直接阅读。

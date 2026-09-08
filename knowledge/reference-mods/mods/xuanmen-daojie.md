@@ -1,3 +1,9 @@
+---
+title: 玄门道界
+aliases:
+  - xuanmen-daojie
+---
+
 # 玄门道界
 
 ## Identity

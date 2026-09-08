@@ -1,3 +1,9 @@
+---
+title: IncensefiredWay
+aliases:
+  - incensefiredway
+---
+
 # IncensefiredWay（香火神道）
 
 ## Identity

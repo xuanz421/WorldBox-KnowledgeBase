@@ -1,3 +1,9 @@
+---
+title: Resources 系统
+aliases:
+  - Resources and Storage
+---
+
 # System: Resources / Storage
 
 WorldBox 资源系统的系统级调查。基于 worldbox-0.51.2-51d275f0168b 源码直接阅读 + reference mod 用法交叉验证。本文件关闭 buildings.md / city.md / save.md 的 Resources 边界 Known Gap（见回写记录）。

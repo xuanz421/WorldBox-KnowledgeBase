@@ -1,3 +1,9 @@
+---
+title: Sandbox
+aliases:
+  - sandbox
+---
+
 # Sandbox
 
 ## Identity

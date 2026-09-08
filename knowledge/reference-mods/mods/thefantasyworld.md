@@ -1,3 +1,9 @@
+---
+title: TheFantasyWorld
+aliases:
+  - thefantasyworld
+---
+
 # TheFantasyWorld（西幻世界）
 
 ## Identity

@@ -1,3 +1,9 @@
+---
+title: ChineseName
+aliases:
+  - chinesename
+---
+
 # ChineseName（中文名）
 
 ## Identity

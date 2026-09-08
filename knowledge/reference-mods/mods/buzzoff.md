@@ -1,3 +1,9 @@
+---
+title: BuzzOff
+aliases:
+  - buzzoff
+---
+
 # BuzzOff
 
 ## Identity

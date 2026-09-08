@@ -1,3 +1,9 @@
+---
+title: Optime
+aliases:
+  - optime
+---
+
 # Optime
 
 ## Identity

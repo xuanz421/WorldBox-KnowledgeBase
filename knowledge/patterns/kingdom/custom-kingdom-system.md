@@ -1,3 +1,9 @@
+---
+title: 自定义王国系统
+aliases:
+  - Custom Kingdom System (3-layer)
+---
+
 # Pattern: custom-kingdom-system
 
 ## Status

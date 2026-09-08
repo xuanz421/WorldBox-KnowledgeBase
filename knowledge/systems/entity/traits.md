@@ -1,3 +1,9 @@
+---
+title: Traits 系统
+aliases:
+  - Traits
+---
+
 # System: Traits
 
 WorldBox 特质系统的系统级调查（WorldBox 本体视角）。基于 worldbox-0.51.2-51d275f0168b 源码直接阅读。

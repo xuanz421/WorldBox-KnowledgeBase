@@ -1,3 +1,9 @@
+---
+title: MapDeal
+aliases:
+  - mapdeal
+---
+
 # MapDeal
 
 ## Identity

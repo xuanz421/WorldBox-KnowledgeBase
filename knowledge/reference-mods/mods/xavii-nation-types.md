@@ -1,3 +1,9 @@
+---
+title: Xavii Nation Types
+aliases:
+  - xavii-nation-types
+---
+
 # Xavii Nation Types (XNTM)
 
 ## Identity

@@ -1,3 +1,9 @@
+---
+title: 自定义神力 Tab
+aliases:
+  - Custom Power Tab
+---
+
 # Pattern: custom-power-tab
 
 ## Status

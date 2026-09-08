@@ -1,6 +1,12 @@
+---
+title: 跨模组对比总结
+aliases:
+  - Cross-Mod Summary
+---
+
 # Cross-Mod Summary
 
-21 个 Reference Mods 的横向对比。分层：Tier A（核心玩法/系统深度）9 个、Tier B（单功能有技术价值）8 个、Tier C（微型/本地化）4 个。
+23 个 Reference Mods 的横向对比。分层：Tier A（核心玩法/系统深度）10 个、Tier B（单功能有技术价值）9 个、Tier C（微型/本地化）4 个。
 
 ## Most Valuable References（按技术价值）
 
@@ -16,6 +22,8 @@
 | **sandbox** | 泛型类 manual Harmony patch 配方 + powers.clone 落地神力模板 |
 | **familytree** | 死亡快照模式 + 纯 UGUI 平移缩放关系图 |
 | **mapdeal** | 零 Harmony 深度地图操作：反射 tiles_map + SmoothLoader 生成链复刻 |
+| **boatrebalancebox** | 船只 rebalance 双层范式：数据层直改共享资产（零 Harmony）+ 行为层重写索敌/齐射/命中链——Boats 系统唯一 reference |
+| **biology** | 器官/疾病/手术健康系统：零持久化静态字典状态 + 选中单位单点模拟 + updateStats postfix 版本守卫重放（与 xuanmen Transpiler 构成对偶）——Actor 健康/疾病领域唯一 reference（R2-2 入库） |
 
 ## 覆盖：Harmony 三种组织法
 
@@ -43,14 +51,14 @@ map_stats.custom_data（世界级） thefantasyworld, xuanmen-daojie, actorhisto
 存档槽目录文件                   guigu
 persistentDataPath JSON         shtoolkit, xuanmen-daojie
 SQLite（sqlite-net）            actorhistory
-内存静态字典（会丢失）           familytree——已知反例
+内存静态字典（会丢失）           familytree, biology（器官系统，零持久化有意设计 + 反模式实证）
 ```
 
 ## Coverage by System
 
 - **多例子**（≥5 primary）：Actor(5), Traits(6), UI(5)
 - **中等**（2-4）：Kingdom(3), Combat(4), Save/Persistence(4), Buildings(3), Assets(2), World(2), Events(2), Map(2), Mod Lifecycle(2), Utility(2)
-- **少/无例子**：Jobs(0), Professions(0), Diplomacy(1), Culture(0 primary—仅 powerbox secondary), Religion(0 primary), Resources(0), Items(1), Equipment(1), Boats(0), Books(0), Mining/Farming(0), Localization(1)
+- **少/无例子**：Jobs(0), Professions(0), Diplomacy(1), Culture(0 primary—仅 powerbox secondary), Religion(0 primary), Resources(0), Items(1), Equipment(1), Books(0), Mining/Farming(0), Localization(1)——**Boats 已补**：boatrebalancebox（2026-09-08 R2-1 入库）；**Actor 健康/疾病已补**：biology（2026-09-08 R2-2 入库）
 
 ## Coverage by Technique
 

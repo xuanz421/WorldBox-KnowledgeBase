@@ -1,3 +1,9 @@
+---
+title: PowerBox
+aliases:
+  - powerbox
+---
+
 # PowerBox
 
 ## Identity

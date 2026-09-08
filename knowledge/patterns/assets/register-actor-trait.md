@@ -1,3 +1,9 @@
+---
+title: 注册单位特质
+aliases:
+  - Register an Actor Trait
+---
+
 # Pattern: register-actor-trait
 
 ## Status

@@ -1,3 +1,9 @@
+---
+title: Items 系统
+aliases:
+  - Items and Equipment
+---
+
 # System: Items / Equipment
 
 WorldBox 物品/装备系统的系统级调查。基于 worldbox-0.51.2-51d275f0168b 源码直接阅读。本文件关闭 resources.md 的 ItemCrafting 边界 Known Gap、actor.md 的 saved_items/equipment 语义、save.md 的 items 加载序确认（见回写记录）。

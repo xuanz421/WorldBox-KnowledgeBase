@@ -1,3 +1,9 @@
+---
+title: actor.data 单位自定义状态
+aliases:
+  - Per-Actor Custom State via actor.data
+---
+
 # Pattern: actor-data-custom-state
 
 ## Status

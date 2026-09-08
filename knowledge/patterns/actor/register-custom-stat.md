@@ -1,3 +1,9 @@
+---
+title: 注册自定义属性
+aliases:
+  - Register Custom Stat (BaseStatAsset)
+---
+
 # Pattern: register-custom-stat
 
 ## Status

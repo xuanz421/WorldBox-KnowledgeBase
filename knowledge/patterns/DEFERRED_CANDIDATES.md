@@ -1,3 +1,9 @@
+---
+title: 延迟与拒绝候选
+aliases:
+  - Deferred / Rejected Candidates
+---
+
 # Deferred / Rejected Candidates
 
 Z5 的 56 个 candidate 中未晋升为 Pattern 的部分。简洁记录理由，不做深度分析。

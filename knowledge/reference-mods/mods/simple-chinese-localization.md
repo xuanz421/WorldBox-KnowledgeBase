@@ -1,3 +1,9 @@
+---
+title: 简单汉化
+aliases:
+  - simple-chinese-localization
+---
+
 # 简单汉化
 
 ## Identity

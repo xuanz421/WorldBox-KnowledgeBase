@@ -1,3 +1,9 @@
+---
+title: Save 系统
+aliases:
+  - Save and Persistence
+---
+
 # System: Save / Persistence
 
 WorldBox 存档系统的系统级调查。基于 worldbox-0.51.2-51d275f0168b 源码直接阅读。本文件同时关闭 actor.md / traits.md 的 Save deferred 项。

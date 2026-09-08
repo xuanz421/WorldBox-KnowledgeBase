@@ -1,3 +1,9 @@
+---
+title: 系统清单
+aliases:
+  - System Inventory
+---
+
 # WorldBox System Inventory
 
 基于 WBKB 索引（worldbox-0.51.2-51d275f0168b）的机械扫描 + 命名核实。Tier 依据 Modding 价值与 Z5/Z6 缺口。

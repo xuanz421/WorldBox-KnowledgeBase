@@ -1,3 +1,9 @@
+---
+title: 世界 Tick 接入
+aliases:
+  - World Tick Integration (3 routes)
+---
+
 # Pattern: world-tick-integration
 
 ## Status

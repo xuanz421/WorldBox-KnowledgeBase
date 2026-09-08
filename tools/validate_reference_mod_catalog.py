@@ -19,8 +19,8 @@ csv_rows = list(csv.DictReader(open(OUT / "catalog.csv", encoding="utf-8")))
 matrix = list(csv.DictReader(open(OUT / "system-matrix.csv", encoding="utf-8")))
 patterns = [json.loads(line) for line in (OUT / "pattern-candidates.jsonl").read_text(encoding="utf-8").splitlines() if line]
 
-if len(catalog) != 21:
-    problems.append(f"catalog has {len(catalog)} entries, expected 21")
+if len(catalog) != 23:
+    problems.append(f"catalog has {len(catalog)} entries, expected 23")
 if len(profiles) != len(catalog):
     problems.append(f"{len(profiles)} profiles vs {len(catalog)} catalog entries")
 
@@ -53,7 +53,7 @@ for entry in catalog:
 known_systems = {"Actor", "Traits", "Jobs", "City", "Kingdom", "Diplomacy", "Culture", "Religion",
                  "Buildings", "Resources", "Items", "Combat", "World", "Map", "Events", "Assets",
                  "UI", "Save/Persistence", "Mod Lifecycle", "Utility", "Localization", "Events",
-                 "Alliance", "Clan", "War", "AI", "Items"}
+                 "Alliance", "Clan", "War", "AI", "Items", "Boats"}
 for row in matrix:
     if row["system"] not in known_systems:
         problems.append(f"unknown system name in matrix: {row['system']}")
