@@ -1,7 +1,7 @@
 ---
-title: 世界 Tick 接入
+title: world-tick-integration
 aliases:
-  - World Tick Integration (3 routes)
+  - 世界 Tick 接入
 ---
 
 # Pattern: world-tick-integration

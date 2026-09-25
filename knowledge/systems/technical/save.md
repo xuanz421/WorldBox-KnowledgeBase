@@ -181,7 +181,7 @@ loadWorld() → loadWorld(path)                         SaveManager.cs:~460-500
 
 ## Related Patterns
 
-稳定 pattern_id（完整索引：knowledge/patterns/模式索引.md）：
+稳定 pattern_id（完整索引：knowledge/patterns/module-index.md）：
 
 - `persistent-mod-data` — mod 数据 5 级选型（本系统各层级的 modding 实践）
 - `actor-data-custom-state` — 实体级 custom_data 用法

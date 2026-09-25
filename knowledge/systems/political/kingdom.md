@@ -160,7 +160,7 @@ MapBox → _list_meta_main_managers: KingdomManager.update(pElapsed)      Kingdo
 
 ## Related Patterns
 
-稳定 pattern_id（完整索引：knowledge/patterns/模式索引.md）：
+稳定 pattern_id（完整索引：knowledge/patterns/module-index.md）：
 
 - `custom-kingdom-system` — per-kingdom data + KingdomTrait 的 modding 实践（与本体 dirty 重建/trait 管线一致）
 - `harmony-prefix-recipes` — 介入建国/灭亡流程

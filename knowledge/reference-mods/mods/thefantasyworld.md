@@ -1,5 +1,5 @@
 ---
-title: TheFantasyWorld
+title: 西幻世界
 aliases:
   - thefantasyworld
 ---

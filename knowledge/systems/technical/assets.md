@@ -157,7 +157,7 @@ AssetLibrary<T>.clone(newId, fromId)                  AssetLibrary.cs:83-90
 
 ## Related Patterns
 
-稳定 pattern_id（完整索引：knowledge/patterns/模式索引.md）：
+稳定 pattern_id（完整索引：knowledge/patterns/module-index.md）：
 
 - `register-actor-trait` — add() 的 modding 用法
 - `clone-modify-asset` — clone() 的 modding 用法与共享引用 caveat

@@ -14,7 +14,7 @@ aliases:
 ## 结构
 
 ```text
-模组索引.md              导航根（By System / By Technique / By Tier）
+mod-index.md              导航根（By System / By Technique / By Tier）
 catalog.json             机器可读目录（主入口）
 catalog.csv              同内容的 CSV
 system-matrix.csv        mod × system 矩阵（role: primary/secondary）
@@ -37,4 +37,4 @@ CROSS_MOD_SUMMARY.md     跨 mod 对比与覆盖总结
 
 ## 导航
 
-按 System / Technique / Tier 的完整导航见 [模组索引.md](模组索引.md)；权威机器可读目录为 `catalog.json` / `system-matrix.csv`。
+按 System / Technique / Tier 的完整导航见 [mod-index.md](mod-index.md)；权威机器可读目录为 `catalog.json` / `system-matrix.csv`。

@@ -1,7 +1,7 @@
 ---
-title: 注册自定义属性
+title: register-custom-stat
 aliases:
-  - Register Custom Stat (BaseStatAsset)
+  - 注册自定义属性
 ---
 
 # Pattern: register-custom-stat

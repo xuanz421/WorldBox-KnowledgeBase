@@ -20,7 +20,7 @@ Profile（`knowledge/reference-mods/mods/`）描述"每个 mod 是什么"；模�
 
 ## 使用方式
 
-- 人类：从 [模式索引.md](模式索引.md)（模块索引）按应用方向 / Goal / System 定位
+- 人类：从 [module-index.md](module-index.md)（模块索引）按应用方向 / Goal / System 定位
 - Agent：`catalog.json` 的稳定 `pattern_id`（如 `register-godpower`）可被直接引用；验证 API 时用 `wbkb search/symbol/refs/show`
 
 ## 消费统计
@@ -28,7 +28,7 @@ Profile（`knowledge/reference-mods/mods/`）描述"每个 mod 是什么"；模�
 ```text
 Candidates (Z5): 56
 Merged/consumed: 42
-Verified patterns: 16（Strong Verified 8 / Verified 8）
+Verified patterns: 17（Strong Verified 8 / Verified 9）
 Deferred: 12
 Rejected: 2
 ```

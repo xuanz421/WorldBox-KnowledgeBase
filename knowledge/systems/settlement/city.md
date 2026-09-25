@@ -191,7 +191,7 @@ loadCities 之后再 addZone 一轮（saveVersion≥7 路径，CityManager.cs:13
 
 ## Related Patterns
 
-稳定 pattern_id（完整索引：knowledge/patterns/模式索引.md）：
+稳定 pattern_id（完整索引：knowledge/patterns/module-index.md）：
 
 - `custom-kingdom-system` — per-city data + kingdom 联动（本系统 data 层的 modding 实践）
 - `persistent-mod-data` — 城市级持久数据选型

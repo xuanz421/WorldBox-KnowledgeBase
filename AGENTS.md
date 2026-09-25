@@ -8,7 +8,7 @@
 
 ## Knowledge Organization (Obsidian)
 
-知识库结构组织的完整规则在根目录 `知识组织规则.md`（Top-Level Index Authority / Index Responsibilities / Naming Rules / File Name vs Display Name / Recursive Forest / Weak Balance / Link Rules / Independent Markdown Files / Placement Decision / Maintenance Checklist）。md 的创建、管理、归纳、分类、拆分、接入与命名一律先参考该规则；整理 knowledge/、新建或移动知识文档前必读。
+知识库结构组织的完整规则在根目录 `knowledge-organization-rules.md`（Top-Level Index Authority / Index Responsibilities / Naming Rules / File Name vs Display Name / Recursive Forest / Weak Balance / Link Rules / Independent Markdown Files / Placement Decision / Maintenance Checklist）。md 的创建、管理、归纳、分类、拆分、接入与命名一律先参考该规则；整理 knowledge/、新建或移动知识文档前必读。
 
 不变量速览（细节以上述文档为准）：
 
@@ -24,11 +24,11 @@ WBKB 的核心目标是：
 
 > 将昂贵的一次性代码调查转换成可持续复用、可自动重建、可快速查询的结构化知识。
 
-回答 WorldBox/NML modding 问题前，先查已有知识，而不是从头调查（人类导航入口：根 `知识库索引.md`，forest 结构——链接只从索引指向叶子，跨树引用使用稳定 id 而非链接）：
+回答 WorldBox/NML modding 问题前，先查已有知识，而不是从头调查（人类导航入口：根 `knowledge-index.md`，forest 结构——链接只从索引指向叶子，跨树引用使用稳定 id 而非链接）：
 
-* `knowledge/patterns/catalog.json` — 16 个验证过的可复用模块（`pattern_id` 即模块稳定 ID；导航根 `knowledge/patterns/模式索引.md`，节点显示名「模块索引」）
-* `knowledge/reference-mods/catalog.json` — 23 个 reference mod 的证据化 profile（导航见 `knowledge/reference-mods/模组索引.md`）
-* `knowledge/systems/catalog.json` — WorldBox 系统 map（core types → `file` 入口；导航见 `knowledge/systems/源代码索引.md`）
+* `knowledge/patterns/catalog.json` — 17 个验证过的可复用模块（`pattern_id` 即模块稳定 ID；导航根 `knowledge/patterns/module-index.md`，节点显示名「模块索引」）
+* `knowledge/reference-mods/catalog.json` — 23 个 reference mod 的证据化 profile（导航见 `knowledge/reference-mods/mod-index.md`）
+* `knowledge/systems/catalog.json` — WorldBox 系统 map（core types → `file` 入口；导航见 `knowledge/systems/system-index.md`）
 * `wbkb` 索引（见下）— 反编译源码的结构化查询
 
 ## Commands
@@ -81,7 +81,7 @@ python -m wbkb semantic "query"                      # 需先 vector build
 
 ## Editing knowledge/
 
-validators 硬编码期望条数（16 patterns / 23 mods）并校验结构；增删条目必须同步多处：
+validators 硬编码期望条数（17 patterns / 23 mods）并校验结构；增删条目必须同步多处：
 
 * patterns：`catalog.json` + `<category>/<id>.md`，文件必须含固定 section 集（`# Pattern:` / `## Status` / `## Goal` / … 完整列表见 `tools/validate_patterns.py`）且正文引用 `.cs:行号` 证据；不在 catalog 的散落 `.md` 会被拒。
 * reference-mods：`catalog.json` / `catalog.csv` / `system-matrix.csv` / `mods/<mod-id>.md` 四处 id 与条数必须一致；catalog 的 `primary_systems` 必须等于 matrix 中该 mod 的 role=primary 系统集合。

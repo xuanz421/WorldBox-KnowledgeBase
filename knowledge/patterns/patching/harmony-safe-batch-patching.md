@@ -1,7 +1,7 @@
 ---
-title: 安全批量补丁组织
+title: harmony-safe-batch-patching
 aliases:
-  - Safe Batch Patching (3 organizations)
+  - 安全批量补丁组织
 ---
 
 # Pattern: harmony-safe-batch-patching

@@ -15,8 +15,8 @@ problems: list[str] = []
 
 catalog = json.loads((PATTERNS / "catalog.json").read_text(encoding="utf-8"))
 entries = catalog["patterns"]
-if len(entries) != 16:
-    problems.append(f"catalog has {len(entries)} patterns, expected 16")
+if len(entries) != 17:
+    problems.append(f"catalog has {len(entries)} patterns, expected 17")
 
 ids = [entry["id"] for entry in entries]
 if len(set(ids)) != len(ids):

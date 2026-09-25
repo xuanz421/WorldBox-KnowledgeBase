@@ -12,15 +12,15 @@ aliases:
 
 | 树 | 根 | 回答的问题 |
 | --- | --- | --- |
-| 源代码 | [knowledge/systems/源代码索引.md](knowledge/systems/源代码索引.md) | WorldBox 有哪些系统、核心类型与数据模型是什么（10 个 S 级 verified） |
-| 模块 | [knowledge/patterns/模式索引.md](knowledge/patterns/模式索引.md) | 以后开发 Mod 时有什么可以直接拿来用（16 个 Verified+ 模块） |
-| 模组 | [knowledge/reference-mods/模组索引.md](knowledge/reference-mods/模组索引.md) | 该看哪个 mod 的哪个实现（23 个证据化 profile） |
+| 源代码 | [knowledge/systems/system-index.md](knowledge/systems/system-index.md) | WorldBox 有哪些系统、核心类型与数据模型是什么（10 个 S 级 verified） |
+| 模块 | [knowledge/patterns/module-index.md](knowledge/patterns/module-index.md) | 以后开发 Mod 时有什么可以直接拿来用（16 个 Verified+ 模块） |
+| 模组 | [knowledge/reference-mods/mod-index.md](knowledge/reference-mods/mod-index.md) | 该看哪个 mod 的哪个实现（23 个证据化 profile） |
 
 消费顺序建议：源代码（理解机制）→ 模块（取可复用实现）→ 模组（对照实现）。
 
 ## Repo & Tooling
 
-- [知识组织规则.md](知识组织规则.md) — Obsidian 知识组织 authoritative 规则（总索引权威 / Recursive Forest / Link Rules / 独立 md 判定）
+- [knowledge-organization-rules.md](knowledge-organization-rules.md) — Obsidian 知识组织 authoritative 规则（总索引权威 / Recursive Forest / Link Rules / 独立 md 判定）
 - [README.md](README.md) — WBKB 基础设施与 Quick Start（`wbkb` CLI）
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — 分层架构与数据流
 - [docs/REFERENCE_MOD_RESEARCH_R2.md](docs/REFERENCE_MOD_RESEARCH_R2.md) — R2 参考模组研究批次追踪（Biology B2 / Cultiway C0–C5 / Economy 队列与状态）

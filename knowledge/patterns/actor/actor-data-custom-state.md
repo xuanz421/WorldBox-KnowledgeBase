@@ -1,7 +1,7 @@
 ---
-title: actor.data 单位自定义状态
+title: actor-data-custom-state
 aliases:
-  - Per-Actor Custom State via actor.data
+  - actor.data 单位自定义状态
 ---
 
 # Pattern: actor-data-custom-state

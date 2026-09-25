@@ -1,7 +1,7 @@
 ---
-title: 注册单位特质
+title: register-actor-trait
 aliases:
-  - Register an Actor Trait
+  - 注册单位特质
 ---
 
 # Pattern: register-actor-trait

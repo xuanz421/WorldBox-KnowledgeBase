@@ -1,7 +1,7 @@
 ---
-title: NML Feature 工程组织
+title: nml-feature-authoring
 aliases:
-  - NML Feature Authoring (auto-discovery)
+  - NML Feature 工程组织
 ---
 
 # Pattern: nml-feature-authoring

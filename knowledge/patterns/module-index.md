@@ -1,7 +1,6 @@
 ---
 title: 模块索引
 aliases:
-  - 模式索引
   - Pattern Index
   - Module Index
 ---
@@ -20,6 +19,7 @@ aliases:
 
 **Actor**
 - [actor-data-custom-state](actor/actor-data-custom-state.md) — actor.data 单位自定义状态（跨存档）
+- [actor-annual-persistent-stat-growth](actor/actor-annual-persistent-stat-growth.md) — 年度判定、ActorData 持久化与属性重建后重放
 - [register-custom-stat](actor/register-custom-stat.md) — 注册自定义属性（BaseStatAsset）
 - [actor-event-observation](actor/actor-event-observation.md) — 单位事件观察（死亡快照）
 
@@ -49,6 +49,7 @@ aliases:
 **给单位加能力/状态**
 - 加被动特性/境界/buff → [register-actor-trait](assets/register-actor-trait.md)
 - 存 per-actor 跨存档状态 → [actor-data-custom-state](actor/actor-data-custom-state.md)
+- 每年概率永久增长单位属性 → [actor-annual-persistent-stat-growth](actor/actor-annual-persistent-stat-growth.md)
 - 加自定义数值属性 → [register-custom-stat](actor/register-custom-stat.md)
 - 记录单位生平/事件 → [actor-event-observation](actor/actor-event-observation.md)
 
@@ -75,19 +76,19 @@ aliases:
 
 ## By System
 
-- **Actor**：actor-data-custom-state, register-custom-stat, actor-event-observation
+- **Actor**：actor-data-custom-state, actor-annual-persistent-stat-growth, register-custom-stat, actor-event-observation
 - **Traits**：register-actor-trait, register-custom-stat
 - **Assets**：register-actor-trait, clone-modify-asset, register-godpower, safe-asset-registration
 - **Buildings**：clone-modify-asset
 - **Kingdom**：custom-kingdom-system
 - **UI**：ui-button-injection, custom-power-tab, register-godpower
-- **Save/Persistence**：actor-data-custom-state, persistent-mod-data, actor-event-observation
+- **Save/Persistence**：actor-data-custom-state, actor-annual-persistent-stat-growth, persistent-mod-data, actor-event-observation
 - **Mod Lifecycle**：nml-feature-authoring, world-tick-integration, harmony-safe-batch-patching
-- **Patching**：harmony-prefix-recipes, harmony-safe-batch-patching
+- **Patching**：harmony-prefix-recipes, harmony-safe-batch-patching, actor-annual-persistent-stat-growth
 - **Utility**：private-api-reflection
 
 ## Library Metadata
 
-- [README_模块库.md](README_模块库.md) — 状态含义、与 Reference Mod Profile 的关系、消费统计
+- [README_patterns.md](README_patterns.md) — 状态含义、与 Reference Mod Profile 的关系、消费统计
 - [DEFERRED_CANDIDATES.md](DEFERRED_CANDIDATES.md) — 未晋升候选（12 deferred / 2 rejected）
 - [PATTERN_GAPS.md](PATTERN_GAPS.md) — 高价值缺口队列（Z7+/Z8 输入）

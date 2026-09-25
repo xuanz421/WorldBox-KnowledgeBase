@@ -1,5 +1,5 @@
 ---
-title: IncensefiredWay
+title: 香火神道
 aliases:
   - incensefiredway
 ---

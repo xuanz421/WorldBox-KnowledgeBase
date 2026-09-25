@@ -171,7 +171,7 @@ ActorManager.loadFromSave(List<ActorData>)          ActorManager.cs:772
 
 ## Related Patterns
 
-稳定 pattern_id（完整索引：knowledge/patterns/模式索引.md）：
+稳定 pattern_id（完整索引：knowledge/patterns/module-index.md）：
 
 - `actor-data-custom-state` — per-actor 持久状态（本系统 data.get/set 的 modding 用法）
 - `actor-event-observation` — 死亡快照观察

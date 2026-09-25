@@ -200,7 +200,7 @@ gatherer_* → collect_fruits/herbs/honey 同构（→ economy/resources.md 搬�
 
 ## Related Patterns
 
-稳定 pattern_id（完整索引：knowledge/patterns/模式索引.md）：
+稳定 pattern_id（完整索引：knowledge/patterns/module-index.md）：
 
 - `world-tick-integration` — City AI 周期驱动（CityBehCheckCitizenTasks 挂载点）
 - `register-custom-stat` — 数值侧扩展（与 profession 解耦）

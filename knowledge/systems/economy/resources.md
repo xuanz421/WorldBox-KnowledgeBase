@@ -216,7 +216,7 @@ putToDict(slot)                dict + asset.food ? _list_food : _list_other 双�
 
 ## Related Patterns
 
-稳定 pattern_id（完整索引：knowledge/patterns/模式索引.md）：
+稳定 pattern_id（完整索引：knowledge/patterns/module-index.md）：
 
 - `persistent-mod-data` — 资源量持久化随 BuildingData（本系统 saved_resources 的 modding 语境）
 - `clone-modify-asset` — 资源模板 clone 路线（原版 initFood 同模式）

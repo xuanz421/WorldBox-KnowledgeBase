@@ -1,7 +1,7 @@
 ---
-title: 自定义王国系统
+title: custom-kingdom-system
 aliases:
-  - Custom Kingdom System (3-layer)
+  - 自定义王国系统
 ---
 
 # Pattern: custom-kingdom-system

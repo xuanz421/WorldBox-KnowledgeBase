@@ -1,7 +1,7 @@
 ---
-title: 模组数据持久化
+title: persistent-mod-data
 aliases:
-  - Persistent Mod Data (5-level selection)
+  - 模组数据持久化
 ---
 
 # Pattern: persistent-mod-data

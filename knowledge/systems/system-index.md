@@ -35,7 +35,7 @@ WorldBox 系统 map 的导航根。机器可读权威目录是 [catalog.json](ca
 
 ## 跨系统速查
 
-- [资产注册与持久化速查](资产注册与持久化速查.md) — 6 类资产（Trait/Building/Resource/CitizenJob/Equipment/Custom Data）注册与持久化单页消费层 + BuildingAsset 最小字段 checklist（跨系统消费层文档，非 system，不进 catalog.json）
+- [资产注册与持久化速查](asset-registration-persistence-cheatsheet.md) — 6 类资产（Trait/Building/Resource/CitizenJob/Equipment/Custom Data）注册与持久化单页消费层 + BuildingAsset 最小字段 checklist（跨系统消费层文档，非 system，不进 catalog.json）
 
 ## Planned / Partial（未调查）
 

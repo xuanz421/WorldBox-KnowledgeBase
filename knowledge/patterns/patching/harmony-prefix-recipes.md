@@ -1,7 +1,7 @@
 ---
-title: Harmony Prefix 配方
+title: harmony-prefix-recipes
 aliases:
-  - Harmony Prefix Recipes (fill-pass / veto / replace)
+  - Harmony Prefix 配方
 ---
 
 # Pattern: harmony-prefix-recipes

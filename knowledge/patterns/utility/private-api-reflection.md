@@ -1,7 +1,7 @@
 ---
-title: 私有 API 反射
+title: private-api-reflection
 aliases:
-  - Private API Reflection (last resort)
+  - 私有 API 反射
 ---
 
 # Pattern: private-api-reflection

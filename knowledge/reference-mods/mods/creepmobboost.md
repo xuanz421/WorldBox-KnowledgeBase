@@ -1,5 +1,5 @@
 ---
-title: CreepMobBoost
+title: 天灾强化
 aliases:
   - creepmobboost
 ---

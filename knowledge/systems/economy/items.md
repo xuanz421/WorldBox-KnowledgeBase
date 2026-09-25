@@ -357,7 +357,7 @@ unlock 体系: EquipmentAsset.unlock() → pot_*_unlocked 池增量维护
 
 ## Related Patterns
 
-稳定 pattern_id（完整索引：knowledge/patterns/模式索引.md）：
+稳定 pattern_id（完整索引：knowledge/patterns/module-index.md）：
 
 - `register-actor-trait` — 同源 BaseAugmentationAsset 注册（trait 与 item 同框架）
 - `clone-modify-asset` — 材质族装备（armor_iron ← $armor clone）即此模式

@@ -1,7 +1,7 @@
 ---
-title: 注册神力
+title: register-godpower
 aliases:
-  - Register a God Power (GodPower + DropAsset)
+  - 注册神力
 ---
 
 # Pattern: register-godpower

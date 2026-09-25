@@ -190,7 +190,7 @@ MapBox → BuildingManager.update(pElapsed)                                  Bui
 
 ## Related Patterns
 
-稳定 pattern_id（完整索引：knowledge/patterns/模式索引.md）：
+稳定 pattern_id（完整索引：knowledge/patterns/module-index.md）：
 
 - `clone-modify-asset` — 建筑派生注册（本系统 add 路线的 modding 实践）
 - `custom-kingdom-system` — 建筑 kingdom 联动玩法

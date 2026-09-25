@@ -1,7 +1,7 @@
 ---
-title: 自定义神力 Tab
+title: custom-power-tab
 aliases:
-  - Custom Power Tab
+  - 自定义神力 Tab
 ---
 
 # Pattern: custom-power-tab

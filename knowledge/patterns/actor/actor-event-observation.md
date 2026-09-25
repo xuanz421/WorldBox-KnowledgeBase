@@ -1,7 +1,7 @@
 ---
-title: 单位事件观察
+title: actor-event-observation
 aliases:
-  - Actor Event Observation (death snapshot)
+  - 单位事件观察
 ---
 
 # Pattern: actor-event-observation

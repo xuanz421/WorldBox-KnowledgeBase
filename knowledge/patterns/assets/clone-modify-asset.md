@@ -1,7 +1,7 @@
 ---
-title: 克隆与魔改资产
+title: clone-modify-asset
 aliases:
-  - Clone & Modify Existing Assets
+  - 克隆与魔改资产
 ---
 
 # Pattern: clone-modify-asset

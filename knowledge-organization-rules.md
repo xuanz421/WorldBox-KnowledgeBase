@@ -7,7 +7,7 @@ aliases:
 
 # 知识组织规则（Obsidian）
 
-本文件是 WBKB 知识库（Obsidian vault）结构组织的 authoritative 规则，自 AGENTS.md 独立。适用于 `knowledge/` 三个总索引内部与所有知识文档的整理；根导航入口为 [知识库索引](知识库索引.md)。
+本文件是 WBKB 知识库（Obsidian vault）结构组织的 authoritative 规则，自 AGENTS.md 独立。适用于 `knowledge/` 三个总索引内部与所有知识文档的整理；根导航入口为 [知识库索引](knowledge-index.md)。
 
 知识库是索引型森林，不是高密度知识图网络。
 
@@ -17,7 +17,7 @@ aliases:
 
 * 源代码索引 — `knowledge/systems/`：WorldBox 原版源代码解析
 * 模组索引 — `knowledge/reference-mods/`：参考模组自身实现解析
-* 模块索引 — `knowledge/patterns/`：可复用实现（导航文件 `模式索引.md`，节点显示名「模块索引」）
+* 模块索引 — `knowledge/patterns/`：可复用实现（导航文件 `module-index.md`，节点显示名「模块索引」）
 
 未经用户明确要求，Agent 不得：新增 / 删除 / 合并总索引、修改总索引名称、调整总索引之间层级、将内部方向提升为新总索引、为图谱整齐强行制造目录层级、为消除孤立节点创建虚假关系。发现内部方向大到可能值得成为新总索引时，只记录并汇报，不直接修改。
 

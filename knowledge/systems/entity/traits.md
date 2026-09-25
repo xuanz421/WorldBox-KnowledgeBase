@@ -163,7 +163,7 @@ AssetManager.init() → AssetManager.add(traits, "traits") → ActorTraitLibrary
 
 ## Related Patterns
 
-稳定 pattern_id（完整索引：knowledge/patterns/模式索引.md）：
+稳定 pattern_id（完整索引：knowledge/patterns/module-index.md）：
 
 - `register-actor-trait` — 注册侧 modding pattern（本系统 add 流程的 modding 包装）
 - `safe-asset-registration` — 防重复注册（对应 AssetLibrary.add 的 last-wins 行为）
