@@ -13,6 +13,7 @@ aliases:
 - Dir: `WorldResilience_0.4.0`
 - Files: 5 total / 2 C#
 - Confidence: Verified
+- 本地源码：已移除（2026-09-27 discover 时目录不存在；以下证据基于移除前的源码阅读，证据状态不变）
 
 ## Purpose
 
@@ -46,6 +47,12 @@ WorldBehaviourActionErosion.updateErosion / WorldLaws.init / PlayerOptionData / 
 |---|---|---|---|
 | WorldBehaviourActionErosion.updateErosion | Prefix | WorldResilience.cs:95 | 逆向侵蚀=世界自愈 |
 | WorldLaws.init | Postfix | WorldResilience.cs:279 | 注册 world_regrow 法则 |
+
+## Unique Methods
+
+筛选口径说明：补丁方法体内承载完整算法时，方法本体计为独特方法（管线接线部分除外）。
+
+- `WorldResilience.updateErosion 重写体` (WorldResilience.cs:L95-276) — 逆向侵蚀算法本体：岩→土→沙→浅海循环 + 海洋均质化（PerlinNoise 控制、Traverse 取私有字段、批量收集后统一 terraformMain）——整个模组的核心即此 ~180 行 Prefix 替换
 
 ## Reusable Ideas
 

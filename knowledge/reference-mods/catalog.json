@@ -553,6 +553,145 @@
     "profile": "mods/biology.md"
   },
   {
+    "source_id": "ref:fanren-xiuxianzhuan",
+    "name": "凡人修仙传",
+    "tier": "A",
+    "summary": "独立修仙体系：11 境界 37 层修炼状态机（帧切片心跳）、灵根五行相克算法、宗门/灵脉/灵石六品经济、天劫与法宝装备，全状态存 actor.data",
+    "primary_systems": [
+      "Actor",
+      "Traits",
+      "Combat",
+      "UI",
+      "World"
+    ],
+    "secondary_systems": [
+      "Mod Lifecycle",
+      "Save/Persistence",
+      "Assets",
+      "Events",
+      "AI",
+      "City",
+      "Items",
+      "Resources",
+      "Localization",
+      "Utility"
+    ],
+    "techniques": [
+      "Harmony Prefix",
+      "Harmony Postfix",
+      "Harmony Transpiler",
+      "Custom data",
+      "Asset registration",
+      "Event subscription",
+      "UI injection",
+      "Localization",
+      "MonoBehaviour updater"
+    ],
+    "worldbox_api_areas": [
+      "Actor.data",
+      "Actor.updateStats",
+      "Actor.getHit",
+      "Actor.die",
+      "AssetManager.traits",
+      "AssetManager.trait_groups",
+      "TabManager.CreateTab",
+      "SaveManager.folderPath",
+      "UnitWindow.OnEnable",
+      "NameplateText.setText"
+    ],
+    "nml_api_areas": [
+      "BasicMod<T>.OnModLoad (Verified)",
+      "TabManager/PowerButtonCreator (Verified)",
+      "ModConfigureWindow (Verified)"
+    ],
+    "harmony": true,
+    "ui": true,
+    "assets": false,
+    "persistence": true,
+    "key_files": [
+      "mods/fanren-xiuxianzhuan.md"
+    ],
+    "pattern_candidates": [
+      "actor-data-key-state-store",
+      "frame-sliced-world-simulation",
+      "runtime-cache-rebuild-from-unit-scan",
+      "save-folder-json-sidecar",
+      "transpiler-pre-normalize-stat-injection",
+      "legacy-save-idempotent-backfill"
+    ],
+    "confidence": "Verified",
+    "profile": "mods/fanren-xiuxianzhuan.md"
+  },
+  {
+    "source_id": "ref:ancient-warfare-3",
+    "name": "Ancient Warfare 3",
+    "tier": "A",
+    "summary": "历史战争 overhaul：郡县/朝廷/天命/族谱 RTS 引擎，SQLite 档案随存档持久化，协作式异步调度 + 存档屏障，自有寻路与军队 RTS 控制（survey 级建档，深挖 deferred）",
+    "primary_systems": [
+      "Actor",
+      "City",
+      "Kingdom",
+      "War",
+      "Save/Persistence",
+      "UI",
+      "AI"
+    ],
+    "secondary_systems": [
+      "Diplomacy",
+      "Culture",
+      "Combat",
+      "Events",
+      "Assets",
+      "Mod Lifecycle",
+      "Buildings",
+      "Jobs"
+    ],
+    "techniques": [
+      "Harmony Prefix",
+      "Harmony Postfix",
+      "Harmony Transpiler",
+      "Reflection",
+      "SQLite persistence",
+      "Async work scheduler",
+      "Custom data",
+      "Event subscription",
+      "UI injection",
+      "Localization",
+      "GodPower registration"
+    ],
+    "worldbox_api_areas": [
+      "Actor.newCreature",
+      "Actor.goTo",
+      "City",
+      "KingdomManager.makeNewCivKingdom",
+      "SaveManager.saveWorldToDirectory",
+      "War",
+      "BabyMaker.makeBaby",
+      "AssetManager.powers"
+    ],
+    "nml_api_areas": [
+      "BasicMod<T> + IReloadable (Verified)",
+      "NeoModLoader General/UI/Tab/Window (Mostly Verified)"
+    ],
+    "harmony": true,
+    "ui": true,
+    "assets": true,
+    "persistence": true,
+    "key_files": [
+      "mods/ancient-warfare-3.md"
+    ],
+    "pattern_candidates": [
+      "sqlite-sidecar-save-archive",
+      "process-isolated-runtime-db",
+      "async-work-coordinator-save-barrier",
+      "tabledef-reflection-schema-migration",
+      "dormant-patch-gate",
+      "replica-read-only-facade"
+    ],
+    "confidence": "Mostly Verified",
+    "profile": "mods/ancient-warfare-3.md"
+  },
+  {
     "source_id": "ref:sandbox",
     "name": "Sandbox",
     "tier": "B",
@@ -959,6 +1098,63 @@
     "profile": "mods/boatrebalancebox.md"
   },
   {
+    "source_id": "ref:funboost",
+    "name": "FunBoost",
+    "tier": "B",
+    "summary": "42 项运行时可开关的 Harmony 补丁包：行为/视觉/权能反应/城市经济四大类 skip 与增强，JSON 声明式配置回调驱动，纯补丁包范式样板",
+    "primary_systems": [
+      "Mod Lifecycle",
+      "AI",
+      "UI"
+    ],
+    "secondary_systems": [
+      "Actor",
+      "City",
+      "Culture",
+      "Assets",
+      "Items",
+      "Map",
+      "Resources",
+      "Save/Persistence",
+      "Boats"
+    ],
+    "techniques": [
+      "Harmony Prefix",
+      "Harmony Postfix",
+      "Config callback hot-toggle",
+      "Reflection"
+    ],
+    "worldbox_api_areas": [
+      "Actor.die",
+      "Actor.changeHappiness",
+      "ai.behaviours",
+      "City.addZone",
+      "AssetManager.gene_library",
+      "MapBox.calculateCurElapsed",
+      "SaveManager.loadWorld"
+    ],
+    "nml_api_areas": [
+      "BasicMod<T>/GetConfig (Verified)",
+      "ModConfigureWindow.ShowWindow (Verified)",
+      "default_config.json Callback (Verified)"
+    ],
+    "harmony": true,
+    "ui": true,
+    "assets": false,
+    "persistence": false,
+    "key_files": [
+      "mods/funboost.md"
+    ],
+    "pattern_candidates": [
+      "config-toggle-skip-prefix",
+      "skip-flag-prefix-postfix-pair",
+      "decision-injection-postfix",
+      "config-callback-runtime-reapply"
+    ],
+    "confidence": "Verified",
+    "profile": "mods/funboost.md"
+  },
+  {
     "source_id": "ref:nerffiredamage",
     "name": "NerfFireDamage",
     "tier": "C",
@@ -1096,5 +1292,66 @@
     ],
     "confidence": "Verified",
     "profile": "mods/simple-chinese-localization.md"
+  },
+  {
+    "source_id": "ref:zhutian-shenzuo",
+    "name": "诸天神座",
+    "tier": "B",
+    "summary": "万象修仙框架测试版：词条获取/技能/职业体系、天劫三态状态机、起源领域、源脉地图生成、存档级快照时间线时间神殿（自述测试范围仅 10 特质，其余为完整实现）",
+    "primary_systems": [
+      "Actor",
+      "Combat",
+      "World",
+      "Save/Persistence",
+      "Traits",
+      "UI"
+    ],
+    "secondary_systems": [
+      "Assets",
+      "Map",
+      "Resources",
+      "Events",
+      "Utility",
+      "Localization",
+      "Mod Lifecycle"
+    ],
+    "techniques": [
+      "Harmony Prefix",
+      "Harmony Postfix",
+      "Custom data",
+      "Reflection",
+      "Save-folder snapshot timeline",
+      "Asset registration",
+      "UI injection",
+      "MonoBehaviour updater"
+    ],
+    "worldbox_api_areas": [
+      "Actor.getHit",
+      "Actor.die",
+      "BatchActors.u8_checkUpdateTimers",
+      "World.world.map_stats.custom_data",
+      "SaveManager.loadWorld(反射)",
+      "SavedMap.create",
+      "AssetManager.base_stats_library"
+    ],
+    "nml_api_areas": [
+      "BasicMod<T> + GetDeclaration().FolderPath (Verified)",
+      "TabManager.CreateTab / SpriteTextureLoader (Verified)"
+    ],
+    "harmony": true,
+    "ui": true,
+    "assets": true,
+    "persistence": true,
+    "key_files": [
+      "mods/zhutian-shenzuo.md"
+    ],
+    "pattern_candidates": [
+      "u8-batch-dispatch-tick-gate",
+      "actor-data-key-state-store",
+      "karma-doomed-death-deferred-destroy",
+      "save-folder-snapshot-timeline-branching"
+    ],
+    "confidence": "Mostly Verified",
+    "profile": "mods/zhutian-shenzuo.md"
   }
 ]

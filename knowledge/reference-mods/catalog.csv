@@ -9,6 +9,8 @@ ref:thefantasyworld,TheFantasyWorld,A,True,True,True,True,Actor|Traits|Combat|Mo
 ref:shtoolkit,SHToolkit,A,True,True,True,True,Utility|UI|Save/Persistence|Mod Lifecycle,Mostly Verified,mods/shtoolkit.md
 ref:chinesename,ChineseName,A,True,False,True,True,Utility|Assets|Mod Lifecycle,Verified,mods/chinesename.md
 ref:biology,生物学,A,True,True,False,False,Actor|Traits|UI,Mostly Verified,mods/biology.md
+ref:fanren-xiuxianzhuan,凡人修仙传,A,True,True,False,True,Actor|Traits|Combat|UI|World,Verified,mods/fanren-xiuxianzhuan.md
+ref:ancient-warfare-3,Ancient Warfare 3,A,True,True,True,True,Actor|City|Kingdom|War|Save/Persistence|UI|AI,Mostly Verified,mods/ancient-warfare-3.md
 ref:sandbox,Sandbox,B,True,True,True,False,Actor|City|Kingdom|UI,Verified,mods/sandbox.md
 ref:optime,Optime,B,True,False,False,False,Utility|World,Verified,mods/optime.md
 ref:incensefiredway,IncensefiredWay,B,True,True,True,True,Traits|Actor,Mostly Verified,mods/incensefiredway.md
@@ -18,7 +20,9 @@ ref:mapdeal,MapDeal,B,False,True,False,False,Map,Verified,mods/mapdeal.md
 ref:creepmobboost,CreepMobBoost,B,False,False,True,False,Actor|Buildings,Verified,mods/creepmobboost.md
 ref:worldresilience,WorldResilience,B,True,False,True,False,Map|World,Verified,mods/worldresilience.md
 ref:boatrebalancebox,BoatRebalanceBox,B,True,False,True,False,Boats|Combat,Verified,mods/boatrebalancebox.md
+ref:funboost,FunBoost,B,True,True,False,False,Mod Lifecycle|AI|UI,Verified,mods/funboost.md
 ref:nerffiredamage,NerfFireDamage,C,True,False,False,False,Combat,Verified,mods/nerffiredamage.md
 ref:unlock-all,Unlock all,C,True,False,False,False,World,Verified,mods/unlock-all.md
 ref:hanhai-unlock-all,寒海的全解锁,C,False,False,False,False,Utility,Verified,mods/hanhai-unlock-all.md
 ref:simple-chinese-localization,简单汉化,C,True,False,False,False,Localization,Verified,mods/simple-chinese-localization.md
+ref:zhutian-shenzuo,诸天神座,B,True,True,True,True,Actor|Combat|World|Save/Persistence|Traits|UI,Mostly Verified,mods/zhutian-shenzuo.md

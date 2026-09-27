@@ -8,6 +8,21 @@ ref:actorhistory,Kingdom,secondary,1,Verified
 ref:actorhistory,Save/Persistence,primary,6,Verified
 ref:actorhistory,UI,primary,6,Verified
 ref:actorhistory,War,secondary,1,Verified
+ref:ancient-warfare-3,Actor,primary,4,Mostly Verified
+ref:ancient-warfare-3,AI,primary,4,Mostly Verified
+ref:ancient-warfare-3,Assets,secondary,1,Mostly Verified
+ref:ancient-warfare-3,Buildings,secondary,1,Mostly Verified
+ref:ancient-warfare-3,City,primary,4,Mostly Verified
+ref:ancient-warfare-3,Combat,secondary,1,Mostly Verified
+ref:ancient-warfare-3,Culture,secondary,1,Mostly Verified
+ref:ancient-warfare-3,Diplomacy,secondary,1,Mostly Verified
+ref:ancient-warfare-3,Events,secondary,1,Mostly Verified
+ref:ancient-warfare-3,Jobs,secondary,1,Mostly Verified
+ref:ancient-warfare-3,Kingdom,primary,4,Mostly Verified
+ref:ancient-warfare-3,Mod Lifecycle,secondary,1,Mostly Verified
+ref:ancient-warfare-3,Save/Persistence,primary,4,Mostly Verified
+ref:ancient-warfare-3,UI,primary,4,Mostly Verified
+ref:ancient-warfare-3,War,primary,4,Mostly Verified
 ref:biology,Actor,primary,8,Mostly Verified
 ref:biology,Events,secondary,3,Mostly Verified
 ref:biology,Mod Lifecycle,secondary,1,Mostly Verified
@@ -36,6 +51,33 @@ ref:familytree,Clan,secondary,1,Verified
 ref:familytree,Events,secondary,1,Verified
 ref:familytree,Kingdom,secondary,1,Verified
 ref:familytree,UI,primary,5,Verified
+ref:fanren-xiuxianzhuan,Actor,primary,6,Verified
+ref:fanren-xiuxianzhuan,AI,secondary,1,Verified
+ref:fanren-xiuxianzhuan,Assets,secondary,1,Verified
+ref:fanren-xiuxianzhuan,City,secondary,1,Verified
+ref:fanren-xiuxianzhuan,Combat,primary,6,Verified
+ref:fanren-xiuxianzhuan,Events,secondary,1,Verified
+ref:fanren-xiuxianzhuan,Items,secondary,1,Verified
+ref:fanren-xiuxianzhuan,Localization,secondary,1,Verified
+ref:fanren-xiuxianzhuan,Mod Lifecycle,secondary,1,Verified
+ref:fanren-xiuxianzhuan,Resources,secondary,1,Verified
+ref:fanren-xiuxianzhuan,Save/Persistence,secondary,1,Verified
+ref:fanren-xiuxianzhuan,Traits,primary,6,Verified
+ref:fanren-xiuxianzhuan,UI,primary,6,Verified
+ref:fanren-xiuxianzhuan,Utility,secondary,1,Verified
+ref:fanren-xiuxianzhuan,World,primary,6,Verified
+ref:funboost,Actor,secondary,1,Verified
+ref:funboost,AI,primary,5,Verified
+ref:funboost,Assets,secondary,1,Verified
+ref:funboost,Boats,secondary,1,Verified
+ref:funboost,City,secondary,1,Verified
+ref:funboost,Culture,secondary,1,Verified
+ref:funboost,Items,secondary,1,Verified
+ref:funboost,Map,secondary,1,Verified
+ref:funboost,Mod Lifecycle,primary,5,Verified
+ref:funboost,Resources,secondary,1,Verified
+ref:funboost,Save/Persistence,secondary,1,Verified
+ref:funboost,UI,primary,5,Verified
 ref:guigu-cultivation,Actor,primary,7,Mostly Verified
 ref:guigu-cultivation,City,secondary,1,Mostly Verified
 ref:guigu-cultivation,Combat,primary,7,Mostly Verified
@@ -145,3 +187,16 @@ ref:xuanmen-daojie,Traits,primary,6,Mostly Verified
 ref:xuanmen-daojie,UI,primary,6,Mostly Verified
 ref:xuanmen-daojie,Utility,secondary,1,Mostly Verified
 ref:xuanmen-daojie,World,secondary,1,Mostly Verified
+ref:zhutian-shenzuo,Actor,primary,5,Mostly Verified
+ref:zhutian-shenzuo,Assets,secondary,1,Mostly Verified
+ref:zhutian-shenzuo,Combat,primary,5,Mostly Verified
+ref:zhutian-shenzuo,Events,secondary,1,Mostly Verified
+ref:zhutian-shenzuo,Localization,secondary,1,Mostly Verified
+ref:zhutian-shenzuo,Map,secondary,1,Mostly Verified
+ref:zhutian-shenzuo,Mod Lifecycle,secondary,1,Mostly Verified
+ref:zhutian-shenzuo,Resources,secondary,1,Mostly Verified
+ref:zhutian-shenzuo,Save/Persistence,primary,5,Mostly Verified
+ref:zhutian-shenzuo,Traits,primary,5,Mostly Verified
+ref:zhutian-shenzuo,UI,primary,5,Mostly Verified
+ref:zhutian-shenzuo,Utility,secondary,1,Mostly Verified
+ref:zhutian-shenzuo,World,primary,5,Mostly Verified

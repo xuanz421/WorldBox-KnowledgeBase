@@ -1,0 +1,113 @@
+---
+title: Ancient Warfare 3（古代战争·春秋）
+aliases:
+  - ancient-warfare-3
+---
+
+# Ancient Warfare 3（古代战争·春秋）
+
+## Identity
+
+- Name: Ancient Warfare 3 v1.2.7g（mod.json:2-9，guid `ANCIENTWARFARE3`，author GoatDie#4068，RepoUrl github.com/monpai-lover/AncientWarfare3.0）
+- Source ID: `ref:ancient-warfare-3`
+- Dir: `古代战争_春秋3.0`
+- Files: 4263 total / 2018 C#
+- Confidence: Mostly Verified
+
+## Purpose
+
+历史战争 overhaul：郡县制、朝廷官僚与科举、天命系统、族谱 SQLite 档案、军队 RTS 控制、历代开国君主降临、多人快照。核心域 1619 文件（court 213 / lineage 831 / db 118）、150 个补丁文件。**本轮 survey 级建档**（抽查入口/DB/API/8 个代表性补丁），court/lineage 内部为名录+抽查推断；深挖子批 C0-C6 已列入 deferred。
+
+## Systems
+
+- Primary: Actor, City, Kingdom, War, Save/Persistence, UI, AI
+- Secondary: Diplomacy, Culture, Combat, Events, Assets, Mod Lifecycle, Buildings, Jobs
+
+## Key Implementation
+
+- `Code/ModClass.cs` (L27-196) — `BasicMod<ModClass>, IReloadable`：`DormantPatchTypes` 停用门（L55-59，附中文风险注记 L37-54）、反射扫描 `[HarmonyPatch]` 逐类有序上补丁 + 空结果告警（L137-196）、`[MethodReplace]` Transpiler 方法体重定向（L108-109）
+- `Code/core/asyncwork/AWAsyncWorkCoordinator.cs` (L215-404) — 协作式异步调度：lane/stamp/commit-mode 工作请求、主线程按时间预算 `DrainMainThread(ms,maxBatches)` 分批提交、存档屏障
+- `Code/core/db/LineageArchiveManager.cs` (L25-590) — SQLite 档案：反射 `[TableDef]` 建表（118 表类）+ `AddMissingColumns` 幂等补列（L527-552）、进程隔离 `.runtime/process-<pid>/` 运行时库、fail-closed 存档隔离 `DisableRuntimeArchive`（L119-132）
+- `Code/core/lineage/MandateService.cs` (L46-3606) — 天命系统：单行状态（STATE_ID=1）+ 报告缓存 + 年度涨落 `CalculateYearlyDelta`（L2566）+ DB 重算 `ReadReportFromDb`（L2726）
+- `Code/core/court/CourtService.cs` (L119-3414) — 朝廷：官职 id 配置、空缺填补、`CourtSnapshot` 画像（效率/集中度/民生/战争/秩序/科技）
+- `Code/core/county/CountyAdministrationService.cs` (L10-240) — 郡县制：zone 邻接图分区 + 历史郡名录匹配 + 空郡失活
+- `Code/core/lineage/ArmyRtsControllerService.cs` (L22-7283) — 军队 RTS：mission 模型、每帧 32 控制器上限、战略抵达半径
+- `Code/content/figures/HistoricalFigureService.cs` (L28-731) — 开国君主降临：严格顺序生成（前代不死不出）、SQLite 持久化防重刷、私有 `System.Random`（MapBox 会播种 UnityEngine.Random）
+- `Code/api/history/AW3HistoryApi.cs` (L9-77) + `Code/core/historyapi/AW3HistoryReadService.cs` (L59-832) — 历史查询公共 API：分页读 + IDisposable 订阅
+- `Code/patch/AW_SavePatch.cs` (L34-172) — `SaveManager.saveWorldToDirectory` 前后缀把运行时档案导出进存档目录
+
+## Unique Methods
+
+筛选口径：剔除补丁管线与样板后，代表性模组自有机制方法（survey 级精选，非穷举）。
+
+- `CountyAdministrationService.ReconcileCity(City)` (Code/core/county/CountyAdministrationService.cs:L12-227) — 郡县制核心：对城市 zone 邻接图重新划分郡，匹配历史郡名录，失活空郡并持久化
+- `AWAsyncWorkCoordinator.TrySchedule(...)` / `DrainMainThread(double,int)` (Code/core/asyncwork/AWAsyncWorkCoordinator.cs:L299-404) — 异步工作请求入列 + 主线程时间预算分批提交，存档经 TryEnterSaveBarrier 屏障（AWAsyncRuntime.cs:78）
+- `ArmyRtsCommandService.Dispatch(AW3CommandRequest)` (Code/api/commands/ArmyRtsCommandService.cs:L13-48) — 军令 RPC：replica 只读校验 + 主线程/王国/军队归属校验后执行集结点/目标城/姿态/取消
+- `MandateService.ReadReport()` / `ReadReportFromDb()` (Code/core/lineage/MandateService.cs:L273, L2726) — 天命报告：缓存未脏直接读，否则从 SQLite 重算 mandate/authority/core_control/crisis_level
+- `HistoricalFigureService.TrySpawnOn(Actor,string)` (Code/content/figures/HistoricalFigureService.cs:L124-233) — 君主降临：严格顺序 + 存活互斥 + 私有无种子随机
+- `AW3HistoryReadService.ReadEvents(AW3HistoryQuery)` (Code/core/historyapi/AW3HistoryReadService.cs:L59-832) — 历史事件分页查询引擎（SQLite 只读连接 + DTO 映射）
+- `CourtService.GetSnapshot(Kingdom)` (Code/core/court/CourtService.cs:L357) — 朝廷画像快照：多学阀 dominant_school/faction 缓存
+
+## Techniques
+
+Harmony Prefix/Postfix/Transpiler（150 patch 文件；目标直方图 Actor 100 / City 83 / MapBox 47 / QuantumSpriteLibrary 46 / Kingdom 35）、`[MethodReplace]` 通用方法体重定向（attributes/MethodReplaceAttribute.cs + utils/HarmonyTools.cs）、SQLite 持久化（System.Data.SQLite 随包）、`[TableDef]` 反射 schema 迁移、协作式异步调度 + 存档屏障、进程隔离运行时库、IReloadable 热重载、GodPower 注册（GodPowerLibrary.cs:121-256）
+
+## WorldBox Usage
+
+Actor.newCreature / Actor.goTo / City / CityBehCheckLeader / KingdomManager.makeNewCivKingdom / SaveManager.saveWorldToDirectory / War / Army / BabyMaker.makeBaby / MapBox / QuantumSpriteLibrary / AssetManager.powers / StatusManager.update / Building
+
+## NeoModLoader Usage
+
+- BasicMod<T> + IReloadable.Reload（Verified，ModClass.cs:27,339-344）
+- NeoModLoader General/UI/Tab/Window（Mostly Verified，14 文件使用）
+- GodPower + PlayerConfig 功能开关（Verified，HistoricalFigureService.cs:31-33）
+
+## Patch Targets
+
+| Target | Type | File | Purpose |
+|---|---|---|---|
+| SaveManager.saveWorldToDirectory | Pre+Post | Code/patch/AW_SavePatch.cs:34-62 | 运行时档案导出进存档目录 |
+| Actor.newCreature | Postfix | Code/patch/AW_BirthPatch.cs:26 | 出生路由（含历代君主） |
+| Actor.goTo / updatePathMovement / isUsingPath | Prefix ×3 | Code/patch/AW_GlobalPathfindingPatch.cs:32-153 | AW3 自有寻路接管 |
+| BabyHelper.canMakeBabies / BabyMaker.makeBaby | Pre+Post | Code/patch/AW_DynasticReproductionPatch.cs:14-107 | 王朝生育控制 |
+| CityBehCheckLeader.checkFindLeader | Prefix | Code/patch/AW_CityLeaderPatch.cs:13 | 城主选拔接管 |
+| KingdomManager.makeNewCivKingdom / removeObject | Postfix/Prefix | Code/patch/AW_ChroniclePatch.cs:39-51 | 王国编年史与生命周期 |
+| StatusManager.update | Prefix | Code/patch/AW_FramePrioritySchedulerPatch.cs:114 | 帧预算插桩（SpecialPatch 手动装载） |
+
+（150 patch 文件未逐一列表；2 个 dormant 停用类见 ModClass.cs:55-59。）
+
+## Reusable Ideas
+
+- `DormantPatchTypes` 停用门：缺类级 `[HarmonyPatch]` 从未真正装载的补丁显式停用并写明风险与验证条件（ModClass.cs:37-59）
+- SQLite 档案随存档走：进程隔离运行时库 + saveWorldToDirectory 前后缀复制，实现跨存档保留（LineageArchiveManager.cs:23 注释明说设计动机）
+- 反射 `[HarmonyPatch]` 逐类有序上补丁 + 空结果告警，区分"意外漏打"与 `[HarmonyPrepare]` 主动停用（ModClass.cs:137-196,276-299）
+- 主线程时间预算 drain 的异步协调器：后台算、主线程按 ms 预算收结果（AWAsyncWorkCoordinator.cs:404）
+- fail-closed 存档加载：档案打不开就 `DisableRuntimeArchive` 隔离，绝不用空库顶替存档数据（LineageArchiveManager.cs:119-132）
+
+## Pattern Candidates
+
+- `sqlite-sidecar-save-archive`
+- `process-isolated-runtime-db`
+- `async-work-coordinator-save-barrier`
+- `tabledef-reflection-schema-migration`
+- `dormant-patch-gate`
+- `replica-read-only-facade`
+
+## Evidence
+
+- Code/ModClass.cs:27 — `class ModClass : BasicMod<ModClass>, IReloadable`
+- Code/ModClass.cs:55-59 — DormantPatchTypes 停用门
+- Code/ModClass.cs:137-196 — 反射扫描逐类上补丁
+- Code/core/db/LineageArchiveManager.cs:23 — "运行时库 + 随存档复制"设计注释
+- Code/core/db/LineageArchiveManager.cs:87-88,527-552 — 建库与幂等补列
+- Code/core/lineage/MandateService.cs:18-59 — MandateReport DTO 与常量
+- Code/core/asyncwork/AWAsyncWorkCoordinator.cs:299,404 — TrySchedule / DrainMainThread
+- Code/core/court/CourtService.cs:121-136,357 — CourtSnapshot 指标与 GetSnapshot
+- Code/core/county/CountyAdministrationService.cs:28-45 — 分区规则与历史名录
+- Code/api/commands/ArmyRtsCommandService.cs:19-27 — replica 只读/主线程校验
+- Code/content/figures/HistoricalFigureService.cs:16-27 — 顺序生成与私有 Random 设计注释
+- Code/patch/AW_SavePatch.cs:34-35,61-62 — saveWorldToDirectory 前后缀
+
+## Notes / Deferred
+
+Survey 级建档：court（213 文件/ CourtService 3414 行）、lineage（831 文件 / ArmyRtsControllerService 7283 行）、db 写管线（HistoricalWriteService/Queue/Worker/BatchSink）仅名录+抽查。深挖子批建议（Cultiway C0-C5 模式）：C0 调度与性能（asyncwork+performance+pathfinding）、C1 持久化（db 写管线+schema 迁移+AW_SavePatch）、C2 族谱/战争域（lineage 拆 RTS 与天命/外交）、C3 朝廷与郡县（court+county+schools+Courtjson）、C4 内容与文化（content/+naming+word_libraries）、C5 UI 与 API（ui/+api/+historyapi+multiplayer）、C6 补丁目录（patch/ 150 文件全表）。Assemblies\ 含完整 Assembly-CSharp.dll 发布副本与 .runtime 运行时产物，深挖可用公开 GitHub repo 作更净源。mod.json:12-14 声明与 一米_中文名 不兼容（ModClass.cs:139-149 有冲突检测实现）。

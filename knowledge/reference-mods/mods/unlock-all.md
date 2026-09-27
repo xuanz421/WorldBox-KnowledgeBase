@@ -13,6 +13,7 @@ aliases:
 - Dir: `Unlock all`
 - Files: 3 total / 1 C#
 - Confidence: Verified
+- 本地源码：已移除（2026-09-27 discover 时目录不存在；以下证据基于移除前的源码阅读，证据状态不变）
 
 ## Purpose
 
@@ -44,6 +45,10 @@ AssetManager.world_laws_library / CursedSacrifice.{reset,_current_sacrifice_coun
 | Target | Type | File | Purpose |
 |---|---|---|---|
 | CursedSacrifice.reset | Postfix | Code/Main.cs:64-66 | 献祭计数重置为 500 保全解锁 |
+
+## Unique Methods
+
+微型 NCMS 补丁，无独立自有机制方法：全部机制内嵌于 Awake 资产直改与 reset Postfix 补丁体（见 Key Implementation / Patch Targets），对应 pattern `world-law-default-flip`。
 
 ## Reusable Ideas
 
