@@ -32,6 +32,19 @@ aliases:
 - `UI/SandboxTab.cs` (L30-60) — TabManager.CreateTab + 分组布局 + AddPowerButton
 - `Toolkit/Graphics/ButtonBuilder.cs` — 纯代码构建 PowerButton（四样式）
 
+## Unique Methods
+
+筛选口径：剔除补丁接线与注册样板后，承载核心机制且原版无对应物的模组自有方法。
+
+- `MagnetPlus.MagnetAction` (Features/MagnetPlus.cs:71-122) — 复刻并扩展原版磁铁三态状态机（拾取/拖动/抛掷），窗口激活时强制放下已抓单位
+- `MagnetPlus.PickupUnits` (Features/MagnetPlus.cs:124-161) — 按笔刷像素逐格抓取单位，尊重 `can_be_moved_by_powers` 与 PlayerConfig 的每单位磁铁开关
+- `MagnetPlus.drawMagnetUnits` (Features/MagnetPlus.cs:14-32) — Postfix 将磁吸量子精灵重绘为单位自身贴图并按磁铁移动角旋转
+- `SettleCity.ClickSettleCity` (Features/SettleCity.cs:36-81) — 两段式点击（先选王国、再点空地）用 `createNewUnit`+`buildNewCity` 为任意王国异地定居新城
+- `SettleCity.DrawSettleLine` (Features/SettleCity.cs:83-105) — QuantumSprite draw_call 从王国首都向鼠标位置画彩色箭头预览
+- `MetaObjectWithTraits_Patch.AddTraits_Prefix` (Patches/MetaObjectWithTraits_Patch.cs:45-87) — 按特质类型+窗口白名单否决 addTrait 并过滤 default_traits 列表（配套 FillTraitAssetsFromStringList_Prefix:89-116）
+- `BuildingConstructor.UpdateAssets` (Features/BuildingConstructor.cs:11-33) — 遍历全部 BuildingAsset 批量克隆 power+drop 生成"放置任意建筑"神力（配套 SpawnBuilding:35-48）
+- `MakeUnitKing.MakeKing` (Features/MakeUnitKing.cs:21-46) — 落地区域挑选单位（收藏优先）`removeKing`+`setKing` 强制封王
+
 ## Techniques
 
 AssetManager.powers.clone 模板克隆 + DropAsset action_landed、泛型方法运行时 MakeGenericType manual patch（MetaObjectWithTraits<,>）、ScrollWindow prefab 克隆 UI、Builder 模式 UI 构建、GodPower select_button_action/click_special_action 组合、QuantumSpriteAsset 自定义绘制

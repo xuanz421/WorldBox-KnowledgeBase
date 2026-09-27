@@ -26,10 +26,23 @@ aliases:
 ## Key Implementation
 
 - `Code/ModClass.cs` (L33-50) — BasicMod+IReloadable，反射扫描 IPatch 自动注册全部 patch
-- `Code/Patches/ActorNamePatch.cs` (L15-56) — Actor.getName Prefix + turnIntoZombie/Skeleton Transpiler；family_name 经 actor data 遗传
-- `Code/CN_NameGeneratorLibrary.cs` (L91-96) — 自定义 AssetLibrary<CN_NameGeneratorAsset>，同步向 vanilla name_generator 注册占位 asset 保证兼容
-- `Code/CN_NameTemplate.cs` (L62-80) — 原子化模板解析（atoms + required_parameters），[Hotfixable] GenerateName
+- `Code/Patches/ActorNamePatch.cs` (L15-59) — Actor.getName Prefix + turnIntoZombie/Skeleton Transpiler；family_name 经 actor data 遗传
+- `Code/CN_NameGeneratorLibrary.cs` (L61-105) — 自定义 AssetLibrary<CN_NameGeneratorAsset>，同步向 vanilla name_generator 注册占位 asset 保证兼容
+- `Code/CN_NameTemplate.cs` (L62-107 GenerateName, L118-415 Parse) — 原子化模板解析（atoms + required_parameters）+ 拓扑排序，[Hotfixable] GenerateName
 - `Code/WordLibraryManager.cs` (L41-52) — 文本词库（每行一词）→ WordLibraryAsset，SubmitDirectoryToLoad
+
+## Unique Methods
+
+筛选口径：剔除补丁接线与注册样板后，承载核心机制且原版无对应物的模组自有方法。
+
+- `CN_NameTemplate.Parse` (Code/CN_NameTemplate.cs:118-415) — 字符级状态机解析模板（`{} <> $ # :` 定界，Parameter/RawText/WordLibrary 三原子），尾部按 tag 依赖做拓扑排序得 atoms_before_generate（L364-414）
+- `CN_NameTemplate.GenerateName` (Code/CN_NameTemplate.cs:62-107) — [Hotfixable] 生成：先按拓扑序填充 tag 原子，再拼接三类原子，必填词库取词为空则整体返回空串
+- `CN_NameTemplateAtom.GetFilledTemplate` (Code/CN_NameTemplate.cs:434-456) — 参数键依次查 actor 参数表→`ModClass.GlobalParameters`，string.Format 填充原子
+- `CN_NameGeneratorLibrary.Submit` (Code/CN_NameGeneratorLibrary.cs:61-105) — 逐模板 Parse 失败剔除 + 双注册：add 自身库同时向 `AssetManager.name_generator` 补占位 NameGeneratorAsset（L91-97）
+- `WordLibraryManager.SubmitDirectoryToLoad` (Code/WordLibraryManager.cs:41-50) — 文本词库整目录（每行一词）加载为 WordLibraryAsset，`submitted_dir` 去重支撑 IReloadable 热重载
+- `ActorNamePatch.set_actor_name` (Code/Patches/ActorNamePatch.cs:23-59) — Prefix 仅空名时生成；family_name 从父母 data（男性优先，L42-51）遗传并回写 `data.name`/`data.family_name`
+- `ActorNamePatch.undead_creature_name` (Code/Patches/ActorNamePatch.cs:61-67) — Transpiler 把 IL 字面量 `"Un"` 换成 `"亡-"`（僵尸/骷髅前缀）
+- `ModClass.Update` (Code/ModClass.cs:12-18) — 每帧运行 `ParameterGetters.global_parameter_getters` 刷新全局模板参数（反射扫描注册在 L33-50）
 
 ## Techniques
 

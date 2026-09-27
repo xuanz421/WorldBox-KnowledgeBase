@@ -32,6 +32,18 @@ aliases:
 - `Code/Features/Windows/WindowBase.cs` (L6-73) — ScrollWindow ModObjectFeature 基类（网格布局+高亮器）
 - `Code/Scheduling/Scheduler.cs` (L5-29) — 时间片轮转任务调度器
 
+## Unique Methods
+
+筛选口径：剔除 Feature 注册样板与 NML 生命周期后，承载核心机制且原版无对应物的模组自有方法。
+
+- `Scheduler.Run` (Code/Scheduling/Scheduler.cs:13-27) — 时间片调度核心：每帧按各任务 `MaxBlockingTime` 毫秒预算连续取步执行，超时让出下帧，任务取尽自动移除
+- `PowerboxTab.SwitchSection` (Code/Features/Buttons/PowerboxTab.cs:50-63) — Spawns/Metas 二级分区切换：全 tab 按钮按注册分区批量 SetActive
+- `PowerboxTab.PositionButton` (Code/Features/Buttons/PowerboxTab.cs:29-42) — 覆写 NML 按钮定位钩子，把按钮归入分区字典并默认隐藏（仅 All 区可见）
+- `BuildingUpgradePower.BuildingUpgradeAction` (Code/Features/GodPowers/BuildingUpgradePower.cs:34-44) — DropAsset 落地回调：按 `upgrade_to` 模板升级建筑并回满血/重算 stats
+- `CityBorderExpansionPower.CityBorderExpansionAction` (Code/Features/GodPowers/CityBorderExpansionPower.cs:20-27) — 两段式划界：点到城市记住目标，点到野外把该 zone 并入目标城
+- `EditResourcesWindow.CheckInput` (Code/Features/Windows/EditResourcesWindow.cs:108-120) — 城市资源编辑：输入值 clamp 0-999 写入首仓库、清零其余仓库并回写合计
+- `WhisperOfAllianceLine.DrawWhisperOfAllianceLine` (Code/Features/QuantumSpriteAssets/WhisperOfAllianceLine.cs:21-34) — QuantumSprite 每帧从选定王国各城向鼠标画联盟连线预览
+
 ## Techniques
 
 NML Feature registration（ModAssetFeature/ModButtonFeature/ModPowerTabFeature/ModObjectFeature/ModWindowButtonFeature + ModFeatureRequirementList 依赖声明）、Asset registration（GodPower+DropAsset、ActorAsset.clone、NameGeneratorAsset）、UI injection（TabManager.CreateTab + 分区按钮）、自定义帧调度器、Reflection/ResourcesFinder、EmbeddedResources sprite 加载
@@ -49,9 +61,10 @@ AssetManager.{drops, powers, actor_library, buildings} / GodPower / DropAsset / 
 
 | Target | Type | File | Purpose |
 |---|---|---|---|
-| UiUnitAvatar.OnDisable | Prefix | Features/Patches/PreventSettingActorToNullInUiUnitAvatarOnDisablePatch.cs | 防关闭单位头像时置空 actor |
+| UiUnitAvatarElement.OnDisable | Transpiler（feature Init 动态 Patch） | Features/Patches/PreventSettingActorToNullInUiUnitAvatarOnDisablePatch.cs:10-13 | IL 把 Ldnull 换成加载自身 `_actor` 字段，防关闭单位头像时置空 actor |
+| StatsWindow.create | Postfix（一次性钩子） | Features/Windows/EditResourcesWindow.cs:20-23 | 注入资源编辑按钮，首次命中后自 Unpatch |
 
-仅 1 个 Harmony patch——该 mod 几乎全走 NML Feature 资产路线。
+共 2 个动态补丁点、0 个 attribute 补丁类——该 mod 几乎全走 NML Feature 资产路线。
 
 ## Reusable Ideas
 

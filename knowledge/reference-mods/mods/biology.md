@@ -11,7 +11,7 @@ aliases:
 
 - Name: 生物学 1.0.7（信仰芙芙の博士，无 git）
 - Source ID: `ref:biology`
-- Dir: `Biology_1.0.7`（31 .cs，`Code/` 平铺，namespace `RimWorldMod`；证据位置相对 `Mods/Biology_1.0.7/Code/`）
+- Dir: `Biology_1.0.7`（31 .cs，`Code/` 平铺，namespace `RimWorldMod`；证据位置相对 `Mods/Biology_1.0.7/Code/`；mod.json 已改名 mod.json.close，模组处于禁用态）
 - Confidence: Mostly Verified
 
 ## Purpose
@@ -39,6 +39,19 @@ Biology 不给 WorldBox Actor 增加任何持久组件：全部运行时状态�
 - `UnitHealthTab.cs:75,1002-1061` — UnitWindow.OnEnable postfix 克隆 WindowMetaTab 注入"生物学"页
 - `UnitHealthTab.cs:129-136` — updateStats postfix + 脏版本守卫权威重放（OrganStats）
 - `BioResurrect.cs:76-96,170-236` — die prefix 快照收藏单位 + 复活链（units.dict 手术 + PutState 同引用整条搬回）
+
+## Unique Methods
+
+筛选口径：剔除补丁接线与 UI 样板后，承载核心机制且原版无对应物的模组自有方法（路径相对 `Code/`）。
+
+- `HealthSimulator.Simulate` (HealthSimulator.cs:87-207) — 五路合成核心（L142-176）：无 runtime 器官实例，`oh.Hp = Clamp(woundHp − tSev − extra + boost + hpMod − penalty, 0, 999)` 瞬时合成器官 HP，尾部 SyncSexByOrgans
+- `HealthSimulator.GetOrCreateState` (HealthSimulator.cs:1020-1029) — 进程内唯一权威状态表访问器（表 L75，cap L73）：`_states.Count >= 4000` 时整表 Clear()（活跃单位状态一并抹掉，实证反模式）
+- `HealthSimulator.ApplyStageDisease` (HealthSimulator.cs:207-232) — 按器官当前 HP 分档升级疾病（如肛门 失禁→肛裂→烂屁眼；阴道按 `current_children_count*3` 计入松弛负担）
+- `OrganStats.ApplyAfterRecalc` (OrganStats.cs:65-95) — updateStats Postfix：`_recalcVersion` 脏版本守卫（L69-72）保证每次原版重建后恰好重放一次乘算修正（器官→stat 映射表 L12-46）
+- `OrganEditor.DeleteOrgan` (OrganEditor.cs:534-553) — 摘除=纯状态突变（Removed/Added/HpMods/ModDiseases/FailedOrgans 五通道），双腿摘除联动双脚，ApplyRemoveConsequence 结算代价
+- `OrganEditor.StrengthenOrgan/AddOrgan` (OrganEditor.cs:1089-1110,1226-1236) — 强化链每级 ±10 HpMods，±30/+100 阈值授/撤特质，>−100 解除 FailedOrgans；AddOrgan 重生器官清除旧伤
+- `BioResurrect.OnBeforeDie/Snapshot` (BioResurrect.cs:86-127) — die Prefix 抢在原版 clearManagers/setCity(null) 拆解前 JSON 深拷 ActorData，并把 ActorWoundState 同引用整条搬走（Grave）
+- `BioResurrect.Resurrect/CopyData` (BioResurrect.cs:159-237,254) — createNewUnit 后逐字段反射拷回快照（custom_data_* 六容器必留活份避免 BatchActors NRE 冻结时间）、改写 units.dict id 索引、Relink/复冕/PutState 搬回器官状态
 
 ## Techniques
 

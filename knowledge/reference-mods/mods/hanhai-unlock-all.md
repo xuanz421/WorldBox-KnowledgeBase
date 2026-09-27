@@ -43,6 +43,12 @@ GameProgress.instance.{unlockAllAchievements,debugUnlockAll} / Input/KeyCode / M
 
 无
 
+## Unique Methods
+
+微型 NCMS 轮询 mod，唯一自有方法：
+
+- `Main.Update` (Main.cs:11-20) — 首帧（`load` 布尔闸）自动调用 `GameProgress.instance.unlockAllAchievements()` + `debugUnlockAll()`，之后 F9/F10 组合键重触发全解锁
+
 ## Reusable Ideas
 
 - `GameProgress.debugUnlockAll()` 是全内容解锁的官方后门入口

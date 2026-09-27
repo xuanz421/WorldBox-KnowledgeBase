@@ -27,6 +27,14 @@ aliases:
 
 - `Main.cs` (L10-69) — 全部逻辑（70 行）：addBuilding 否决、双目标进化拦截、协程清扫
 
+## Unique Methods
+
+筛选口径：补丁方法体内承载完整算法时，方法本体计为独特方法（管线接线除外）。
+
+- `Main.addBuilding_Prefix` (Main.cs:16-27) — Beehives 开关开启且 asset.id=="beehive" 时 `__result=null; return false` 源头否决蜂巢生成
+- `Main.tryToEvolveUnit_ViaAscension_Prefix` (Main.cs:32-51) — 单 Prefix 注解堆叠同时命中 tryToEvolveUnitViaMonolith/ViaAscension，按 5 种虫 id×SWITCH 置 `__result=!blocked` 并跳过
+- `Main.DestroyBeehives` (Main.cs:57-69) — Awake 启动的协程每 1s 全量遍历 World.world.buildings，对 beehive 调 startDestroyBuilding 持续清扫
+
 ## Techniques
 
 否决建筑生成（Prefix `__result = null; return false`）、单注解打两方法（[HarmonyPatch]×2 堆叠共用 Prefix）、协程低频轮询 World.world.buildings、NML SWITCH 配置即时读取

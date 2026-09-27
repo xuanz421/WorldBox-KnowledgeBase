@@ -26,11 +26,25 @@ aliases:
 ## Key Implementation
 
 - `Code/XNTM.cs` (L11-308) — 入口：注册 traits/world laws/national laws + world_log_library 注册 20+ WorldLogAsset（L53-65 text_replacer 模板替换范式）
-- `Code/Utils/NationTypeManager.cs` (L13-1940) — 核心：`nationals_type_id` 存 kingdom.data.custom_data_string（L13,1262）；57 类型定义表（L92-150）；RegisterTraits 注入 KingdomTrait（L1705-1747）
+- `Code/Utils/NationTypeManager.cs` (L13-1940) — 核心：`nationals_type_id` 存 kingdom.data.custom_data_string（L13,1262）；57 类型定义表（L92-150）；RegisterTraits 注入 KingdomTrait（L1691-1747）
+- `Code/Features/BetterWars/BetterWarsManager.cs` (L157-369) — 战争结局重做：绝望度四因子决定白和/停火/割让/傀儡/朝贡分发
 - `Code/Patches/KingdomBehCheckKingPatch.cs` (L8-34) — Prefix 拦截原版王位检查行为树：无领袖/议会政体短路
 - `Code/Utils/LandTypeManager.cs` (L16-100) — 城市地格类型：人口阈值+修正，存 city.data key `xntm_land_type`
 - `Code/Patches/CityLandTypePatches.cs` (L7-63) — City 生命周期四点挂钩 + getLoyalty ref 修正
 - `Code/Data/NationTypeDefinition.cs` (L18-107) — 纯数据定义 + 本地化读取范式
+
+## Unique Methods
+
+筛选口径：剔除补丁管线与注册样板后，承载核心机制且原版无对应物的模组自有方法。
+
+- `NationTypeManager.SelectHeir` (Code/Utils/NationTypeManager.cs:1093-1123) — 按政体 SuccessionMode 七路分派继承人（血统/声望选举/议会/宗教/年龄/财富/随机），无领袖政体返回 null 短路原版继承
+- `NationTypeManager.TryRunRepublicElection` (Code/Utils/NationTypeManager.cs:969-997) — 共和政体到期选举：选挑战者、令在任国王 kingLeftEvent、迁移首都、写入 `custom_data_long` 选举领袖与下次选举时间（配套 BuildRepublicElectionScore:1053）
+- `NationTypeManager.TickAuto/DetermineAutoTarget` (Code/Utils/NationTypeManager.cs:1398-1415,1416-1457) — 政体自动演化 tick：政变检查优先、冷却间隔、不合格回落 GetNaturalType
+- `NationTypeManager.RegisterTraits` (Code/Utils/NationTypeManager.cs:1691-1747) — 运行时把 57 条定义批量物化为 KingdomTrait（special_locale_id 图标/本地化接线 + opposites 收尾）
+- `CouncilManager.TickCouncil` (Code/Utils/CouncilManager.cs:39-92) — 议会政体主循环：裁汰亡席、按评分补选席位（ElectMembers:297-324）、定临时/常设与主席
+- `BetterWarsManager.TryTriggerPeaceAction` (Code/Features/BetterWars/BetterWarsManager.cs:157-238) — 以绝望度/疲惫度/战争年数/失城四因子决定和平结局并分发（下游 ApplyPuppetAgreement:355-369 傀儡驻管与吞并）
+- `NationalLawManager.TickKingdom` (Code/Features/NationalLaws/NationalLawManager.cs:115-165) — 国策法王国 tick：懒初始化 KingdomLawState、按法令模板发周期脉冲（ApplyTemplateLawPulse:529-679）
+- `LandTypeManager.Tick` (Code/Utils/LandTypeManager.cs:96-112) — 城市地格类型随人口/宗主国演化 tick，叠加饥荒忠诚惩罚与建设速度修正
 
 ## Techniques
 

@@ -27,6 +27,12 @@ aliases:
 
 - `BurningEffectPatch.cs` (L14-42) — Prefix 重写 burningEffect 全逻辑并 return false 跳过原方法，复刻皮肤烧伤/火焰粒子
 
+## Unique Methods
+
+筛选口径：补丁方法体内承载完整算法时，方法本体计为独特方法（管线接线除外）。
+
+- `BurningEffectPatch.Prefix` (BurningEffectPatch.cs:14-42) — Prefix 完全重写燃烧效果本体：随机皮肤烧伤、按最大生命 1% 计每 tick 伤害（原版 10%）、废墟建筑乘 0.05、10% 概率火焰粒子，`return false` 跳过原版（L41）——整个模组的核心即此一个方法
+
 ## Techniques
 
 BasicMod.OnModLoad + 手动 new Harmony(id).PatchAll()
@@ -47,7 +53,7 @@ StatusLibrary.burningEffect / BaseSimObject.{getMaxHealthPercent,getHit,isActor,
 
 ## Reusable Ideas
 
-- 用常量标注"原版值 vs 修改值"的 Prefix 全量替换模板（BurningEffectPatch.cs:9-33）
+- 用常量标注"原版值 vs 修改值"的 Prefix 全量替换模板（BurningEffectPatch.cs:9-42）
 
 ## Pattern Candidates
 

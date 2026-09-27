@@ -34,6 +34,19 @@ aliases:
 - `Code/Core/ReincarnationPersistence.cs` (L80-139) — 轮回数据写存档槽目录
 - `Code/Core/ModCreatureRegistry.cs` (L17-41) — 反射调私有 loadTexturesAndSprites 重载自定义生物贴图
 
+## Unique Methods
+
+筛选口径：剔除补丁管线与初始化样板后，承载核心机制且原版无对应物的模组自有方法。
+
+- `CultivationSystem.TickMonthlyCultivationBatchOnWorldTime` (Code/Core/CultivationSystem.cs:378-492) — 月结总入口：世界切换/加载态/暂停早退后，按稳态排水与跨月追赶双路分帧切片推进全局游戏月
+- `CultivationSystem.TickMonthlyExpAndLevelUpForMonth` (Code/Core/CultivationSystem.cs:885-1214) — 单位单月经验公式结算（资质×倍率×灵气）+ 境界突破门槛 + 属性/词条/宗门状态合并
+- `CultivationSystem.ArmPostLoadMonthlyExpSacrificeWindow` (Code/Core/CultivationSystem.cs:105-111) — 读档后武装 12s（clamp 5-45s）"牺牲窗"：窗内只对齐 last_exp_month 不发经验，附 10s 低切片续窗
+- `SectBootstrap.RunDeferredWorldLoadHeavy` (Code/Sect/SectBootstrap.cs:124-150) — 等 SmoothLoader/暂停结束（带重试上限）后把宗门重活拆 Phase0-4 逐帧入队
+- `ReincarnationPersistence.TryGetWriteSaveRoot` (Code/Core/ReincarnationPersistence.cs:129-143) — 轮回写侧目录解析：优先 SaveWriteContext 活动存档文件夹，失败回退读侧槽位目录
+- `LawUniquenessDuelSystem.TryBeginDuelIfNeeded` (Code/Core/LawUniquenessDuelSystem.cs:89-154) — "大道唯一"机制：天道词条超容时新挑战者与在世旧持道者登记强制决斗
+- `RealmSuppression.ApplyRealmSuppression` (Code/Core/RealmSuppression.cs:95-109) — 跨大境界攻击伤害减免，带绝对最小伤害与比例双保底
+- `InnateLuckBirth.RollAndApply` (Code/Core/InnateLuckBirth.cs:179-244) — 新生儿按配置权重掷先天气运（红/黄/紫/蓝/绿），含仙道凡人权重再分配
+
 ## Techniques
 
 Harmony Prefix/Postfix/Transpiler（40+ patch 类，逐类 CreateAndPatchAll 隔离）、Reflection（ActorAsset._cached_sprite 等私有成员）、Asset registration（trait_groups/traits/projectiles/actor_library/powers.clone）、Custom data（actor.data 字符串键）、文件持久化（存档槽目录 txt/json）、Event subscription（MapBox.on_world_loaded）、UI injection（TabManager.CreateTab + UnitWindow postfix）、Localization
@@ -53,7 +66,7 @@ Actor.data / Actor.updateStats / AssetManager.{trait_groups, projectiles, actor_
 |---|---|---|---|
 | Actor.updateStats | Pre+Post+Transpiler | Patches/HarmonyPatches.cs:26-93 | 境界属性叠加进原版统计 |
 | Kingdom.setKing | Prefix+2×Postfix | Patches/HarmonyPatches.cs:95-158 | 修 vanilla 换王不卸旧王 + 宗门角色同步 |
-| BatchActors.u8_checkUpdateTimers | Prefix | Patches/ModOptimizationPatch.cs:184-190 | 驱动全局分帧任务队列 |
+| BatchActors.u8_checkUpdateTimers | Postfix | Patches/ModOptimizationPatch.cs:183-190 | 驱动全局分帧任务队列 |
 | UnitWindow.OnEnable | Postfix | Patches/HarmonyPatches.cs:159-175 | 单位面板注入修仙信息页 |
 | SelectedUnitTab.showStatsGeneral | Postfix | Patches/HarmonyPatches.cs:176-184 | 宗门 UI 徽章/称号 |
 | MapBox.finishingUpLoading 等 | Prefix/Postfix | Sect/SectBootstrap.cs | 读档半初始化窗口内同步宗门 hydrate |

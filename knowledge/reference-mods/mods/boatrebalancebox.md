@@ -8,10 +8,10 @@ aliases:
 
 ## Identity
 
-- Name: BoatRebalanceBox v1.2.4
+- Name: BoatRebalanceBox v1.2.4（mod.json 已改名 mod.json.close，禁用态）
 - Source ID: `ref:boatrebalancebox`
 - Dir: `BoatRebalanceBox_1.2.4`
-- Files: 14 total / 8 C#（根 1 + Content 7）
+- Files: 12 total / 8 C#（根 5 + Content 7）
 - Confidence: Verified
 
 ## Purpose
@@ -58,12 +58,23 @@ ActorAsset.default_attack（ActorAsset.cs:107）
 - Primary: Boats, Combat
 - Secondary: Actor, Assets
 
+## Unique Methods
+
+筛选口径：剔除补丁接线后，承载核心机制且原版无对应物的模组自有方法（补丁方法体承载算法时计为本体）。
+
+- `Boat_Sight.Prefix` (Boat_Sight.cs:25-58) — `BaseSimObject.findEnemyObjectTarget` Prefix（仅 `is_boat_transport`）：先在 per-kingdom 64 槽环形缓存中倒序找 isInAttackRange 内的存活目标（跳过建筑内/船上单位），未命中再按 chunk 偏移搜索，找不到则放行原版索敌
+- `Boat_Sight.TrySearchOffsets` (Boat_Sight.cs:78-106) — 随机起点遍历半相 offset 表（±2 chunk），命中敌对 kingdom chunk 后收集缓存目标随机取一，实现超 vanilla 1-chunk 视野的扩域索敌
+- `Patch_Boat_Rapid_Fire.Prefix` (Boat_RapidFire.cs:19-84) — `attackRangeAction` Prefix 替换（弹数×攻速选 0.15s/0.10s 间隔，≥4 发偶数标记双发）：先打首发再起协程连发
+- `Patch_Boat_Rapid_Fire.RapidFire` (Boat_RapidFire.cs:86-106) — 协程逐发循环：目标死亡置 null（后续弹继续打已冻结的预测落点）、射手死亡则 break——单帧齐射→时间分布连发
+- `Boat_Weapons.SetupSealBoatWeaponItem/LinkSealBoatToSealBoatWeapon` (Boat_Weapons.cs:125-145) — clone `boat_cannonball`→`boat_shotgun`（6 连发、关闭 locales/meta-editor/knowledge 三开关隐藏资产），并把 `boat_transport_seal.default_attack` 重接到新武器
+- `Boat_Weapon_Projectile.ApplyModifications` (Boat_Weapon_Projectile.cs:180-209) — 遍历 11 个武器修饰表：每武器 get-or-clone `"<weapon>_newProjectile"`（幂等），先套全局默认再套专属修饰，最后 `boatWeapon.projectile = newProjId` 重接引用（配套反射写入器 ApplyDataToAsset:211-227）
+
 ## Patch Targets
 
 | Target | Type | File | Purpose |
 |---|---|---|---|
 | BaseSimObject.findEnemyObjectTarget | Prefix（找到即否决） | Boat_Sight.cs:25-58 | 运输船自定义索敌：per-kingdom 64 槽环形缓存 + 当前 chunk ±2 偏移搜索（超 vanilla 1 chunk 视野），跳过建筑内/船上单位，**仅回 isInAttackRange 内目标**（不追击远程敌人→防御型行为）；未找到则放行原逻辑 |
-| CombatActionLibrary.attackRangeAction | Prefix（替换） | Boat_RapidFire.cs:17-84 | projectiles>1 的运输船：单帧齐射改协程连发（0.10/0.15s 间隔按弹数×攻速选；≥4 发且偶数时每 tick 双发）；目标死亡转 hit_position 继续射 |
+| CombatActionLibrary.attackRangeAction | Prefix（替换） | Boat_RapidFire.cs:17-84 | projectiles>1 的运输船：单帧齐射改协程连发（0.10/0.15s 间隔按弹数×攻速选；≥4 发且偶数时每 tick 双发）；协程中目标死亡置 null 继续打首发时已冻结的预测落点（hit_position 回落仅首发分支 :38-42） |
 | MapBox.applyAttack | Prefix（替换） | Boat_NoShake.cs:12-34 | 船攻击或 boat_transport 被击：跳过 BEFORE_HIT deflect/block 战斗动作池、击退力（applyForceToUnit）、attackTargetActions、进食逻辑；对建筑伤害 ×1.2；直接 getHit(pSkipIfShake:true) |
 | Actor.startShake | Prefix（参数改写） | Boat_NoShake.cs:36-46 | **`pTimer=0` 在 boat 检查前执行→全局生效**（所有单位受击抖动时长归零，`_shake_timer=Min(0,max)`，Actor.cs:761-769）；船再清 vol/h/v |
 | Actor.calculateForce | Prefix（否决） | Boat_NoShake.cs:48-54 | 船永不击退（**有** is_boat guard） |
@@ -112,7 +123,7 @@ ActorAsset.default_attack（ActorAsset.cs:107）
 
 ## Evidence
 
-- mod：BoatRebalanceBox.cs:9-21 / Content.cs:8-13 / Boat_Weapons.cs:16-145 / Boat_States.cs:15-43 / Boat_Weapon_Projectile.cs:17-227 / Boat_Sight.cs:25-159 / Boat_RapidFire.cs:17-151 / Boat_NoShake.cs:12-63 / mod.json（v1.2.4，GUID GX4BoatRebalanceBox）
+- mod：BoatRebalanceBox.cs:9-21 / Content.cs:8-13 / Boat_Weapons.cs:16-145 / Boat_States.cs:15-43 / Boat_Weapon_Projectile.cs:17-227 / Boat_Sight.cs:25-159 / Boat_RapidFire.cs:17-151 / Boat_NoShake.cs:12-63 / mod.json.close（v1.2.4，GUID GX4BoatRebalanceBox）
 - vanilla：ActorAsset.cs:107,296,298,519 / ActorAssetLibrary.cs:3142-3301 / Actor.cs:761-769,1826,2771,6107-6113,6306-6366 / AssetLibrary.cs:55-90 / AssetManager.cs:163,409 / BaseSimObject.cs:363-386 / CombatActionLibrary.cs:235-280 / EnemiesFinder.cs:21-30 / SimGlobalAsset.cs:28 / MapBox.cs:703-743,746-791,793-855,862+ / ProjectileAsset.cs:14-88 / Projectile.cs:462 / ItemAsset.cs:59
 
 ## Unknowns

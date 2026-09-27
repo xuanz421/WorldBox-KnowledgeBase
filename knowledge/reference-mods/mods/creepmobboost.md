@@ -25,8 +25,17 @@ aliases:
 
 ## Key Implementation
 
-- `CreepMobBoost.cs` (L21-78) — OnModLoad：task+decision 注册及在役 Actor 决策数组扩容
+- `CreepMobBoost.cs` (L17-96) — OnModLoad：task+decision 注册及在役 Actor 决策数组扩容（L44-57）；L60-96 三个基线×倍数配置 setter
 - `Beh_buld_creep_mob_hive.cs` (L13-42) — 自定义 BehaviourActionActor：生物群落约束+距离查重+addBuilding+die
+
+## Unique Methods
+
+筛选口径：剔除注册样板后，承载核心机制且原版无对应物的模组自有方法。
+
+- `Beh_buld_creep_mob_hive.execute` (Beh_buld_creep_mob_hive.cs:13-42) — 自定义筑巢行为：按 mob→biome/mob→building 双字典校验生物群落约束（可配置开关）、按概率掷点、半径内用 `Finder.getBuildingsFromChunk` 查重既有同型建筑，通过后 `addBuilding` 生成巢穴并令自身 `die(true)`
+- `CreepMobBoost.set_step_max` (CreepMobBoost.cs:60-78) — 配置 setter：首次调用时懒缓存 4 种 creep 建筑 `grow_creep_*` 原值基线（setter 早于 OnModLoad 触发，cs:62 注释），再按配置倍数覆写 `grow_creep_steps_max`
+- `CreepMobBoost.set_worker_num` (CreepMobBoost.cs:80-87) — 同一基线×倍数模式覆写 `grow_creep_workers`
+- `CreepMobBoost.set_step_interval` (CreepMobBoost.cs:89-96) — 同一基线×倍数模式覆写 `grow_creep_step_interval`（float）
 
 ## Techniques
 
@@ -47,7 +56,7 @@ AssetManager.{tasks_actor,decisions_library,actor_library,buildings} / DecisionA
 ## Reusable Ideas
 
 - 给现有种族注入新 decision+task 的标准三步注册（task→decision→挂资产）
-- 决策库扩容时遍历在役 Actor 修数组，避免旧单位越界（CreepMobBoost.cs:39-42）
+- 决策库扩容时遍历在役 Actor 修数组，避免旧单位越界（CreepMobBoost.cs:44-57）
 - 配置 setter 触发早于 OnModLoad 时的基线缓存技巧（cs:62）
 
 ## Pattern Candidates

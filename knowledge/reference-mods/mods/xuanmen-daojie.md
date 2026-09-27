@@ -32,6 +32,19 @@ aliases:
 - `code/Systems/Cultivation/RealmSystem.cs:843` — updateStats Transpiler：normalize 前注入境界加成（labels 迁移）
 - `code/Systems/Cultivation/YouMingLunHuiSystem.cs:295` — terraform 同心环领域
 
+## Unique Methods
+
+筛选口径：剔除补丁管线与初始化样板后，承载核心机制且原版无对应物的模组自有方法。
+
+- `DamageSystem.Actor_GetHit_Prefix` (code/Systems/Combat/DamageSystem.cs:208-337) — 境界压制+五韵免疫+克制真伤+五韵护盾按序吸收的战斗改算总控（返回 bool 控流）
+- `RealmSystem.Actor_UpdateStats_Transpiler` (code/Systems/Cultivation/RealmSystem.cs:843-871) — 定位 stats.normalize 调用点、在其前注入境界属性加成的 IL Transpiler
+- `TianJieSystem.UpdateTianJie` (code/Systems/Cultivation/TianJieSystem.cs:63-98) — 天劫状态机：计时累计→9 道雷分批（ProcessEarlyLightning:148/ProcessFinalLightning:162）→PromoteToXian:257 或 KillActor:324
+- `EvolutionSystem.PerformEvolutionToSapient` (code/Systems/Cultivation/EvolutionSystem.cs:96-154) — 元婴突破化智人：SaveCultivationData:207→换种族→RestoreCultivationData:235 迁移修为数据
+- `BodyPossessionSystem.TryPossessBody` (code/Systems/Cultivation/BodyPossessionSystem.cs:38-100) — 鬼魂击杀者夺舍死者肉身（替换 actor 身份数据），由 newKillAction Postfix 触发
+- `LingQiSystem.UpdateGlobalLingQi` (code/Systems/Cultivation/LingQiSystem.cs:21-67) — 全局灵炁经济按年累加；以 life_dna 作世界指纹，新世界自动 ResetAllData
+- `YouMingLunHuiSystem.CreateAtTile` (code/Systems/Cultivation/YouMingLunHuiSystem.cs:295-430) — 幽冥领域创建：REALM_RADIUS² 同心环判定（:111/:123/:521）逐格 MapAction.terraformMain 改造地形
+- `SavedActorManager.SpawnSavedActor` (code/Features/SavedActorManager.cs:186-230) — 从 persistentDataPath JSON 档案（SaveActor:122，NonPublic ContractResolver）在指定地块重放置保存角色
+
 ## Techniques
 
 程序集级 PatchAll、BaseStatAsset/TraitAsset 运行时注册、actor.data 键值+stats 双写、MapStats.custom_data 世界级持久化、BatchActors postfix 主循环、IL Transpiler（stats/移速/物理）、persistentDataPath JSON 跨存档保存 Actor、TabManager 反射防热重载
@@ -55,7 +68,7 @@ Actor.{getHit,updateStats,checkNaturalDeath,goTo,updateFall,precalcMovementSpeed
 | Actor.checkNaturalDeath | Prefix | Systems/Cultivation/NaturalDeathSystem.cs:75 | Sigmoid 渐进死亡 |
 | Actor.goTo | Prefix | Systems/Flight/FlightSystem.cs:119 | 直线路径飞行 |
 | Actor.precalcMovementSpeed | Transpiler | Systems/Flight/FlightSystem.cs:86 | 飞行 2x 移速 |
-| Actor.newKillAction | Prefix | Systems/Cultivation/BodyPossessionSystem.cs:25 | 鬼魂夺舍 |
+| Actor.newKillAction | Postfix | Systems/Cultivation/BodyPossessionSystem.cs:24-26 | 鬼魂夺舍 |
 | Meteorite.explode | Prefix | Traits/TraitEffects/TeXingEffects.cs:447 | 无伤陨石特效 |
 
 另约 10 处（Actor.u1_checkInside 原版空引用修复、updateFall、UnitWindow/KingdomWindow/SelectedUnitTab/UnitBarsElement/Tooltip UI 注入等）。

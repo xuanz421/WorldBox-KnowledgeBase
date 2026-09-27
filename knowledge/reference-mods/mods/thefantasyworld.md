@@ -30,7 +30,21 @@ aliases:
 - `code/trait.cs` (L15-25) — trait 工厂 `RankTalentst_AddActorTrait` 绑定 action_special_effect 委托
 - `code/Resistance.cs` (L121-460) — 死亡保护系统：die/makeStunned/addStatusEffect 等多 Prefix
 - `code/traitAction.cs` (L24-66) — 突破日志用 map_stats.custom_data.custom_data_bool 持久化
+- `code/Practicemetho.cs` (L138-198,554) — 功法修炼系统：悟性×层数推演经验、扣费发属性点、写回 actor data
 - `code/THEFANTASYWORLDUIManager.cs` (L29-34,75-82) — TabManager.CreateTab + PowerButtonCreator
+
+## Unique Methods
+
+筛选口径：剔除补丁管线与注册样板后，承载核心机制且原版无对应物的模组自有方法。
+
+- `traits.RankTalentst_AddActorTrait` (code/trait.cs:15-27) — 特质工厂：new ActorTrait 挂 `base_stats = new BaseStats()` 并把 `action_special_effect += traitAction.grade1_effectAction` 作为逐帧升级入口后入库
+- `traitAction.grade1_effectAction` (code/traitAction.cs:583-660) — 突破 tick：经验阈值+禁忌特质（OrderofBeing）检查后批量授予默认/职业特质（同型 grade7_effectAction:1653 触发神明复活广播）
+- `Resistance.Actor_die_Prefix` (code/Resistance.cs:122-158) — 三段死亡管线：ForceKillActors 集合强杀放行（pDestroy=true）→ 保护特质拦截返回 false → 正常死亡动画+记录清理（配套 CleanupActorDeathRecords:160）
+- `Practicemetho.Tick` (code/Practicemetho.cs:138-164) — 功法修炼系统 tick：悟性×层数累积推演经验、达标即扣费翻倍发属性点、结果写回 actor data（配套 TryAutoDeduce:179-198、SaveToData:554）
+- `TheReturnofGod.ResurrectUnit` (code/TheReturnofGod.cs:523-664) — 死亡单位数据 JSON 落盘（return_of_god 目录），grade7 突破或年限到期后按 SavedResurrectionData 找合法出生瓦片重建单位（配套 CheckResurrection:479、SaveDataToFile:737、LoadSavedData:838）
+- `FantasyTalent.CheckTraitMutationOnBirth_Postfix` (code/FantasyTalent.cs:25-46) — 出生双补丁：先血脉遗传再按父母注入天赋特质（MakeBaby_AddRankTalentst_Postfix:367-368）
+- `Battlecalculation.ChangeHealth_Prefix` (code/Battlecalculation.cs:322-437) — `Priority.First` 伤害管线重入护栏（DMGCTX.InDamagePipeline）下重算扣血：护盾吸量按效率折算扣蓝
+- `SummonerSkill.effect_summoner` (code/vocationalskills/SummonerSkill.cs:177-265) — 召唤师召唤与主宠 ID 绑定（ptogw_master_id）/存活校验，限同屏召唤种类上限（配套 SetMasterLink:139、MasterHasAliveSummon:148）
 
 ## Techniques
 
@@ -52,10 +66,10 @@ AssetManager.{base_stats_library,traits,trait_groups,powers} / Actor.{die,getHit
 |---|---|---|---|
 | Actor.die | Prefix | Resistance.cs:122 | 天賦免死拦截 + ForceKill 队列绕过 |
 | BaseSimObject.changeHealth | Prefix | Battlecalculation.cs:320 | 伤害公式重算（护盾/魔抗） |
-| Actor.checkTraitMutationOnBirth | Prefix | FantasyTalent.cs:27 | 出生天賦注入 |
-| BabyMaker.makeBaby | Postfix | FantasyTalent.cs:368 | 婴儿天賦遗传 |
+| Actor.checkTraitMutationOnBirth | Postfix | FantasyTalent.cs:27 | 出生天赋注入 |
+| BabyMaker.makeBaby | Postfix | FantasyTalent.cs:368 | 婴儿天赋遗传 |
 | UnitWindow.OnEnable | Postfix | Upgradethesystem.cs:28 | 单位窗口升级图标 |
-| LoadWorldButton.loadWorld | Prefix | TheReturnofGod.cs:91 | 神明跨存档回归 |
+| LoadWorldButton.loadWorld | Postfix | TheReturnofGod.cs:90-95 | 神明跨存档回归（读档后 LoadSavedData） |
 
 ## Reusable Ideas
 

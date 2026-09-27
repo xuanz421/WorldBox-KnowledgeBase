@@ -25,12 +25,25 @@ aliases:
 
 ## Key Implementation
 
-- `InterestingTrait.cs:12` (WuLinClass.OnModLoad) — 唯一入口（文件名极具误导性），初始化全部系统
+- `InterestingTrait.cs:16` (WuLinClass.OnModLoad，类声明在 :12) — 唯一入口（文件名极具误导性），初始化全部系统
 - `code/XuanJian/Core/Patches/ShiJieSimulationHooks.cs:43` — MapBox.updateSimulation Postfix 作为全部系统 tick 总线
 - `code/XuanJian/Systems/Cultivation/Definitions/XiuXingTraits.cs:130-1580` — 境界 trait 定义/注册（48+ WorldAction 技能）
 - `code/XuanJian/Systems/Cultivation/QuanBing/XuanJianDaoTuQuanBingSystem.Persistence.cs:176` — 世界字符串持久化范本（Serialize/Deserialize）
 - `code/XuanJian/Core/XuanJianUIManager.cs:40-58` — TabManager.CreateTab + PowerButtonCreator 自定义 tab
 - `code/XuanJian/Systems/FaBao/ZiDingYiItems.cs` — 法宝 item class/group 资产注册
+
+## Unique Methods
+
+筛选口径：剔除补丁管线与初始化样板后，承载核心机制且原版无对应物的模组自有方法。
+
+- `XuanJianDaoTuQuanBingSystem.Serialize/Deserialize` (code/XuanJian/Systems/Cultivation/QuanBing/XuanJianDaoTuQuanBingSystem.Persistence.cs:176-226,227-494) — 权柄战争状态的 TSV 行式世界字符串序列化/解析（战亡计数、战争起止年、道徒槽位表）
+- `XuanJianDaoTuQuanBingSystem.TryResolveLocalQuanBingSeizure` (code/XuanJian/Systems/Cultivation/QuanBing/QuanBingLifecycle.cs:366-451) — 金丹死亡时击杀者按概率窃取死者道途权柄槽位的本地结算（枚举可窃索引+概率乘数）
+- `JingJieProgressionActions.TryAcquireNewXianJi` (code/XuanJian/Systems/Cultivation/Progression/JingJieProgressionActions.cs:912-1135) — 金丹境单位按规则获取新仙籍（归一道途/紫府/相邻道途兜底，配套 NormalizeXianJiToDaoTu:1136）
+- `SiWangLifecyclePatches.TryCaptureJinDanReincarnation` (code/XuanJian/Systems/Death/SiWangLifecyclePatches.cs:1351-1436) — 金丹死亡瞬间捕获转世档案，出生侧 TryApplyReincarnationOnBirth:1480 消费完成"兵解转生"（patch 方法体承载机制本体）
+- `ShouYuanControl.SyncPersistedCultivationLifespan` (code/XuanJian/Core/Patches/ShouYuanControl.cs:34-72) — 修为寿元的显示值/持久值双轨同步与上下限重建（配套 GetExpectedCultivationLifespanCeiling:250）
+- `DongTianRuntime.TickSimulation` (code/XuanJian/Systems/DongTian/DongTianRuntime.cs:39) — 洞天每帧模拟入口，按 Time.frameCount 去重驱动闭关/产出
+- `ChengHaoTitleGeneration.GenerateJinDanTitle/SelectWordByWeight` (code/XuanJian/Systems/Cultivation/Progression/ChengHaoTitleGeneration.cs:249-319,345-478) — 按道途专属/通用词库加权随机生成称号的纯算法
+- `XiuXingTraits.WdZz_AddActorTrait` (code/XuanJian/Systems/Cultivation/Definitions/XiuXingTraits.cs:125-148) — Delegate.Combine 挂接 action_special_effect 后注册 trait 的数据驱动范本
 
 ## Techniques
 

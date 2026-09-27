@@ -32,6 +32,19 @@ aliases:
 - `code/ui/ActorHistoryWindowUI.cs:207` — NML SingleAutoLayoutWindow 窗口 + 分类页签；L701-770 克隆按钮注入
 - `code/ui/ActorHistoryMainTabButton.cs:26` — 主 tab 加按钮
 
+## Unique Methods
+
+筛选口径：剔除补丁接线与 UI 注入样板后，承载核心机制且原版无对应物的模组自有方法。
+
+- `LogService.EnqueueLog` (code/LogService.cs:93-142) — 收藏过滤后的双轨入队：分类 txt StringBuilder 缓冲 + 结构化条目（WorldKey/WorldTime/UTC ticks），5s 节流触发 Flush
+- `LogService.Flush` (code/LogService.cs:243-297) — 分类 txt 追加写 + SQLite 事务批插；AppendEntries 失败时把快照回灌 StructuredBuffer 头部防丢（L276-296）
+- `ActorHistoryStorage.EnsureCurrentWorldKey` (code/ActorHistoryStorage.cs:80-104) — 以 map_stats.custom_data 持久化 `"wd-{life_dna}-{Guid:N}"` 世界键（L276-280），跨存档/换世界隔离记录
+- `ActorHistoryStorage.AppendEntries/GenerateEntryId` (code/ActorHistoryStorage.cs:156-202,282-294) — 事务批插 + UTC ticks 单调递增主键防撞
+- `LogService.GetEntriesForActor` (code/LogService.cs:304-344) — pending 缓冲与 DB 双源合并去重，按 past_names 别名集合匹配归属，再 Polish/着色装饰
+- `LogService.TryExtractLegacySubject/ExtractLeadingName` (code/LogService.cs:548-589) — 旧版 txt 迁移：按"行首主语名（遇 和/于/在/的/被 截断）"反查归属 actor
+- `LogService.GetRelationName` (code/LogService.cs:201-233) — parent_id/lover/best_friend → 父/母/子/女/伴侣/知己中文称谓推导
+- `ActorHistoryUnitHistoryButton.Ensure` (code/ui/ActorHistoryWindowUI.cs:703-768) — 克隆收藏按钮父物体、`onClick = new ButtonClickedEvent()` 重绑、换 iconDocument 图标的零布局注入
+
 ## Techniques
 
 Prefix/Postfix 纯观察式事件采集（try/catch 包裹）、双持久化（内存缓冲→sqlite-net 事务批插 + 人类可读 txt）、WorldKey 存 map_stats.custom_data 跨存档隔离（"wd-{life_dna}-{Guid}"）、UI 克隆注入、SingleAutoLayoutWindow + Text 对象池、热键驱动、旧版 txt 迁移兼容
@@ -54,7 +67,7 @@ Actor.{checkDeath,newKillAction,addTrait,removeTrait,changeHappiness,setBestFrie
 | BabyMaker.makeBabiesViaSexual | Postfix | code/patch/BirthPatch.cs:10 | 出生/家系事件 |
 | WarManager.endWar | Postfix | code/patch/WarPatch.cs:217 | 战争结算 |
 | Kingdom.setKing | Postfix | code/patch/PoliticsPatch.cs:33 | 登基事件 |
-| Alliance.join | Prefix | code/patch/AlliancePatch.cs:162 | 外交事件 |
+| Alliance.join | Postfix | code/patch/AlliancePatch.cs:162-168 | 外交事件（__result==false 时跳过记录） |
 | MapBox.clearWorld | Prefix | code/ActorHistoryStorage.cs:297 | 换世界前 Flush |
 | UnitWindow.OnEnable | Postfix | code/ui/ActorHistoryWindowUI.cs:12 | 注入按钮+热键 |
 

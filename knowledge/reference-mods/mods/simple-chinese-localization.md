@@ -46,6 +46,13 @@ LocalizedText.{Start,key,autoField,updateText} / LocalizedTextManager.instance.l
 |---|---|---|---|
 | LocalizedText.Start | Postfix | ModClass.cs:55-63 | 语言热切换后刷新非 autoField 文本 |
 
+## Unique Methods
+
+筛选口径：剔除 IReloadable 管线接线后，承载核心机制且原版无对应物的模组自有方法。
+
+- `ModClass.Update` (ModClass.cs:19-43) — 一次性修补（`_possession_ui_cz` 闸）：仅当语言为 cz/ch 且 PossessionUI 激活时，用局部函数 set_text（L26-31，`Toolbox.coloredString` 上色 + `LM.Has` 回退）重写 11 个附身模式硬编码操作提示
+- `Patch.OnLocalizedTextStart` (ModClass.cs:55-63) — `LocalizedText.Start` Postfix：跳过 autoField 文本，对 `LM.Has` 命中的 key 强制 `updateText()`，修复切换语言后非 autoField 文本不刷新
+
 ## Reusable Ideas
 
 - IReloadable + LM.LoadLocale 组合可在不重启游戏时重载汉化

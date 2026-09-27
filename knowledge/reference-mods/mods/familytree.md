@@ -8,7 +8,7 @@ aliases:
 
 ## Identity
 
-- Name: FamilyTree v0.1.5
+- Name: FamilyTree v0.1.5（mod.json 已改名 mod.json.close，禁用态）
 - Source ID: `ref:familytree`
 - Dir: `FamilyTree_0.1.5`
 - Files: 12 total / 8 C#
@@ -30,6 +30,17 @@ aliases:
 - `UI/ClanMindmapWindow.cs` (L81-1700) — 纯 UGUI 平移缩放思维导图（Canvas 550/1920x1080/中键拖拽/滚轮缩放/旋转拉长 Image 画线）
 - `UI/ClanTreeWindowUI.cs` (L17-332) — NML AutoLayoutWindow<T> 四区分栏
 - `Patch/PatchUnitWindow.cs` (L26-67) — 克隆 _icon_favorite 按钮注入族谱入口
+
+## Unique Methods
+
+筛选口径：剔除补丁接线与 UI 样板后，承载核心机制且原版无对应物的模组自有方法。
+
+- `DeathRecordManager.RecordDeath(Actor, AttackType)` (History/DeathRecordManager.cs:23-52) — countDeath 瞬间抢存死者 clan/lover/parent_id_1/2/kills/age/死因快照进静态字典（Actor 即将回收，事后关系不可查）
+- `ClanTreeBuilder.BuildClanTree(Clan)` (History/ClanTreeBuilder.cs:41-140) — 活体 units_only_alive 与死亡记录合并建节点，parentMap 建边，无父节点为根，递归按击杀数/名字排序
+- `ClanMindmapWindow.TryAddParent` (UI/ClanMindmapWindow.cs:495-557) — 递归向上补全祖先：活单位走 actor.data，死者走死亡快照 Parent1/2Id，双源无缝衔接
+- `ClanMindmapWindow.BuildDescendants` (UI/ClanMindmapWindow.cs:559-602) — 用 childrenMap 递归向下展开子孙，GenerationOffset 逐代 +1
+- `ClanMindmapWindow.AddLoverAndSiblings` (UI/ClanMindmapWindow.cs:607-725) — 补活配偶/快照配偶与同父母兄弟姐妹节点及横向边
+- `ClanMindmapWindow.CreateLineSegment` (UI/ClanMindmapWindow.cs:1610-1636) — 中点定位 + Atan2 旋转 + length 拉长的 3px 半透明 Image 连线，零图资源
 
 ## Techniques
 

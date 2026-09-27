@@ -25,10 +25,24 @@ aliases:
 
 ## Key Implementation
 
-- `code/patch.cs` (L34-305) — 12 个 Harmony 补丁：updateAge 天赋分发、getHit 减伤、神明免疫套件
+- `code/patch.cs` (L34-305) — 10 个 Harmony 补丁：updateAge 天赋分发、getHit 减伤、神明免疫套件（其中 updateStamina 为 Postfix 锁体力）
 - `code/trait.cs` (L25-99,166) — 52 特质资产+委托挂接样板
 - `code/traitAction.cs` (2618 行，采样精读) — 升级/攻击/转化/召唤 WorldAction/AttackAction 实现
-- `code/utils/ActorExtensions.cs` (L124-230) — actor.data 自定义浮点属性 Get/Set/Change 三件套
+- `code/utils/ActorExtensions.cs` (L96-113，文件共 114 行) — actor.data 自定义浮点属性 Get/Set/Change 三件套
+
+## Unique Methods
+
+筛选口径：剔除补丁接线与注册样板后，承载核心机制且原版无对应物的模组自有方法。
+
+- `patch.updateWorldTime_KnightPostfix` (code/patch.cs:34-52) — 基础四族/civ_ 单位 6 岁时 50% 概率获得随机神性天赋（配套 HandleBasicRaceTraits:59-70）
+- `patch.SelectRandomDivinity` (code/patch.cs:72-99) — 4000:2000:1000:500:250:50:1 权重表随机选 Divinity1-7
+- `patch.ApplyTraitEffects` (code/patch.cs:101-155) — 按境界区间（Divinity1-7 / GodsandBuddhas7-93）随机增长香火值
+- `patch.actorGetHit_prefix` (code/patch.cs:186-229) — GodsandBuddhas4-93 特质按优先级乘数减伤（当前配置全部乘 0 = 免伤）
+- `patch.HasProtectedQWE 六方法套件` (code/patch.cs:231-289,299-303) — 香火阶梯单位"霸体"：禁残疾/锁满体力/禁击飞/禁睡眠/禁眩晕/禁部分异常
+- `traitAction.attack_Conversion` (code/traitAction.cs:1818-1990) — 按攻击者特质查半径/HP 阈值/授予包，范围 10% 攻击伤害后将濒死敌人转化为信徒（参数解析 ResolveParamsForAttacker9:1787）
+- `traitAction.upTrait` (code/traitAction.cs:146-176) — 升级链换特质并重写单位名的境界后缀与随机尊号（UpdateXianSuffix/ApplyXianTitle:30-96，40+ 尊号/阶）
+- `traitAction.teleportRandom` (code/traitAction.cs:1446-1496) — OfType 反射取 CityManager，优先传回王国首都、否则随机存活城市
+- `ActorExtensions.ChangeIncenseandfire 三件套` (code/utils/ActorExtensions.cs:96-113) — `actor.data.get/set("wushu.*")` 随存档持久化的自定义浮点属性（Believers :80-94，另四组同构）
 
 ## Techniques
 
@@ -48,7 +62,8 @@ ActorTrait/BaseStats / BaseStatAsset / ProjectileAsset / AssetManager.* / Actor.
 |---|---|---|---|
 | Actor.updateAge | Postfix | patch.cs:34 | 天赋分发+香火增长 |
 | Actor.getHit | Prefix | patch.cs:186 | 特质减伤乘数 |
-| Actor.{addInjuryTrait,updateStamina,calculateForce,applyRandomForce,makeSleep,makeStunned,addStatusEffect} | Prefix 批量 | patch.cs:231-289 | 神明免疫（霸体） |
+| Actor.{addInjuryTrait,calculateForce,applyRandomForce,makeSleep,makeStunned,addStatusEffect} | Prefix 批量 | patch.cs:231-289 | 神明免疫（霸体） |
+| Actor.updateStamina | Postfix | patch.cs:231-289 区段 | 锁满体力 |
 | ActionLibrary.showWhisperTip | Prefix | patch.cs:305 | 提示停留 15s |
 | UnitWindow.OnEnable | Pre+Post | Upgradethesystem.cs:28,48 | 初始化+文本注入 |
 | UnitStatsElement.showContent | Prefix | Upgradethesystem.cs:38 | 自定义属性数值显示 |
@@ -69,7 +84,8 @@ ActorTrait/BaseStats / BaseStatAsset / ProjectileAsset / AssetManager.* / Actor.
 ## Evidence
 
 - patch.cs:34-52,186-229,231-289 / trait.cs:25-26,70-99,166
-- traitAction.cs:146-176,1567-1645 / stats.cs:45-52 / Upgradethesystem.cs:38-45
+- traitAction.cs:146-176,1567-1645 / stats.cs:7-25 / Upgradethesystem.cs:38-45
+- UnitWindowStatsIcon.cs:32-113 — 克隆 i_kills 注入
 
 ## Notes
 

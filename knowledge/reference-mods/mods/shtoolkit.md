@@ -26,10 +26,23 @@ aliases:
 ## Key Implementation
 
 - `Code/sh_toolkit_main.cs` (L78-170) — 入口与完整生命周期；L96-115 WorldBehaviourAsset 匿名闭包注册随机刷兵
-- `Code/sh_toolkit_harmony_save.cs` (L46-98) — AutoSaveManager Prefix 自定义间隔 + generateNewMap/loadData Postfix
+- `Code/sh_toolkit_harmony_save.cs` (L46-119) — AutoSaveManager Prefix 自定义间隔 + generateNewMap/loadData Postfix + landTile 缓存重建
 - `Code/sh_toolkit_harmony_world.cs` (L46-91) — WorldTile.setTopTileType + 3 个 setTileType 重载合并 Postfix 维护 landTile 集合；超级暂停
 - `Code/sh_toolkit_harmony_ui.cs` (L46-158) — PowerButton/DragOrderElement/PowerClockButton UI patch
 - `Code/sh_toolkit_set.cs` (L33-45) — toggleActions/toggleBools 字典 + UnityAction<bool> 回调注册中心
+
+## Unique Methods
+
+筛选口径：剔除补丁接线与设置样板后，承载核心机制且原版无对应物的模组自有方法。
+
+- `sh_toolkit_harmony_save.loadToolkitData` (Code/sh_toolkit_harmony_save.cs:107-119) — 全图扫描 Ground 层 `pot_spawn_units_auto` 瓦片重建 landTile 刷兵缓存（换图/读档经 SmoothLoader 排队执行）
+- `sh_toolkit_harmony_save.update` (sh_toolkit_harmony_save.cs:48-75) — Prefix 重写自动存档计时：ForceAutoSave 在 lowMemory 下强制 autoSave（窗口激活/控制单位时推迟）
+- `sh_toolkit_harmony_save.resetAutoSaveTimer` (sh_toolkit_harmony_save.cs:78-86) — skip-Prefix 把原版计时重置替换为写入自定义 `auto_save_interval`
+- `sh_toolkit_harmony_world.setTileType` (sh_toolkit_harmony_world.cs:50-61) — 3 重载合并 Postfix：按 layer_type+biome_asset 增量增删 landTile 集合
+- `sh_toolkit_harmony_world.checkMainSimulationUpdate` (sh_toolkit_harmony_world.cs:64-76) — SuperPause skip-Prefix：强制 `_is_paused`+`Config.paused` 并拦截模拟推进
+- `Main.OnModLoad 匿名 WorldBehaviour action` (Code/sh_toolkit_main.cs:96-117) — 运行时注册 7.2~14.4s 随机刷兵 WorldBehaviour（空城/密度/概率/数量区间四重检查）
+- `Main.Update SHAggression 段` (sh_toolkit_main.cs:206-216) — 每帧为空闲军队队长派发自定义任务 `sh_aggression_warrior_army_leader_move_to_attack_target`
+- `Main.GetTilesBetweenPos` (sh_toolkit_main.cs:347-391) — Bresenham 直线瓦片遍历算法（供 RangedAttackIfClear 视线遮挡检查，消费点 harmony_other.cs:99-115）
 
 ## Techniques
 
@@ -52,7 +65,9 @@ WorldBehaviourAsset / WorldBehaviour / AssetManager.world_behaviours / World.wor
 | MapBox.checkMainSimulationUpdate | Prefix | sh_toolkit_harmony_world.cs:62 | SuperPause 冻结模拟 |
 | WorldTile.setTileType×3 + setTopTileType | Postfix | sh_toolkit_harmony_world.cs:46-49 | 维护陆地瓦片缓存 |
 | PowerButton.showTooltip | Postfix | sh_toolkit_harmony_ui.cs:72 | 自定义 tooltip |
-| PowerLibrary.spawnUnit / ControllableUnit.setControllableCreature | Prefix | sh_toolkit_harmony_ui.cs:156-158 | 刷兵增强 |
+| PowerLibrary.spawnCrabzilla / ControllableUnit.setControllableCreature | Prefix | sh_toolkit_harmony_ui.cs:157-159 | SuperPause 复位 + 速度归 x1 |
+| PowerLibrary.spawnUnit | Prefix | sh_toolkit_harmony_other.cs:74-87 | 刷兵增强 |
+| MonthLibrary.getMonth | Prefix | sh_toolkit_harmony_world.cs:90-102 | 月份环回修正 |
 | LocalizedTextManager.loadLocalizedText | Prefix | sh_toolkit_harmony_other.cs:47 | 外置语言文件热载 |
 
 ## Reusable Ideas

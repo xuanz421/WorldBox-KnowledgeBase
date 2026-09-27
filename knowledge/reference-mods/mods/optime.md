@@ -30,6 +30,18 @@ QoL+性能优化合集：相机不动时跳过 ZoneCamera 更新、暂停时冻�
 - `QoL/FPS.cs` (L6-28) — calculateCurElapsed 按帧率缩放模拟步长
 - `Optimizations/LazyZoneCamera.cs` — 相机静止时跳帧更新
 
+## Unique Methods
+
+筛选口径：剔除补丁接线与配置样板后，承载核心机制且原版无对应物的模组自有方法。
+
+- `Feature<T>.SetLoaded` (Feature.cs:11-17) — 配置 Callback 驱动的运行时开关：实例未建时记 `_enableOnAwake`，否则切 enabled 触发补丁装卸
+- `Feature<T>.OnEnable/OnDisable` (Feature.cs:39-53) — enabled 切换即 PatchAll/UnpatchSelf，每功能独立 Harmony 实例（Awake 单例守卫 :27-37）
+- `FPS.calculateCurElapsed` (QoL/FPS.cs:8-16) — Prefix 替换模拟步长：fps>60 时按 `fixedDeltaTime*multiplier*(60/fps)` 缩放防高刷加速
+- `FPS.SetFrameRate` (QoL/FPS.cs:18-28) — 受 vsync/fps_lock_30 守卫设置 targetFrameRate，OnUnload 时回落 60
+- `LazyZoneCamera.update` (Optimizations/LazyZoneCamera.cs:15-25) — 缓存相机位置+正交尺寸，均未变化则 Prefix 返回 false 跳过 ZoneCamera.update
+- `DisableMapStats.recalcCounters` (Developer/DisableMapStats.cs:10-14) — `__runOriginal=false` 跳过统计重算（配套 SetLoaded :17-27 拦截首启并与开发者模式互斥回写）
+- `TimeStopProjectiles.update` (QoL/TimeStopProjectiles.cs:9-12) — 暂停时 `__runOriginal = !isPaused()` 冻结全部弹道
+
 ## Techniques
 
 泛型 Feature<T> 框架 + 配置 Callback 字符串绑定（`Class:SetLoaded`）、Prefix 返回 false 跳过、`ref bool __runOriginal = false` 变体、静态配置旗标直写（Config.firebase_available 等）
