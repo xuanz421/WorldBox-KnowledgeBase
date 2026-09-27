@@ -48,6 +48,17 @@ aliases:
 - `AW3HistoryReadService.ReadEvents(AW3HistoryQuery)` (Code/core/historyapi/AW3HistoryReadService.cs:L59-832) — 历史事件分页查询引擎（SQLite 只读连接 + DTO 映射）
 - `CourtService.GetSnapshot(Kingdom)` (Code/core/court/CourtService.cs:L357) — 朝廷画像快照：多学阀 dominant_school/faction 缓存
 
+- `AWFramePriorityGovernor.RecalculateBudget` (Code/core/performance/AWFramePriorityGovernor.cs:L323-346) — 帧预算 governor：渲染 P90 基线 + 超支 ≤50% 摊还下帧的每帧模拟预算
+- `AWCooperativeWorldMaintenanceRunner.Step` (Code/core/performance/AWCooperativeWorldMaintenanceRunner.cs) — 把原版 World.updateObjects 的 28 个维护阶段改造成协作式分步状态机（经 TakeOverMainSimulation 接管驱动）
+- `AWPathFinder.Request` / `AWStreamingPathGenerator.GenerateSegment` (Code/core/pathfinding/AWPathFinder.cs:L174+、AWStreamingPathGenerator.cs:L44+) — 按 actor session 去重复用的多线程寻路准入 + 风险加权/节点预算/分段续算的流式 A*
+- `HistoricalWriteWorker.WorkerLoop` (Code/core/db/HistoricalWriteWorker.cs:L384-548) — 单线程批量取批→整批单事务→busy 退避→终态故障聚合上报的异步写循环
+- `LineageArchiveManager.TryExportLineageArchive` (Code/core/db/LineageArchiveManager.cs:L185-267) — BackupDatabase + journal_mode=DELETE + quick_check + 原子 Replace 的五重存档快照导出
+
+## Research Map
+
+- [async-and-performance.md](ancient-warfare-3/async-and-performance.md) — R3-AW3 C0：异步调度协议/世界生命周期/帧预算 governor/寻路接管/[MethodReplace]（2026-09-27 完成）
+- [persistence-archive.md](ancient-warfare-3/persistence-archive.md) — R3-AW3 C1：SQLite schema 生命周期/写管线/读路径与订阅/存档集成/进程隔离库（2026-09-27 完成）
+
 ## Techniques
 
 Harmony Prefix/Postfix/Transpiler（150 patch 文件；目标直方图 Actor 100 / City 83 / MapBox 47 / QuantumSpriteLibrary 46 / Kingdom 35）、`[MethodReplace]` 通用方法体重定向（attributes/MethodReplaceAttribute.cs + utils/HarmonyTools.cs）、SQLite 持久化（System.Data.SQLite 随包）、`[TableDef]` 反射 schema 迁移、协作式异步调度 + 存档屏障、进程隔离运行时库、IReloadable 热重载、GodPower 注册（GodPowerLibrary.cs:121-256）
@@ -110,4 +121,4 @@ Actor.newCreature / Actor.goTo / City / CityBehCheckLeader / KingdomManager.make
 
 ## Notes / Deferred
 
-Survey 级建档：court（213 文件/ CourtService 3414 行）、lineage（831 文件 / ArmyRtsControllerService 7283 行）、db 写管线（HistoricalWriteService/Queue/Worker/BatchSink）仅名录+抽查。深挖子批建议（Cultiway C0-C5 模式）：C0 调度与性能（asyncwork+performance+pathfinding）、C1 持久化（db 写管线+schema 迁移+AW_SavePatch）、C2 族谱/战争域（lineage 拆 RTS 与天命/外交）、C3 朝廷与郡县（court+county+schools+Courtjson）、C4 内容与文化（content/+naming+word_libraries）、C5 UI 与 API（ui/+api/+historyapi+multiplayer）、C6 补丁目录（patch/ 150 文件全表）。Assemblies\ 含完整 Assembly-CSharp.dll 发布副本与 .runtime 运行时产物，深挖可用公开 GitHub repo 作更净源。mod.json:12-14 声明与 一米_中文名 不兼容（ModClass.cs:139-149 有冲突检测实现）。
+建档时为 survey 级；**C0（异步调度与性能）与 C1（SQLite 档案与存档集成）已于 2026-09-27 完成**，见 Research Map 子节点，两批核心主张均逐行 Verified。剩余深挖子批：C2 族谱/战争域（lineage 831 文件，拆 C2a ArmyRTS / C2b 天命外交）、C3 朝廷与郡县（court+county+schools）、C4 内容与文化（content/+naming+word_libraries）、C5 UI 与 API（ui/+api/+historyapi+multiplayer）、C6 补丁目录（patch/ 150 文件全表）。Assemblies\ 含完整 Assembly-CSharp.dll 发布副本与 .runtime 运行时产物，深挖可用公开 GitHub repo 作更净源。mod.json:12-14 声明与 一米_中文名 不兼容（ModClass.cs:139-149 有冲突检测实现）。
