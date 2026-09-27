@@ -61,6 +61,9 @@ aliases:
 - [army-rts.md](ancient-warfare-3/army-rts.md) — R3-AW3 C2a：军队 RTS 状态机/调度/战斗所有权/海运降级/多人投影（2026-09-27 完成）
 - [mandate-diplomacy-vassalage.md](ancient-warfare-3/mandate-diplomacy-vassalage.md) — R3-AW3 C2b：天命六指标与改朝换代/战争导演/海运四相位/外交封臣继承域（2026-09-27 完成）
 - [court-county-schools.md](ancient-warfare-3/court-county-schools.md) — R3-AW3 C3：朝廷官职与科举/郡县分区/学派流水线/Courtjson 模板（2026-09-27 完成）
+- [content-naming.md](ancient-warfare-3/content-naming.md) — R3-AW3 C4：资产注册清单/夏种族陷阱/91 君主卡与 691 传记/63 政策/命名引擎（2026-09-27 完成）
+- [ui-api-multiplayer.md](ancient-warfare-3/ui-api-multiplayer.md) — R3-AW3 C5：UI 读路径分档/uiquery read-model/多人复制围栏/公共 API 契约（2026-09-27 完成）
+- [patch-catalog.md](ancient-warfare-3/patch-catalog.md) — R3-AW3 C6：150 补丁文件全枚举（620 方法/分类表/特殊类别/风险标记）（2026-09-27 完成）
 
 ## Techniques
 
@@ -124,4 +127,4 @@ Actor.newCreature / Actor.goTo / City / CityBehCheckLeader / KingdomManager.make
 
 ## Notes / Deferred
 
-建档时为 survey 级；**C0（异步调度与性能）、C1（SQLite 档案）、C2a（军队 RTS）、C2b（天命/外交/封臣）、C3（朝廷/郡县/学派）已于 2026-09-27 完成**，见 Research Map 子节点，各批核心主张均逐行 Verified。剩余深挖子批：C4 内容与文化（content/+naming+word_libraries）、C5 UI 与 API（ui/+api/+historyapi+multiplayer）、C6 补丁目录（patch/ 150 文件全表）。Assemblies\ 含完整 Assembly-CSharp.dll 发布副本与 .runtime 运行时产物，深挖可用公开 GitHub repo 作更净源。mod.json:12-14 声明与 一米_中文名 不兼容（ModClass.cs:139-149 有冲突检测实现）。
+建档时为 survey 级；**R3-AW3 全部 7 个子批（C0 异步调度 / C1 SQLite 档案 / C2a 军队 RTS / C2b 天命外交 / C3 朝廷郡县学派 / C4 内容命名 / C5 UI-API-多人 / C6 补丁目录）已于 2026-09-27 完成**，见 Research Map 子节点，各批核心主张均逐行 Verified。本模组深挖收口；后续如需补遗按各子文档 Known Gaps 追踪。Assemblies\ 含完整 Assembly-CSharp.dll 发布副本与 .runtime 运行时产物，复验可用公开 GitHub repo 作更净源。mod.json:12-14 声明与 一米_中文名 不兼容（ModClass.cs:139-149 有冲突检测实现）。

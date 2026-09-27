@@ -45,7 +45,7 @@ Cultiway-Reborn 克隆位置：`E:\WorldBox Modding\ReferenceSources\Cultiway-Re
 | R2-C0..C5                | Cultiway-Reborn  | 见下节拆分；每子批 1 核心机制或 2-4 文件簇                                                                                                                                 |
 | R2-5 Cultivation Delta   | （取消）             | 旧修仙 mod 均 UNCHANGED，无 delta 可研究                                                                                                                           |
 | R2-6 Cross-Mod Synthesis | 全部 R2 新 profile  | 最后执行；更新 CROSS_MOD_SUMMARY / gaps                                                                                                                          |
-| R3-AW3（进行中）         | 古代战争_春秋3.0   | 2026-09-27 intake survey 级入档（`ref:ancient-warfare-3`，Tier A）；**C0/C1/C2a/C2b/C3 五批已完成**（子节点 `mods/ancient-warfare-3/`），余 C4 内容文化 / C5 UI 与 API / C6 补丁目录                                                              |
+| R3-AW3（**完成**）        | 古代战争_春秋3.0   | 2026-09-27 intake survey 级入档（`ref:ancient-warfare-3`，Tier A）；**全部 7 个深挖子批 C0-C6 已完成**（8 个子节点见 `mods/ancient-warfare-3/` Research Map），后续补遗按各子文档 Known Gaps 追踪                                                                |
 
 推荐第一个正式批次：**R2-1 BoatRebalanceBox**（S 规模、零重复、直接补显式空白，可单批收口）。
 
