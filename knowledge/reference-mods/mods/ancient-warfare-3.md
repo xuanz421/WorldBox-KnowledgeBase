@@ -59,6 +59,8 @@ aliases:
 - [async-and-performance.md](ancient-warfare-3/async-and-performance.md) — R3-AW3 C0：异步调度协议/世界生命周期/帧预算 governor/寻路接管/[MethodReplace]（2026-09-27 完成）
 - [persistence-archive.md](ancient-warfare-3/persistence-archive.md) — R3-AW3 C1：SQLite schema 生命周期/写管线/读路径与订阅/存档集成/进程隔离库（2026-09-27 完成）
 - [army-rts.md](ancient-warfare-3/army-rts.md) — R3-AW3 C2a：军队 RTS 状态机/调度/战斗所有权/海运降级/多人投影（2026-09-27 完成）
+- [mandate-diplomacy-vassalage.md](ancient-warfare-3/mandate-diplomacy-vassalage.md) — R3-AW3 C2b：天命六指标与改朝换代/战争导演/海运四相位/外交封臣继承域（2026-09-27 完成）
+- [court-county-schools.md](ancient-warfare-3/court-county-schools.md) — R3-AW3 C3：朝廷官职与科举/郡县分区/学派流水线/Courtjson 模板（2026-09-27 完成）
 
 ## Techniques
 
@@ -122,4 +124,4 @@ Actor.newCreature / Actor.goTo / City / CityBehCheckLeader / KingdomManager.make
 
 ## Notes / Deferred
 
-建档时为 survey 级；**C0（异步调度与性能）、C1（SQLite 档案与存档集成）、C2a（军队 RTS）已于 2026-09-27 完成**，见 Research Map 子节点，各批核心主张均逐行 Verified。剩余深挖子批：C2b 天命/外交/封臣域（lineage 其余部分，含 ArmyRtsTransportService 主体与 KingdomWarDirectorService）、C3 朝廷与郡县（court+county+schools）、C4 内容与文化（content/+naming+word_libraries）、C5 UI 与 API（ui/+api/+historyapi+multiplayer）、C6 补丁目录（patch/ 150 文件全表）。Assemblies\ 含完整 Assembly-CSharp.dll 发布副本与 .runtime 运行时产物，深挖可用公开 GitHub repo 作更净源。mod.json:12-14 声明与 一米_中文名 不兼容（ModClass.cs:139-149 有冲突检测实现）。
+建档时为 survey 级；**C0（异步调度与性能）、C1（SQLite 档案）、C2a（军队 RTS）、C2b（天命/外交/封臣）、C3（朝廷/郡县/学派）已于 2026-09-27 完成**，见 Research Map 子节点，各批核心主张均逐行 Verified。剩余深挖子批：C4 内容与文化（content/+naming+word_libraries）、C5 UI 与 API（ui/+api/+historyapi+multiplayer）、C6 补丁目录（patch/ 150 文件全表）。Assemblies\ 含完整 Assembly-CSharp.dll 发布副本与 .runtime 运行时产物，深挖可用公开 GitHub repo 作更净源。mod.json:12-14 声明与 一米_中文名 不兼容（ModClass.cs:139-149 有冲突检测实现）。
