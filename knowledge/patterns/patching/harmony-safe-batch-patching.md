@@ -47,6 +47,7 @@ Patching, Mod Lifecycle
 
 - 静默 catch 会掩盖真实错误——catch 内必须 LogService 记日志（guigu 有完整日志）
 - Route 3 的失败域是整个程序集，谨慎用于 patch 目标易变的 mod
+- 字符串目标必须核对实际声明类；不能因为子类继承了方法就假定 `DeclaredMethod` 能找到它。WorldBox `startShowingWindow` 声明于 `WindowMetaGeneric<,>`（`WindowMetaGeneric.cs:75`），窗口子类未声明时批量注册可在启动阶段失败。适用目标与回归边界见 pattern_id `native-window-log-integration`。
 
 ## Evidence
 

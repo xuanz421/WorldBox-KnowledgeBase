@@ -6,7 +6,7 @@ aliases:
 
 # WorldBox Modding 模块库（Pattern Library）
 
-从 Reference Mods 的证据化知识提炼的**可复用代码模块**库。回答："以后开发 Mod 时有什么可以直接拿来用——采用什么模块、参考哪些代码、涉及哪些 API、有哪些风险？"
+从 Reference Mods、原版源码和用户授权的消费者实机证据提炼的**可复用代码模块**库。回答："以后开发 Mod 时有什么可以直接拿来用——采用什么模块、参考哪些代码、涉及哪些 API、有哪些风险？"
 
 ## 状态含义
 
@@ -28,7 +28,8 @@ Profile（`knowledge/reference-mods/mods/`）描述"每个 mod 是什么"；模�
 ```text
 Candidates (Z5): 56
 Merged/consumed: 42
-Verified patterns: 17（Strong Verified 8 / Verified 9）
+Verified patterns: 21（Strong Verified 8 / Verified 13）
+NewEra 1.0 intake: 4（2026-10-10; consumer commit pinned, not source discovery）
 Deferred: 12
 Rejected: 2
 ```

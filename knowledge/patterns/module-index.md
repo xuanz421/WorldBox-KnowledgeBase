@@ -26,23 +26,27 @@ aliases:
 **Harmony**
 - [harmony-prefix-recipes](patching/harmony-prefix-recipes.md) — Prefix 配方（fill-pass / 否决 / 替换）
 - [harmony-safe-batch-patching](patching/harmony-safe-batch-patching.md) — 安全批量补丁的 3 种组织法
+- [culture-consumption-gates](patching/culture-consumption-gates.md) — 文化许可接入建造／升级／装备／书籍实际消费点，保留原版条件
 
 **UI**
 - [ui-button-injection](ui/ui-button-injection.md) — 原生窗口按钮注入（克隆现有按钮）
 - [custom-power-tab](ui/custom-power-tab.md) — 自建神力 tab
+- [native-window-log-integration](ui/native-window-log-integration.md) — 首次窗口生命周期、原版日志行复用、Culture ID 与 pool listener
 
 **生命周期**
 - [world-tick-integration](lifecycle/world-tick-integration.md) — 世界周期/每帧系统驱动（3 条接入路线）
 - [nml-feature-authoring](lifecycle/nml-feature-authoring.md) — NML Feature 工程组织（自动发现）
 
 **存档**
-- [persistent-mod-data](persistence/persistent-mod-data.md) — 模组数据持久化（5 级选型）
+- [persistent-mod-data](persistence/persistent-mod-data.md) — 模组数据持久化（6 种载体选型）
+- [culture-research-state](persistence/culture-research-state.md) — CultureData 研究状态、冷 cache 设置重算、前置与最低成本
 
 **Kingdom**
 - [custom-kingdom-system](kingdom/custom-kingdom-system.md) — 自定义王国政体/类型系统（3 层）
 
 **工具**
 - [private-api-reflection](utility/private-api-reflection.md) — 私有 API 反射（最后手段）
+- [nml-acceptance-release](utility/nml-acceptance-release.md) — NML 测试副本、玩家白名单交付、实机证据边界与产物归档
 
 ## By Goal（我要实现 X）
 
@@ -79,13 +83,14 @@ aliases:
 - **Actor**：actor-data-custom-state, actor-annual-persistent-stat-growth, register-custom-stat, actor-event-observation
 - **Traits**：register-actor-trait, register-custom-stat
 - **Assets**：register-actor-trait, clone-modify-asset, register-godpower, safe-asset-registration
-- **Buildings**：clone-modify-asset
+- **Buildings**：clone-modify-asset, culture-consumption-gates
+- **Culture / Research**：culture-research-state, culture-consumption-gates, native-window-log-integration
 - **Kingdom**：custom-kingdom-system
-- **UI**：ui-button-injection, custom-power-tab, register-godpower
-- **Save/Persistence**：actor-data-custom-state, actor-annual-persistent-stat-growth, persistent-mod-data, actor-event-observation
-- **Mod Lifecycle**：nml-feature-authoring, world-tick-integration, harmony-safe-batch-patching
-- **Patching**：harmony-prefix-recipes, harmony-safe-batch-patching, actor-annual-persistent-stat-growth
-- **Utility**：private-api-reflection
+- **UI**：ui-button-injection, custom-power-tab, register-godpower, native-window-log-integration
+- **Save/Persistence**：actor-data-custom-state, actor-annual-persistent-stat-growth, persistent-mod-data, actor-event-observation, culture-research-state
+- **Mod Lifecycle**：nml-feature-authoring, world-tick-integration, harmony-safe-batch-patching, culture-research-state, nml-acceptance-release
+- **Patching**：harmony-prefix-recipes, harmony-safe-batch-patching, actor-annual-persistent-stat-growth, culture-consumption-gates
+- **Utility / Testing / Release**：private-api-reflection, nml-acceptance-release
 
 ## Library Metadata
 

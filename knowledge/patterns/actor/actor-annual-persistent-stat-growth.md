@@ -105,6 +105,7 @@ internal static class PersistentStatReplayPatch
 - 永久增益是否在角色改宗、转职或失去资格后保留，必须由玩法规则明确；通常资格只控制未来判定，既得 per-actor 成长保留。
 - 长期线性增长应评估概率、增量和可选硬上限；上限作用于持久累计值，不要只 clamp 显示结果。
 - 自定义键在所有 mod 间共享，必须带命名空间前缀，并保持值类型稳定。
+- `stats["health"]` 持久增益属于最大属性；不能据此宣称当前 `ActorData.health` 立即恢复或原版 health 重算规则被接管。NewEra 1.0 仅验证永久上限累计与 dirty 后重放。
 
 ## Evidence
 
@@ -115,6 +116,7 @@ internal static class PersistentStatReplayPatch
 - ref:incensefiredway code/patch.cs:34-52
 - ref:guigu-cultivation Code/Patches/HarmonyPatches.cs:24-90
 - ref:biology Code/UnitHealthTab.cs:125-136
+- consumer:NewEra@fe2d2c88320e8a3d6544b2f5b2f0b3bf88c645ef `Source/Content/Paths/Military/MilitaryTrainingEffects.cs:12`, `:38`; `Source/Content/Paths/Military/PatchMilitaryTraining.cs:17`。既有隔离项 `military/national-training-persistent-health`，来源 `Tests/CultureNodeValidation.cs:144`。
 
 ## Provenance
 
