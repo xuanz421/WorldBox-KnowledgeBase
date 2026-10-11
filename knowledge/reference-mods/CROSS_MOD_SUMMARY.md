@@ -6,12 +6,13 @@ aliases:
 
 # Cross-Mod Summary
 
-27 个 Reference Mods 的横向对比。分层：Tier A（核心玩法/系统深度）12 个、Tier B（单功能有技术价值）11 个、Tier C（微型/本地化）4 个。每模组的机制级方法清单见各 profile 的 Unique Methods 段（稳定 ID 引用，不建横向链接）。
+28 个 Reference Mods 的横向对比。分层：Tier A（核心玩法/系统深度）13 个、Tier B（单功能有技术价值）11 个、Tier C（微型/本地化）4 个。每模组的机制级方法清单见各 profile 的 Unique Methods 段（稳定 ID 引用，不建横向链接）。
 
 ## Most Valuable References（按技术价值）
 
 | Mod | 一句话用途 |
 |---|---|
+| **civilization-trait-expansion** | Culture/Kingdom/Actor trait 分层、原生城市消费点、国家解锁来源与分封流程；入库计量、随机上界、身份清理与库存刷新反例，未实机验收 |
 | **chinesename** | Harmony patch 工程化范本：IPatch 接口+程序集扫描自动注册、双注册兼容、非破坏式 hook——任何新 mod 的组织结构首选参考 |
 | **powerbox** | NML Feature 体系权威样本：40+ 神力全部走 ModAssetFeature/ModButtonFeature 自动发现，零样板 |
 | **xavii-nation-types** | 王国/政体/外交系统改造全链路：定义表驱动+KingdomTrait+custom_data+行为树 tick 入口 |
@@ -82,10 +83,10 @@ SQLite（System.Data.SQLite 随包） ancient-warfare-3(118 表档案 + 进程�
 
 ## Coverage by System（primary）
 
-- **多例子**（≥5 primary）：Actor(12), UI(12), Traits(9), Combat(8), Save/Persistence(8), Mod Lifecycle(5), World(5)
-- **中等**（2-4）：Kingdom(4), Utility(4), Buildings(3), Assets(2), City(2), Events(2), Map(2), AI(2)
-- **少**（1）：Items, Diplomacy, Boats, Localization, **War**（ancient-warfare-3 新增首个 War primary）
-- **仍无 primary**：Jobs, Culture, Religion, Resources, Clan, Alliance（fanren Resources / ancient-warfare Jobs 为 secondary 级）
+- **多例子**（≥5 primary）：Actor(12), UI(12), Traits(10), Combat(8), Save/Persistence(9), Kingdom(5), Mod Lifecycle(5), World(5)
+- **中等**（2-4）：Utility(4), Buildings(4), Assets(2), City(3), Events(2), Map(2), AI(2)
+- **少**（1）：Items, Diplomacy, Boats, Localization, Culture, Resources, **War**（ancient-warfare-3 新增首个 War primary）
+- **仍无 primary**：Jobs, Religion, Clan, Alliance（Culture/Resources 已由文明特质拓展提供 primary 静态实现；仍无本次实机证据）
 
 ## Coverage by Technique
 
@@ -93,7 +94,7 @@ SQLite（System.Data.SQLite 随包） ancient-warfare-3(118 表档案 + 进程�
 - UI injection：15；Asset registration：11；Custom data：11；Reflection：11
 - Save/load：5；Localization：5；Event subscription：4
 
-## Knowledge Gaps（27 mods 仍未覆盖的重要领域）
+## Knowledge Gaps（28 mods 仍未覆盖的重要领域）
 
 1. **经济/资源循环**（Resources/Mining/Farming/Storage）——fanren 灵石六品经济、zhutian 本源四池均为 secondary 级样本，Resources 仍无 primary 深挖
 2. **Jobs/Professions 深度改造**——ancient-warfare 朝廷科举/官职、fanren ProfessionSystem 均为 secondary，仍无 primary

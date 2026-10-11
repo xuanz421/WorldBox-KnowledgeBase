@@ -14,7 +14,7 @@ aliases:
 | --- | --- | --- |
 | 源代码 | [knowledge/systems/system-index.md](knowledge/systems/system-index.md) | WorldBox 有哪些系统、核心类型与数据模型是什么（10 个 S 级 verified） |
 | 模块 | [knowledge/patterns/module-index.md](knowledge/patterns/module-index.md) | 以后开发 Mod 时有什么可以直接拿来用（21 个 Verified+ 模块） |
-| 模组 | [knowledge/reference-mods/mod-index.md](knowledge/reference-mods/mod-index.md) | 该看哪个 mod 的哪个实现（27 个证据化 profile，均含 Unique Methods 段） |
+| 模组 | [knowledge/reference-mods/mod-index.md](knowledge/reference-mods/mod-index.md) | 该看哪个 mod 的哪个实现（28 个证据化 profile，均含 Unique Methods 段） |
 
 消费顺序建议：源代码（理解机制）→ 模块（取可复用实现）→ 模组（对照实现）。
 

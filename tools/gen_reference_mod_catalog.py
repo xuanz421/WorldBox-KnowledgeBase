@@ -235,10 +235,41 @@ MODS = [
          nml=["BasicMod/IReloadable (Verified)", "LM.LoadLocale/ApplyLocale (Verified)"],
          patterns=[("locale-hot-reload", "热重载语言文件"),
                    ("localizedtext-refresh-postfix", "切语言不刷新修复点")]),
+    dict(id="ref:civilization-trait-expansion", name="文明特质拓展", tier="A", conf="Mostly Verified",
+         summary="Culture/Kingdom/Actor 三层特质：城市建筑与经济、累计小麦国家传统、帝国管理与继承人教育、TileZone 分封；源码与说明差异及入库计量/身份清理风险已记录，未实机验收",
+         primary=["Culture", "Kingdom", "City", "Buildings", "Resources", "Traits", "Save/Persistence"],
+         secondary=["Actor", "Items", "World", "UI", "Assets", "Events", "Localization", "Mod Lifecycle", "Utility"],
+         techniques=["Harmony Prefix", "Harmony Postfix", "Asset registration", "Custom data",
+                     "World-age tick", "World log integration", "Localization", "NML configuration"],
+         harmony=True, ui=True, assets=True, persistence=True, evidence=5,
+         wb=["Culture.createCulture", "City.getLimitOfBuildingsType", "CityBehCheckFarms.check",
+             "City.updateCityStatus", "CityBehBuild.tryToBuild", "Building.addResources",
+             "ItemCrafting.craftItem", "Actor.updateStats", "SuccessionTool.findNextHeir",
+             "WorldAgeManager.update", "CityManager.newCity", "City.addZone"],
+         nml=["BasicMod<T>/GetConfig (Verified)", "LM.Add/AddToCurrentLocale (Verified)",
+              "ModConfig.CreateGroup/AddConfigItem (Verified API; runtime UI untested)"],
+         patterns=[("culture-trait-city-consumption", "原生城市消费点分清 Culture/Kingdom 效果归属；补充已有 culture-consumption-gates"),
+                   ("dirty-gated-stat-replay", "入口 dirty 守卫防止属性重复重放；补充已有 actor-annual-persistent-stat-growth"),
+                   ("kingdom-resource-progression", "国家累计资源解锁；延后，必须区分生产与搬运"),
+                   ("city-zone-partition", "TileZone 建城分封；延后，库存可见性、守恒与失败恢复待验收")]),
 ]
 
 
 def main() -> None:
+    # Later intakes may be curated directly in the catalogue. Preserve them
+    # rather than silently dropping their profiles and evidence on regeneration.
+    existing_catalog = []
+    existing_matrix = []
+    existing_patterns = []
+    if (OUT / "catalog.json").is_file():
+        existing_catalog = json.loads((OUT / "catalog.json").read_text(encoding="utf-8"))
+    if (OUT / "system-matrix.csv").is_file():
+        with open(OUT / "system-matrix.csv", encoding="utf-8", newline="") as f:
+            existing_matrix = list(csv.DictReader(f))
+    if (OUT / "pattern-candidates.jsonl").is_file():
+        existing_patterns = [json.loads(line) for line in
+                             (OUT / "pattern-candidates.jsonl").read_text(encoding="utf-8").splitlines()
+                             if line.strip()]
     catalog = []
     matrix_rows = []
     pattern_rows = []
@@ -278,6 +309,17 @@ def main() -> None:
                 "reason": mod["summary"][:80],
                 "confidence": "verified" if mod["conf"] == "Verified" else "inferred",
             })
+
+    generated_ids = {entry["source_id"] for entry in catalog}
+    retained = [entry for entry in existing_catalog if entry["source_id"] not in generated_ids]
+    retained_ids = {entry["source_id"] for entry in retained}
+    catalog.extend(retained)
+    existing_order = {entry["source_id"]: i for i, entry in enumerate(existing_catalog)}
+    catalog.sort(key=lambda entry: existing_order.get(entry["source_id"], len(existing_order)))
+    matrix_rows.extend([[row[key] for key in
+                         ("mod_id", "system", "role", "evidence_count", "confidence")]
+                        for row in existing_matrix if row["mod_id"] in retained_ids])
+    pattern_rows.extend(row for row in existing_patterns if row["mod_id"] in retained_ids)
 
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "catalog.json").write_text(

@@ -27,7 +27,7 @@ WBKB 的核心目标是：
 回答 WorldBox/NML modding 问题前，先查已有知识，而不是从头调查（人类导航入口：根 `knowledge-index.md`，forest 结构——链接只从索引指向叶子，跨树引用使用稳定 id 而非链接）：
 
 * `knowledge/patterns/catalog.json` — 21 个验证过的可复用模块（`pattern_id` 即模块稳定 ID；导航根 `knowledge/patterns/module-index.md`，节点显示名「模块索引」）
-* `knowledge/reference-mods/catalog.json` — 27 个 reference mod 的证据化 profile（导航见 `knowledge/reference-mods/mod-index.md`）
+* `knowledge/reference-mods/catalog.json` — 28 个 reference mod 的证据化 profile（导航见 `knowledge/reference-mods/mod-index.md`）
 * `knowledge/systems/catalog.json` — WorldBox 系统 map（core types → `file` 入口；导航见 `knowledge/systems/system-index.md`）
 * `wbkb` 索引（见下）— 反编译源码的结构化查询
 
@@ -43,7 +43,7 @@ pip install -r tools/wbkb/requirements.txt
 验证（改代码或 knowledge/ 后必跑；无 CI，这些命令是唯一门禁）：
 
 ```powershell
-cd tools/wbkb; python -m pytest tests -q             # 115 tests，~30s；RAG 测试用 fake embedding backend，无需下载模型
+cd tools/wbkb; python -m pytest tests -q             # 116 tests，~30s；RAG 测试用 fake embedding backend，无需下载模型
 python -m pytest tests/test_core.py -q               # 单文件
 python -m pytest "tests/test_core.py::HashTests::test_name" -q   # 单测（unittest 风格 node id）
 python tools/validate_patterns.py                    # 失败 exit 1 + FAILED 列表
@@ -81,7 +81,7 @@ python -m wbkb semantic "query"                      # 需先 vector build
 
 ## Editing knowledge/
 
-validators 硬编码期望条数（21 patterns / 27 mods）并校验结构；增删条目必须同步多处：
+validators 硬编码期望条数（21 patterns / 28 mods）并校验结构；增删条目必须同步多处：
 
 * patterns：`catalog.json` + `<category>/<id>.md`，文件必须含固定 section 集（`# Pattern:` / `## Status` / `## Goal` / … 完整列表见 `tools/validate_patterns.py`）且正文引用 `.cs:行号` 证据；不在 catalog 的散落 `.md` 会被拒。
 * reference-mods：`catalog.json` / `catalog.csv` / `system-matrix.csv` / `mods/<mod-id>.md` 四处 id 与条数必须一致；catalog 的 `primary_systems` 必须等于 matrix 中该 mod 的 role=primary 系统集合。

@@ -6,21 +6,21 @@ aliases:
 
 # 模组索引（Reference Mods Index）
 
-27 个 Reference Mod 的导航根。机器可读权威目录是 [catalog.json](catalog.json) / [system-matrix.csv](system-matrix.csv)；profile 一律 evidence-backed（`file:line` 证据，mod 原目录只读），每个 profile 含 Unique Methods 段（机制级方法清单）。跨 mod 对比见 [CROSS_MOD_SUMMARY.md](CROSS_MOD_SUMMARY.md)。
+28 个 Reference Mod 的导航根。机器可读权威目录是 [catalog.json](catalog.json) / [system-matrix.csv](system-matrix.csv)；profile 一律 evidence-backed（`file:line` 证据，mod 原目录只读），每个 profile 含 Unique Methods 段（机制级方法清单）。跨 mod 对比见 [CROSS_MOD_SUMMARY.md](CROSS_MOD_SUMMARY.md)。
 
 ## By System（primary）
 
 - **Actor**：[guigu-cultivation](mods/guigu-cultivation.md), [xuanjian-xianzu](mods/xuanjian-xianzu.md), [xuanmen-daojie](mods/xuanmen-daojie.md), [thefantasyworld](mods/thefantasyworld.md), [biology](mods/biology.md), [sandbox](mods/sandbox.md), [incensefiredway](mods/incensefiredway.md), [buzzoff](mods/buzzoff.md), [creepmobboost](mods/creepmobboost.md), [fanren-xiuxianzhuan](mods/fanren-xiuxianzhuan.md), [ancient-warfare-3](mods/ancient-warfare-3.md), [zhutian-shenzuo](mods/zhutian-shenzuo.md)
 - **UI**：[powerbox](mods/powerbox.md), [xuanjian-xianzu](mods/xuanjian-xianzu.md), [actorhistory](mods/actorhistory.md), [xuanmen-daojie](mods/xuanmen-daojie.md), [shtoolkit](mods/shtoolkit.md), [biology](mods/biology.md), [sandbox](mods/sandbox.md), [familytree](mods/familytree.md), [fanren-xiuxianzhuan](mods/fanren-xiuxianzhuan.md), [ancient-warfare-3](mods/ancient-warfare-3.md), [funboost](mods/funboost.md), [zhutian-shenzuo](mods/zhutian-shenzuo.md)
-- **Traits**：[guigu-cultivation](mods/guigu-cultivation.md), [xavii-nation-types](mods/xavii-nation-types.md), [xuanjian-xianzu](mods/xuanjian-xianzu.md), [xuanmen-daojie](mods/xuanmen-daojie.md), [thefantasyworld](mods/thefantasyworld.md), [incensefiredway](mods/incensefiredway.md), [biology](mods/biology.md), [fanren-xiuxianzhuan](mods/fanren-xiuxianzhuan.md), [zhutian-shenzuo](mods/zhutian-shenzuo.md)
+- **Traits**：[guigu-cultivation](mods/guigu-cultivation.md), [xavii-nation-types](mods/xavii-nation-types.md), [xuanjian-xianzu](mods/xuanjian-xianzu.md), [xuanmen-daojie](mods/xuanmen-daojie.md), [thefantasyworld](mods/thefantasyworld.md), [incensefiredway](mods/incensefiredway.md), [biology](mods/biology.md), [fanren-xiuxianzhuan](mods/fanren-xiuxianzhuan.md), [zhutian-shenzuo](mods/zhutian-shenzuo.md), [文明特质拓展](mods/civilization-trait-expansion.md)
 - **Combat**：[guigu-cultivation](mods/guigu-cultivation.md), [xuanjian-xianzu](mods/xuanjian-xianzu.md), [xuanmen-daojie](mods/xuanmen-daojie.md), [thefantasyworld](mods/thefantasyworld.md), [boatrebalancebox](mods/boatrebalancebox.md), [nerffiredamage](mods/nerffiredamage.md), [fanren-xiuxianzhuan](mods/fanren-xiuxianzhuan.md), [zhutian-shenzuo](mods/zhutian-shenzuo.md)
-- **Save/Persistence**：[guigu-cultivation](mods/guigu-cultivation.md), [xuanjian-xianzu](mods/xuanjian-xianzu.md), [actorhistory](mods/actorhistory.md), [xuanmen-daojie](mods/xuanmen-daojie.md), [shtoolkit](mods/shtoolkit.md), [fanren-xiuxianzhuan](mods/fanren-xiuxianzhuan.md), [ancient-warfare-3](mods/ancient-warfare-3.md), [zhutian-shenzuo](mods/zhutian-shenzuo.md)
+- **Save/Persistence**：[guigu-cultivation](mods/guigu-cultivation.md), [xuanjian-xianzu](mods/xuanjian-xianzu.md), [actorhistory](mods/actorhistory.md), [xuanmen-daojie](mods/xuanmen-daojie.md), [shtoolkit](mods/shtoolkit.md), [fanren-xiuxianzhuan](mods/fanren-xiuxianzhuan.md), [ancient-warfare-3](mods/ancient-warfare-3.md), [zhutian-shenzuo](mods/zhutian-shenzuo.md), [文明特质拓展](mods/civilization-trait-expansion.md)
 - **Mod Lifecycle**：[powerbox](mods/powerbox.md), [thefantasyworld](mods/thefantasyworld.md), [shtoolkit](mods/shtoolkit.md), [chinesename](mods/chinesename.md), [funboost](mods/funboost.md)
 - **World**：[optime](mods/optime.md), [worldresilience](mods/worldresilience.md), [unlock-all](mods/unlock-all.md), [fanren-xiuxianzhuan](mods/fanren-xiuxianzhuan.md), [zhutian-shenzuo](mods/zhutian-shenzuo.md)
-- **Kingdom**：[guigu-cultivation](mods/guigu-cultivation.md), [xavii-nation-types](mods/xavii-nation-types.md), [sandbox](mods/sandbox.md), [ancient-warfare-3](mods/ancient-warfare-3.md)
+- **Kingdom**：[guigu-cultivation](mods/guigu-cultivation.md), [xavii-nation-types](mods/xavii-nation-types.md), [sandbox](mods/sandbox.md), [ancient-warfare-3](mods/ancient-warfare-3.md), [文明特质拓展](mods/civilization-trait-expansion.md)
 - **Utility**：[shtoolkit](mods/shtoolkit.md), [chinesename](mods/chinesename.md), [optime](mods/optime.md), [hanhai-unlock-all](mods/hanhai-unlock-all.md)
-- **Buildings**：[xuanjian-xianzu](mods/xuanjian-xianzu.md), [buzzoff](mods/buzzoff.md), [creepmobboost](mods/creepmobboost.md)
-- **City**：[sandbox](mods/sandbox.md), [ancient-warfare-3](mods/ancient-warfare-3.md)
+- **Buildings**：[xuanjian-xianzu](mods/xuanjian-xianzu.md), [buzzoff](mods/buzzoff.md), [creepmobboost](mods/creepmobboost.md), [文明特质拓展](mods/civilization-trait-expansion.md)
+- **City**：[sandbox](mods/sandbox.md), [ancient-warfare-3](mods/ancient-warfare-3.md), [文明特质拓展](mods/civilization-trait-expansion.md)
 - **Events**：[xavii-nation-types](mods/xavii-nation-types.md), [actorhistory](mods/actorhistory.md)
 - **AI**：[ancient-warfare-3](mods/ancient-warfare-3.md), [funboost](mods/funboost.md)
 - **Assets**：[powerbox](mods/powerbox.md), [chinesename](mods/chinesename.md)
@@ -30,6 +30,8 @@ aliases:
 - **Items**：[xuanjian-xianzu](mods/xuanjian-xianzu.md)
 - **Boats**：[boatrebalancebox](mods/boatrebalancebox.md)
 - **Localization**：[simple-chinese-localization](mods/simple-chinese-localization.md)
+- **Culture**：[文明特质拓展](mods/civilization-trait-expansion.md)
+- **Resources**：[文明特质拓展](mods/civilization-trait-expansion.md)
 
 ## By Technique
 
@@ -47,10 +49,11 @@ aliases:
 - **UI 克隆注入**：[actorhistory](mods/actorhistory.md), [familytree](mods/familytree.md), [sandbox](mods/sandbox.md), [biology](mods/biology.md)
 - **程序集扫描自动注册**：[chinesename](mods/chinesename.md)
 - **选中单位单点模拟（零常驻成本）**：[biology](mods/biology.md)
+- **Culture/Kingdom trait 消费点与分封**：[文明特质拓展](mods/civilization-trait-expansion.md)（城市经济、帝国管理、TileZone 分封；静态风险已标注）
 
 ## By Tier
 
-- **A（12，核心玩法/系统深度）**：[guigu-cultivation](mods/guigu-cultivation.md), [powerbox](mods/powerbox.md), [xavii-nation-types](mods/xavii-nation-types.md), [xuanjian-xianzu](mods/xuanjian-xianzu.md), [actorhistory](mods/actorhistory.md), [xuanmen-daojie](mods/xuanmen-daojie.md), [thefantasyworld](mods/thefantasyworld.md), [shtoolkit](mods/shtoolkit.md), [chinesename](mods/chinesename.md), [biology](mods/biology.md), [fanren-xiuxianzhuan](mods/fanren-xiuxianzhuan.md), [ancient-warfare-3](mods/ancient-warfare-3.md)
+- **A（13，核心玩法/系统深度）**：[guigu-cultivation](mods/guigu-cultivation.md), [powerbox](mods/powerbox.md), [xavii-nation-types](mods/xavii-nation-types.md), [xuanjian-xianzu](mods/xuanjian-xianzu.md), [actorhistory](mods/actorhistory.md), [xuanmen-daojie](mods/xuanmen-daojie.md), [thefantasyworld](mods/thefantasyworld.md), [shtoolkit](mods/shtoolkit.md), [chinesename](mods/chinesename.md), [biology](mods/biology.md), [fanren-xiuxianzhuan](mods/fanren-xiuxianzhuan.md), [ancient-warfare-3](mods/ancient-warfare-3.md), [文明特质拓展](mods/civilization-trait-expansion.md)
 - **B（11，单功能有技术价值）**：[sandbox](mods/sandbox.md), [optime](mods/optime.md), [incensefiredway](mods/incensefiredway.md), [familytree](mods/familytree.md), [buzzoff](mods/buzzoff.md), [mapdeal](mods/mapdeal.md), [creepmobboost](mods/creepmobboost.md), [worldresilience](mods/worldresilience.md), [boatrebalancebox](mods/boatrebalancebox.md), [funboost](mods/funboost.md), [zhutian-shenzuo](mods/zhutian-shenzuo.md)
 - **C（4，微型/本地化）**：[nerffiredamage](mods/nerffiredamage.md), [unlock-all](mods/unlock-all.md), [hanhai-unlock-all](mods/hanhai-unlock-all.md), [simple-chinese-localization](mods/simple-chinese-localization.md)
 

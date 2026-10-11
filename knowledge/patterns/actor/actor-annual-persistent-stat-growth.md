@@ -45,6 +45,7 @@ Primary building blocks:
 - Mod: ref:incensefiredway — File: code/patch.cs:34-52 — Why: 已验证的 `Actor.updateAge` Postfix 年龄事件入口
 - Mod: ref:guigu-cultivation — File: Code/Patches/HarmonyPatches.cs:24-90 — Why: `ActorData` 临时状态与 `Actor.updateStats` Pre/Post 重建链组合
 - Mod: ref:biology — File: Code/UnitHealthTab.cs:125-136 — Why: 明确证明持续属性修正必须在原版 `updateStats` 重建后重放
+- Mod: ref:civilization-trait-expansion — File: Code/CivilizationTraitExpansionPatches.cs:425-453 — Why: Prefix 记录入口 dirty、Postfix 对真正重建后的属性应用倍率；它不是年度永久成长实现，仅补充重放守卫证据
 
 Supporting pattern IDs: `actor-data-custom-state`, `world-tick-integration`。
 
@@ -102,6 +103,7 @@ internal static class PersistentStatReplayPatch
 - 年份必须在 roll 前记录，否则失败者可因重复调用在同一年反复重掷。
 - `updateStats` 会从基础来源重建 stats；只在事件发生时直接改 `actor.stats` 会在下一次重建后丢失。
 - Postfix 没有 dirty 守卫时，原方法早退也可能导致同一累计值被再次相加；Prefix `__state` 用于区分真正的重建。
+- 文明特质拓展使用 static `_didFullRecalc` 而非 per-call `__state`，不能直接复制为可重入实现；其角色任期和管理倍率也不能当作本模块的永久成长数据。
 - 永久增益是否在角色改宗、转职或失去资格后保留，必须由玩法规则明确；通常资格只控制未来判定，既得 per-actor 成长保留。
 - 长期线性增长应评估概率、增量和可选硬上限；上限作用于持久累计值，不要只 clamp 显示结果。
 - 自定义键在所有 mod 间共享，必须带命名空间前缀，并保持值类型稳定。
@@ -116,8 +118,11 @@ internal static class PersistentStatReplayPatch
 - ref:incensefiredway code/patch.cs:34-52
 - ref:guigu-cultivation Code/Patches/HarmonyPatches.cs:24-90
 - ref:biology Code/UnitHealthTab.cs:125-136
+- ref:civilization-trait-expansion `Code/CivilizationTraitExpansionPatches.cs:425-453`、`Code/CivilizationTraitExpansionService.cs:1864-1915` — dirty 后倍率重放与 cities 差额，2026-10-11 静态核对；没有新增实机验收
 - consumer:NewEra@fe2d2c88320e8a3d6544b2f5b2f0b3bf88c645ef `Source/Content/Paths/Military/MilitaryTrainingEffects.cs:12`, `:38`; `Source/Content/Paths/Military/PatchMilitaryTraining.cs:17`。既有隔离项 `military/national-training-persistent-health`，来源 `Tests/CultureNodeValidation.cs:144`。
 
 ## Provenance
 
 Derived from: WorldBox 0.51.2 `Actor.updateAge` / `Actor.updateStats` / `BaseSystemData`, ref:incensefiredway, ref:guigu-cultivation, ref:biology。该模块组合的是已验证入口与持久化/重放机制；年度幂等键是对这些机制的通用化约束。
+
+Additional replay-gate evidence: `ref:civilization-trait-expansion` v1.5.0，用户提供 zip 的源码；身份成长与农业玩法保留在 mod profile，不作为本模块的通用设计。

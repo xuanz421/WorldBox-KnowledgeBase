@@ -19,8 +19,8 @@ csv_rows = list(csv.DictReader(open(OUT / "catalog.csv", encoding="utf-8")))
 matrix = list(csv.DictReader(open(OUT / "system-matrix.csv", encoding="utf-8")))
 patterns = [json.loads(line) for line in (OUT / "pattern-candidates.jsonl").read_text(encoding="utf-8").splitlines() if line]
 
-if len(catalog) != 27:
-    problems.append(f"catalog has {len(catalog)} entries, expected 27")
+if len(catalog) != 28:
+    problems.append(f"catalog has {len(catalog)} entries, expected 28")
 if len(profiles) != len(catalog):
     problems.append(f"{len(profiles)} profiles vs {len(catalog)} catalog entries")
 

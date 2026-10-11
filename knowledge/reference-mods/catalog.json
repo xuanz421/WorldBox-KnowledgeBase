@@ -1353,5 +1353,75 @@
     ],
     "confidence": "Mostly Verified",
     "profile": "mods/zhutian-shenzuo.md"
+  },
+  {
+    "source_id": "ref:civilization-trait-expansion",
+    "name": "文明特质拓展",
+    "tier": "A",
+    "summary": "Culture/Kingdom/Actor 三层特质：城市建筑与经济、累计小麦国家传统、帝国管理与继承人教育、TileZone 分封；源码与说明差异及入库计量/身份清理风险已记录，未实机验收",
+    "primary_systems": [
+      "Culture",
+      "Kingdom",
+      "City",
+      "Buildings",
+      "Resources",
+      "Traits",
+      "Save/Persistence"
+    ],
+    "secondary_systems": [
+      "Actor",
+      "Items",
+      "World",
+      "UI",
+      "Assets",
+      "Events",
+      "Localization",
+      "Mod Lifecycle",
+      "Utility"
+    ],
+    "techniques": [
+      "Harmony Prefix",
+      "Harmony Postfix",
+      "Asset registration",
+      "Custom data",
+      "World-age tick",
+      "World log integration",
+      "Localization",
+      "NML configuration"
+    ],
+    "worldbox_api_areas": [
+      "Culture.createCulture",
+      "City.getLimitOfBuildingsType",
+      "CityBehCheckFarms.check",
+      "City.updateCityStatus",
+      "CityBehBuild.tryToBuild",
+      "Building.addResources",
+      "ItemCrafting.craftItem",
+      "Actor.updateStats",
+      "SuccessionTool.findNextHeir",
+      "WorldAgeManager.update",
+      "CityManager.newCity",
+      "City.addZone"
+    ],
+    "nml_api_areas": [
+      "BasicMod<T>/GetConfig (Verified)",
+      "LM.Add/AddToCurrentLocale (Verified)",
+      "ModConfig.CreateGroup/AddConfigItem (Verified API; runtime UI untested)"
+    ],
+    "harmony": true,
+    "ui": true,
+    "assets": true,
+    "persistence": true,
+    "key_files": [
+      "mods/civilization-trait-expansion.md"
+    ],
+    "pattern_candidates": [
+      "culture-trait-city-consumption",
+      "dirty-gated-stat-replay",
+      "kingdom-resource-progression",
+      "city-zone-partition"
+    ],
+    "confidence": "Mostly Verified",
+    "profile": "mods/civilization-trait-expansion.md"
   }
 ]

@@ -44,6 +44,7 @@ Culture, Buildings, Items, City, Kingdom, Books, Patching
 
 - `consumer:NewEra@fe2d2c88320e8a3d6544b2f5b2f0b3bf88c645ef`: `Source/Content/Buildings/PatchBuildingKnowledge.cs:8`、`:20`。
 - 同 consumer: `Source/Content/Paths/Metallurgy/PatchEquipmentKnowledge.cs:7`; `Source/Content/Paths/Knowledge/PatchBooks.cs:10`, `:34`。
+- `ref:civilization-trait-expansion` v1.5.0：`Code/CivilizationTraitExpansionPatches.cs:15-47,200-228,358-377`；建筑上限、住房、资源入库分别是独立消费点。它扩展 CultureTrait，不是 NewEra 的 asset retirement 实现。
 - Related pattern IDs: `harmony-prefix-recipes`, `culture-research-state`, `actor-annual-persistent-stat-growth`。
 
 ## Regression Checks
@@ -61,15 +62,19 @@ Culture, Buildings, Items, City, Kingdom, Books, Patching
 - 受控直接调用、自然 AI 样本、世界重载和 UI 截图分别说明不同边界；不能把一种证据当成另一种。
 - 历史住宅升级、农田／风车及原版攻占空引用有间歇性失败。后续通过不意味着所有未知根因都已修复。
 - 年度 health 增益重放的是最大属性；不自动代表原版当前 `data.health` 被立刻补满或原版重算行为被修改。
+- 效果持有者须与消费点匹配：文明特质拓展的小麦倍率使用 `city.kingdom` 的 `kingdom_efficient_farming`，渔获倍率使用 `city.culture` 的 `improved_craftsmanship`。同一入库入口也承担搬运，不能未经 harvest 证据将全部正入库计作生产；分封搬运会再次触发倍率与计数。
 
 ## Evidence
 
 - NewEra `Source/Content/Buildings/BuildingKnowledge.cs:8`, `:35`, `:42`; `Source/Content/Paths/Metallurgy/EquipmentKnowledge.cs:8`。
 - NewEra `Source/Content/Paths/Knowledge/PatchBooks.cs:10`, `:34`; `Source/Content/Paths/Knowledge/BookKnowledge.cs:25`。
 - NewEra `Source/Content/Paths/Culture/CultureNodeEffects.cs:67`; `Source/Content/Paths/Culture/PatchCultureNodes.cs:6`; `Source/Content/Paths/Agriculture/AgricultureEffects.cs:12`; `Source/Content/Paths/Agriculture/PatchAgricultureHarvest.cs:12`。
+- 文明特质拓展 `Code/CivilizationTraitExpansionService.cs:683-752,830-866`；`Code/FeudalPartitionService.cs:952-957`；WorldBox snapshot `worldbox-0.51.2-51d275f0168b` 的 `City.cs:2883-2891`。2026-10-11 静态核对，确认效果归属与共享入库路径；不新增实机通过声明。
 - 既有最后全绿完整基准 `bin/acceptance-6d25cebba77e4c3c895fdbbf5ed191cb.tsv`: 1376 PASS / 42 INFO / 0 FAIL，SHA256 `40654F825B473168AE440ACA91FDE077792A4E1968162A0875BA64FE98919781`。包括普通节点研究、六级住宅升级、装备制造、共享文化、易主与文化切换、完整世界存读档。
 - 此后完整审查 `bin/acceptance-91146bd634d046849f72f5e1db2bc555.tsv`: 1380 PASS / 37 INFO / 1 FAIL；营火英文截图完成时 tooltip inactive。该次不能取代全绿完整基准，也不宣称失败根因已关闭。
 
 ## Provenance
 
 消费者证据固定在 NewEra 上述 commit；来源仓库 `https://github.com/xuanz421/NewEra`，原始台账 `Doc/第一计划/第四阶段验收记录.md`。这是可复用接入方法，不导入消费者的节点平衡或玩法规划。
+
+Additional reference: `ref:civilization-trait-expansion`，用户提供 v1.5.0 zip；仅补充消费点归属与入库反例，不改变 NewEra 验收结论。

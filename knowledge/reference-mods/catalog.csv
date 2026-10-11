@@ -26,3 +26,4 @@ ref:unlock-all,Unlock all,C,True,False,False,False,World,Verified,mods/unlock-al
 ref:hanhai-unlock-all,寒海的全解锁,C,False,False,False,False,Utility,Verified,mods/hanhai-unlock-all.md
 ref:simple-chinese-localization,简单汉化,C,True,False,False,False,Localization,Verified,mods/simple-chinese-localization.md
 ref:zhutian-shenzuo,诸天神座,B,True,True,True,True,Actor|Combat|World|Save/Persistence|Traits|UI,Mostly Verified,mods/zhutian-shenzuo.md
+ref:civilization-trait-expansion,文明特质拓展,A,True,True,True,True,Culture|Kingdom|City|Buildings|Resources|Traits|Save/Persistence,Mostly Verified,mods/civilization-trait-expansion.md

@@ -48,6 +48,12 @@
       "name": "中文名"
     },
     {
+      "csharp_file_count": 5,
+      "git_commit": null,
+      "id": "ref:civilization-trait-expansion",
+      "name": "文明特质拓展"
+    },
+    {
       "csharp_file_count": 2,
       "git_commit": null,
       "id": "ref:creepmobboost",
