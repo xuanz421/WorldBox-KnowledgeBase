@@ -1,2 +1,0 @@
-# Optional dependency for WBKB MCP stdio integration
-mcp>=1.0,<2.0
