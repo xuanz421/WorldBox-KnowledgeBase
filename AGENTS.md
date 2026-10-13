@@ -1,5 +1,9 @@
 # AGENTS.md — WBKB Repository Rules
 
+## 公共 AI 使用入口（优先级）
+
+当其他开发者仅提供仓库 URL 时，使用公开的 `README.md` → `AI-GUIDE.md` → `knowledge-index.md` 和三棵知识树；**不得要求用户先安装 Python、SQLite、MCP 或下载源码**。本文件其余的源码索引命令、环境配置和验证器仅面向本地维护与深入验证。公开内容不能验证的 API 必须注明不确定性；不能因为本地索引不可用而忽略仓库已有 Markdown 知识。
+
 ## Language
 
 * 与用户沟通使用中文
